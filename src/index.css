@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Определение палитры цветов */
+:root {
+  --primary: #2563eb; /* Основной синий цвет 0533FF 2563eb*/
+  --white: #ffffff; /* Белый */
+  --gray-800: #1f2937; /* Тёмно-серый */
+  --gray-700: #374151; /* Тёмный серый для текста */
+  --gray-600: #4b5563; /* Средний серый */
+  --gray-400: #9ca3af; /* Светлый серый */
+  --gray-300: #d6d8dc; /* Светло-серый */
+  --gray-200: #e5e7eb; /* Светло-серый */
+  --gray-100: #f3f4f6; /* Очень светло-серый */
+  --gray-50: #f9fafb; /* Ещё светлее серый */
+  --blue-600: #1d4ed8; /* Темнее primary */
+  --blue-200: #bfdbfe; /* Светлый синий */
+  --blue-100: #dbeafe; /* Очень светлый синий */
+  --red-600: #dc2626; /* Красный для ошибок */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-in-out forwards;
+  color: var(--gray-600);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+* {
+  box-sizing: border-box;
+}

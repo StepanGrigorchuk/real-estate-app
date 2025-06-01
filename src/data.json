@@ -1,0 +1,602 @@
+[
+  {
+    "id": "СтройГрад-ЛеснаяРека-1",
+    "title": "Квартира в ЖК ЛеснаяРека",
+    "developer": "СтройГрад",
+    "complex": "ЛеснаяРека",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "2-комнатная",
+      "area": 65,
+      "floor": 5,
+      "price": 10000000,
+      "location": "Центр",
+      "yearBuilt": 2020,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "parking": "Есть",
+      "condition": "Новое"
+    },
+    "description": "Просторная квартира с видом на парк."
+  },
+  {
+    "id": "СтройГрад-ЛеснаяРека-2",
+    "title": "Квартира в ЖК ЛеснаяРека",
+    "developer": "СтройГрад",
+    "complex": "ЛеснаяРека",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "1-комнатная",
+      "area": 45,
+      "floor": 3,
+      "price": 3200000,
+      "location": "Окраина",
+      "yearBuilt": 2019,
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "parking": "Нет",
+      "condition": "Хорошее"
+    },
+    "description": "Уютная квартира для одного."
+  },
+  {
+    "id": "СтройГрад-ОзерныйБерег-1",
+    "title": "Квартира в ЖК ОзерныйБерег",
+    "developer": "СтройГрад",
+    "complex": "ОзерныйБерег",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "3-комнатная",
+      "area": 90,
+      "floor": 7,
+      "price": 6200000,
+      "location": "Набережная",
+      "yearBuilt": 2021,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "parking": "Есть",
+      "condition": "Новое"
+    },
+    "description": "Большая квартира с видом на озеро."
+  },
+  {
+    "id": "СтройГрад-Речной-1",
+    "title": "Квартира в ЖК Речной",
+    "developer": "СтройГрад",
+    "complex": "Речной",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "2-комнатная",
+      "area": 70,
+      "floor": 4,
+      "price": 4800000,
+      "location": "Речной район",
+      "yearBuilt": 2020,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "parking": "Есть",
+      "condition": "Хорошее"
+    },
+    "description": "Квартира у реки с отличной инфраструктурой."
+  },
+  {
+    "id": "ЖилСтрой-ЗеленыйКвартал-1",
+    "title": "Квартира в ЖК ЗеленыйКвартал",
+    "developer": "ЖилСтрой",
+    "complex": "ЗеленыйКвартал",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "1-комнатная",
+      "area": 40,
+      "floor": 2,
+      "price": 3000000,
+      "location": "Север",
+      "yearBuilt": 2018,
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "parking": "Нет",
+      "condition": "Хорошее"
+    },
+    "description": "Компактная квартира для одного."
+  },
+  {
+    "id": "ЖилСтрой-ЗеленыйКвартал-2",
+    "title": "Квартира в ЖК ЗеленыйКвартал",
+    "developer": "ЖилСтрой",
+    "complex": "ЗеленыйКвартал",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "3-комнатная",
+      "area": 85,
+      "floor": 6,
+      "price": 5800000,
+      "location": "Центр",
+      "yearBuilt": 2020,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "parking": "Есть",
+      "condition": "Новое"
+    },
+    "description": "Просторная квартира для семьи."
+  },
+  {
+    "id": "ЖилСтрой-Северный-1",
+    "title": "Квартира в ЖК Северный",
+    "developer": "ЖилСтрой",
+    "complex": "Северный",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "2-комнатная",
+      "area": 60,
+      "floor": 3,
+      "price": 4200000,
+      "location": "Север",
+      "yearBuilt": 2019,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "parking": "Нет",
+      "condition": "Хорошее"
+    },
+    "description": "Уютная квартира в тихом районе."
+  },
+  {
+    "id": "ЖилСтрой-Центральный-1",
+    "title": "Квартира в ЖК Центральный",
+    "developer": "ЖилСтрой",
+    "complex": "Центральный",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "3-комнатная",
+      "area": 88,
+      "floor": 5,
+      "price": 6000000,
+      "location": "Центр",
+      "yearBuilt": 2021,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "parking": "Есть",
+      "condition": "Новое"
+    },
+    "description": "Квартира в центре города."
+  },
+  {
+    "id": "Новострой-Солнечный-1",
+    "title": "Квартира в ЖК Солнечный",
+    "developer": "Новострой",
+    "complex": "Солнечный",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "2-комнатная",
+      "area": 72,
+      "floor": 4,
+      "price": 4900000,
+      "location": "Юг",
+      "yearBuilt": 2020,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "parking": "Есть",
+      "condition": "Хорошее"
+    },
+    "description": "Светлая квартира с панорамными окнами."
+  },
+  {
+    "id": "Новострой-Южный-1",
+    "title": "Квартира в ЖК Южный",
+    "developer": "Новострой",
+    "complex": "Южный",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "4-комнатная",
+      "area": 110,
+      "floor": 8,
+      "price": 7500000,
+      "location": "Юг",
+      "yearBuilt": 2022,
+      "bedrooms": 4,
+      "bathrooms": 2,
+      "parking": "Есть",
+      "condition": "Новое"
+    },
+    "description": "Просторная квартира для большой семьи."
+  },
+  {
+    "id": "Новострой-Восточный-1",
+    "title": "Квартира в ЖК Восточный",
+    "developer": "Новострой",
+    "complex": "Восточный",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "1-комнатная",
+      "area": 42,
+      "floor": 2,
+      "price": 3100000,
+      "location": "Восток",
+      "yearBuilt": 2019,
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "parking": "Нет",
+      "condition": "Хорошее"
+    },
+    "description": "Компактная квартира с ремонтом."
+  },
+  {
+    "id": "СтройГрад-ЛеснаяРека-3",
+    "title": "Квартира в ЖК ЛеснаяРека",
+    "developer": "СтройГрад",
+    "complex": "ЛеснаяРека",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "2-комнатная",
+      "area": 68,
+      "floor": 6,
+      "price": 4700000,
+      "location": "Центр",
+      "yearBuilt": 2021,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "parking": "Есть",
+      "condition": "Новое"
+    },
+    "description": "Квартира с видом на лес."
+  },
+  {
+    "id": "СтройГрад-ОзерныйБерег-2",
+    "title": "Квартира в ЖК ОзерныйБерег",
+    "developer": "СтройГрад",
+    "complex": "ОзерныйБерег",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "1-комнатная",
+      "area": 38,
+      "floor": 1,
+      "price": 2900000,
+      "location": "Набережная",
+      "yearBuilt": 2018,
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "parking": "Нет",
+      "condition": "Хорошее"
+    },
+    "description": "Маленькая квартира у озера."
+  },
+  {
+    "id": "СтройГрад-Речной-2",
+    "title": "Квартира в ЖК Речной",
+    "developer": "СтройГрад",
+    "complex": "Речной",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "3-комнатная",
+      "area": 92,
+      "floor": 7,
+      "price": 6300000,
+      "location": "Речной район",
+      "yearBuilt": 2022,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "parking": "Есть",
+      "condition": "Новое"
+    },
+    "description": "Просторная квартира с террасой."
+  },
+  {
+    "id": "ЖилСтрой-ЗеленыйКвартал-3",
+    "title": "Квартира в ЖК ЗеленыйКвартал",
+    "developer": "ЖилСтрой",
+    "complex": "ЗеленыйКвартал",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "2-комнатная",
+      "area": 62,
+      "floor": 4,
+      "price": 4300000,
+      "location": "Север",
+      "yearBuilt": 2019,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "parking": "Есть",
+      "condition": "Хорошее"
+    },
+    "description": "Квартира в зелёном районе."
+  },
+  {
+    "id": "ЖилСтрой-Северный-2",
+    "title": "Квартира в ЖК Северный",
+    "developer": "ЖилСтрой",
+    "complex": "Северный",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "1-комнатная",
+      "area": 44,
+      "floor": 2,
+      "price": 3100000,
+      "location": "Север",
+      "yearBuilt": 2018,
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "parking": "Нет",
+      "condition": "Хорошее"
+    },
+    "description": "Компактная квартира с ремонтом."
+  },
+  {
+    "id": "ЖилСтрой-Центральный-2",
+    "title": "Квартира в ЖК Центральный",
+    "developer": "ЖилСтрой",
+    "complex": "Центральный",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "4-комнатная",
+      "area": 115,
+      "floor": 9,
+      "price": 7800000,
+      "location": "Центр",
+      "yearBuilt": 2023,
+      "bedrooms": 4,
+      "bathrooms": 2,
+      "parking": "Есть",
+      "condition": "Новое"
+    },
+    "description": "Роскошная квартира в центре."
+  },
+  {
+    "id": "Новострой-Солнечный-2",
+    "title": "Квартира в ЖК Солнечный",
+    "developer": "Новострой",
+    "complex": "Солнечный",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "3-комнатная",
+      "area": 87,
+      "floor": 5,
+      "price": 5900000,
+      "location": "Юг",
+      "yearBuilt": 2021,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "parking": "Есть",
+      "condition": "Новое"
+    },
+    "description": "Светлая квартира с большими окнами."
+  },
+  {
+    "id": "Новострой-Южный-2",
+    "title": "Квартира в ЖК Южный",
+    "developer": "Новострой",
+    "complex": "Южный",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "2-комнатная",
+      "area": 66,
+      "floor": 3,
+      "price": 4500000,
+      "location": "Юг",
+      "yearBuilt": 2020,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "parking": "Есть",
+      "condition": "Хорошее"
+    },
+    "description": "Квартира с видом на юг."
+  },
+  {
+    "id": "Новострой-Восточный-2",
+    "title": "Квартира в ЖК Восточный",
+    "developer": "Новострой",
+    "complex": "Восточный",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "1-комнатная",
+      "area": 40,
+      "floor": 1,
+      "price": 2900000,
+      "location": "Восток",
+      "yearBuilt": 2018,
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "parking": "Нет",
+      "condition": "Хорошее"
+    },
+    "description": "Маленькая квартира для одного."
+  },
+  {
+    "id": "СтройГрад-ЛеснаяРека-4",
+    "title": "Квартира в ЖК ЛеснаяРека",
+    "developer": "СтройГрад",
+    "complex": "ЛеснаяРека",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "3-комнатная",
+      "area": 95,
+      "floor": 8,
+      "price": 6500000,
+      "location": "Центр",
+      "yearBuilt": 2022,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "parking": "Есть",
+      "condition": "Новое"
+    },
+    "description": "Просторная квартира с видом на лес."
+  },
+  {
+    "id": "СтройГрад-ОзерныйБерег-3",
+    "title": "Квартира в ЖК ОзерныйБерег",
+    "developer": "СтройГрад",
+    "complex": "ОзерныйБерег",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "2-комнатная",
+      "area": 64,
+      "floor": 4,
+      "price": 4400000,
+      "location": "Набережная",
+      "yearBuilt": 2020,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "parking": "Есть",
+      "condition": "Хорошее"
+    },
+    "description": "Квартира у озера с ремонтом."
+  },
+  {
+    "id": "СтройГрад-Речной-3",
+    "title": "Квартира в ЖК Речной",
+    "developer": "СтройГрад",
+    "complex": "Речной",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "1-комнатная",
+      "area": 41,
+      "floor": 2,
+      "price": 3000000,
+      "location": "Речной район",
+      "yearBuilt": 2019,
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "parking": "Нет",
+      "condition": "Хорошее"
+    },
+    "description": "Маленькая квартира у реки."
+  },
+  {
+    "id": "ЖилСтрой-ЗеленыйКвартал-4",
+    "title": "Квартира в ЖК ЗеленыйКвартал",
+    "developer": "ЖилСтрой",
+    "complex": "ЗеленыйКвартал",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "4-комнатная",
+      "area": 120,
+      "floor": 10,
+      "price": 8000000,
+      "location": "Север",
+      "yearBuilt": 2023,
+      "bedrooms": 4,
+      "bathrooms": 2,
+      "parking": "Есть",
+      "condition": "Новое"
+    },
+    "description": "Роскошная квартира для большой семьи."
+  },
+  {
+    "id": "ЖилСтрой-Северный-3",
+    "title": "Квартира в ЖК Северный",
+    "developer": "ЖилСтрой",
+    "complex": "Северный",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "2-комнатная",
+      "area": 58,
+      "floor": 3,
+      "price": 4100000,
+      "location": "Север",
+      "yearBuilt": 2019,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "parking": "Есть",
+      "condition": "Хорошее"
+    },
+    "description": "Квартира в северной части города."
+  },
+  {
+    "id": "ЖилСтрой-Центральный-3",
+    "title": "Квартира в ЖК Центральный",
+    "developer": "ЖилСтрой",
+    "complex": "Центральный",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "1-комнатная",
+      "area": 43,
+      "floor": 2,
+      "price": 3100000,
+      "location": "Центр",
+      "yearBuilt": 2018,
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "parking": "Нет",
+      "condition": "Хорошее"
+    },
+    "description": "Компактная квартира в центре."
+  },
+  {
+    "id": "Новострой-Солнечный-3",
+    "title": "Квартира в ЖК Солнечный",
+    "developer": "Новострой",
+    "complex": "Солнечный",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "2-комнатная",
+      "area": 69,
+      "floor": 4,
+      "price": 4700000,
+      "location": "Юг",
+      "yearBuilt": 2020,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "parking": "Есть",
+      "condition": "Хорошее"
+    },
+    "description": "Квартира с южным видом."
+  },
+  {
+    "id": "Новострой-Южный-3",
+    "title": "Квартира в ЖК Южный",
+    "developer": "Новострой",
+    "complex": "Южный",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "3-комнатная",
+      "area": 90,
+      "floor": 6,
+      "price": 6100000,
+      "location": "Юг",
+      "yearBuilt": 2021,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "parking": "Есть",
+      "condition": "Новое"
+    },
+    "description": "Просторная квартира с ремонтом."
+  },
+  {
+    "id": "Новострой-Восточный-3",
+    "title": "Квартира в ЖК Восточный",
+    "developer": "Новострой",
+    "complex": "Восточный",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "1-комнатная",
+      "area": 39,
+      "floor": 1,
+      "price": 2800000,
+      "location": "Восток",
+      "yearBuilt": 2018,
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "parking": "Нет",
+      "condition": "Хорошее"
+    },
+    "description": "Маленькая квартира с ремонтом."
+  },
+  {
+    "id": "СтройГрад-ЛеснаяРека-5",
+    "title": "Квартира в ЖК ЛеснаяРека",
+    "developer": "СтройГрад",
+    "complex": "ЛеснаяРека",
+    "tags": {
+      "type": "Квартира",
+      "rooms": "4-комнатная",
+      "area": 125,
+      "floor": 10,
+      "price": 8200000,
+      "location": "Центр",
+      "yearBuilt": 2023,
+      "bedrooms": 4,
+      "bathrooms": 2,
+      "parking": "Есть",
+      "condition": "Новое"
+    },
+    "description": "Роскошная квартира с видом на лес."
+  }
+]

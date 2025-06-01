@@ -1,0 +1,156 @@
+import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import data from '../data.json';
+
+function Home({ properties: initialProperties }) {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [loadedImages, setLoadedImages] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLeftHovered, setIsLeftHovered] = useState(false);
+  const [isRightHovered, setIsRightHovered] = useState(false);
+  const properties = initialProperties || data;
+
+  const topProperties = properties
+    ? [...properties]
+        .sort((a, b) => b.tags.price - a.tags.price)
+        .slice(0, 5)
+    : [];
+
+  useEffect(() => {
+    const loadImages = async () => {
+      const imagePromises = topProperties.map((property, index) => {
+        return new Promise((resolve) => {
+          const developer = property.developer.replace(/\s+/g, '');
+          const complex = property.complex.replace(/\s+/g, '');
+          const imagePath = `/developers/${developer}/${complex}/${property.id}/images/${property.id}-1.jpg`;
+          const img = new Image();
+          img.src = imagePath;
+          img.onload = () => {
+            console.log(`Image loaded for property ${property.id}: ${imagePath}`);
+            resolve({ index, path: imagePath });
+          };
+          img.onerror = () => {
+            console.log(`Image failed to load for property ${property.id}: ${imagePath}`);
+            resolve({ index, path: 'https://via.placeholder.com/256x160?text=Image+Not+Found' });
+          };
+        });
+      });
+
+      const results = await Promise.all(imagePromises);
+      const sortedImages = results
+        .sort((a, b) => a.index - b.index)
+        .map(result => result.path);
+      setLoadedImages(sortedImages);
+      setIsLoaded(true);
+    };
+
+    loadImages();
+  }, [topProperties]);
+
+  useEffect(() => {
+    if (isLoaded && topProperties.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentSlide(prev => (prev + 1) % topProperties.length);
+      }, 4000);
+      return () => clearInterval(interval);
+    }
+  }, [isLoaded, topProperties.length]);
+
+  const handlePrevSlide = () => {
+    setCurrentSlide(prev => (prev - 1 + topProperties.length) % topProperties.length);
+  };
+
+  const handleNextSlide = () => {
+    setCurrentSlide(prev => (prev + 1) % topProperties.length);
+  };
+
+  const handleDotClick = (index) => {
+    setCurrentSlide(index);
+  };
+
+  return (
+    <section className="bg-[var(--white)] pt-24 pb-12 w-full min-h-screen flex flex-col px-6 animate-fadeIn">
+      <div className="flex flex-col md:flex-row items-start justify-between w-full flex-grow">
+        <div className="w-full md:w-1/2 pl-0 pr-6">
+          <h1 className="text-4xl md:text-5xl font-bold text-[var(--gray-800)] mb-4">
+            Найдите дом своей мечты
+          </h1>
+          <p className="text-lg text-[var(--gray-600)] mb-12 max-w-lg">
+            Найдите идеальный дом с нашим каталогом. Умный поиск по цене, площади и другим параметрам поможет выбрать жильё, соответствующее вашим желаниям.
+          </p>
+          <Link
+            to="/catalog"
+            className="bg-gradient-to-r from-blue-500 to-blue-700 text-[var(--white)] px-6 py-3 rounded-lg hover:from-blue-600 hover:to-blue-800 hover:shadow-xl hover:scale-105 hover:brightness-110 transition-all duration-300 text-lg font-semibold inline-block"
+          >
+            Смотреть недвижку
+          </Link>
+        </div>
+        <div className="w-full md:w-1/2 flex-grow md:flex md:justify-end mt-6 md:mt-0 pr-0 relative">
+          {topProperties.length > 0 && isLoaded ? (
+            <div className="w-full max-w-xl">
+              <div className="w-full max-w-xl h-[450px] rounded-lg shadow-lg relative overflow-hidden">
+                {topProperties.map((property, index) => (
+                  loadedImages[index] && (
+                    <div
+                      key={property.id}
+                      className={`absolute w-full h-full transition-opacity duration-500 ${
+                        index === currentSlide ? 'opacity-100' : 'opacity-0'
+                      }`}
+                    >
+                      <img
+                        src={loadedImages[index]}
+                        alt={property.title}
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                      <Link
+                        to={`/property/${property.id}`}
+                        className="absolute inset-0 z-10 flex justify-center items-center"
+                      >
+                        <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white p-4 rounded-lg z-20">
+                          <p className="text-2xl font-semibold">{property.tags.price.toLocaleString()} ₽</p>
+                          <h3 className="text-base">{property.title}</h3>
+                          <p className="text-base">{property.tags.area} кв.м.</p>
+                        </div>
+                      </Link>
+                      <div
+                        className={`absolute top-0 left-0 w-1/4 h-full cursor-pointer transition-opacity duration-300 z-10 bg-gradient-to-r from-black to-transparent`}
+                        style={{ opacity: isLeftHovered ? 0.4 : 0, transition: 'opacity 150ms ease-in-out' }}
+                        onMouseEnter={() => setIsLeftHovered(true)}
+                        onMouseLeave={() => setIsLeftHovered(false)}
+                        onClick={handlePrevSlide}
+                      />
+                      <div
+                        className={`absolute top-0 right-0 w-1/4 h-full cursor-pointer transition-opacity duration-300 z-10 bg-gradient-to-l from-black to-transparent`}
+                        style={{ opacity: isRightHovered ? 0.4 : 0, transition: 'opacity 150ms ease-in-out' }}
+                        onMouseEnter={() => setIsRightHovered(true)}
+                        onMouseLeave={() => setIsRightHovered(false)}
+                        onClick={handleNextSlide}
+                      />
+                    </div>
+                  )
+                ))}
+              </div>
+              <div className="relative mt-2 flex gap-2 justify-center z-10">
+                {topProperties.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`rounded-full cursor-pointer transition-all duration-300 ${
+                      index === currentSlide ? 'bg-blue-500 w-4 h-2' : 'bg-blue-500 bg-opacity-50 w-2 h-2'
+                    }`}
+                    onClick={() => handleDotClick(index)}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="w-full max-w-xl h-[450px] bg-gray-200 rounded-lg shadow-lg flex items-center justify-center">
+              <p className="text-gray-600">Нет данных для отображения</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default Home;

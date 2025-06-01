@@ -1,0 +1,40 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+# Игнорировать папку node_modules (зависимости Node.js)
+node_modules/
+
+# Игнорировать файл окружения (если есть)
+.env
+
+# Игнорировать папку сборки (если ты её создаёшь, например, при сборке проекта)
+dist/
+
+# Игнорировать логи
+*.log
+
+public/developers
+public/real_images
