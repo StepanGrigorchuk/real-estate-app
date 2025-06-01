@@ -1,12 +1,18 @@
-# React + Vite
+# Крымский компас
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Описание
+**RealEstateCatalog** — это веб-приложение для поиска недвижимости. Пользователи могут просматривать каталог объектов, фильтровать их по различным параметрам (цена, площадь, количество комнат и т.д.) и переходить на страницу с подробной информацией о каждом объекте. Проект создан для упрощения поиска жилья с помощью удобного интерфейса и умной фильтрации.
 
-Currently, two official plugins are available:
+## Технологии
+- **React** — для создания пользовательского интерфейса.
+- **React Router** — для маршрутизации между страницами.
+- **Tailwind CSS** — для стилизации.
+- **React Spring** — для анимаций (например, сворачивание/разворачивание фильтров).
+- **Git/GitHub** — для контроля версий.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Структура проекта
+- src/ — Основной код проекта.
+  - components/ — Компоненты React (Header, Footer, Catalog, TextFilter и т.д.).
+  - data.json — Данные об объектах недвижимости (временная база данных).
+- public/ — Статические файлы (например, логотип).
+  
