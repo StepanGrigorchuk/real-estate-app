@@ -11,6 +11,7 @@ function App() {
   const [tagFilter, setTagFilter] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [properties, setProperties] = useState([]); // добавлено состояние для properties
   const navigate = useNavigate();
   const location = useLocation();
   const filtersRef = useRef(null);
@@ -23,6 +24,21 @@ function App() {
   const resetTagFilter = () => {
     setTagFilter(null);
   };
+
+  // Глобальная загрузка properties (можно доработать под ваши нужды)
+  useEffect(() => {
+    setLoading(true);
+    fetch('/api/properties?limit=1000')
+      .then(res => res.json())
+      .then(data => {
+        setProperties(data.properties || []);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err);
+        setLoading(false);
+      });
+  }, []);
 
   if (loading) {
     return (
@@ -54,8 +70,9 @@ function App() {
     <div className="flex flex-col min-h-screen bg-white">
       <Header />
       <main className="flex-grow w-full">
+        {/* Удалён временный DEBUG-блок */}
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home properties={properties} setProperties={setProperties} />} />
           <Route
             path="/catalog"
             element={
@@ -64,6 +81,8 @@ function App() {
                 filtersRef={filtersRef}
                 tagFilter={tagFilter}
                 resetTagFilter={resetTagFilter}
+                properties={properties}
+                setProperties={setProperties}
               />
             }
           />
@@ -71,7 +90,7 @@ function App() {
             path="/property/:id"
             element={
               <PropertyPage
-                properties={[]}
+                properties={properties}
                 setSelectedProperty={setSelectedProperty}
               />
             }

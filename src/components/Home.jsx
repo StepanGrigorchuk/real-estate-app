@@ -1,9 +1,23 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getParsedTags } from '../utils/property';
-import { getImagePath } from '../utils/imagePath';
 import { formatTag, isNotEmpty } from '../utils/format';
 import { PARAM_NAMES, TELEGRAM_LINK } from '../constants';
+import { imagePath } from '../utils/imagePath';
+
+function getSortedImagePaths({ developer, complex, objectFolder }) {
+  // Получаем n из objectFolder (ожидается формат developer_complex_n)
+  let n = 1;
+  if (objectFolder) {
+    const match = objectFolder.match(/_(\d+)$/);
+    if (match) n = Number(match[1]);
+  }
+  const imagePaths = [];
+  for (let i = 1; i <= 15; i++) {
+    imagePaths.push(imagePath({ developer, complex, n, i }));
+  }
+  return imagePaths;
+}
 
 function Home() {
   const [properties, setProperties] = useState([]);
@@ -14,6 +28,7 @@ function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLeftHovered, setIsLeftHovered] = useState(false);
   const [isRightHovered, setIsRightHovered] = useState(false);
+  const [userInteractedAt, setUserInteractedAt] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -43,24 +58,39 @@ function Home() {
         return new Promise((resolve) => {
           const developer = property.developer;
           const complex = property.complex;
-          const imagePath = getImagePath({ developer, complex, id: property.id, index: 1 });
-          const img = new Image();
-          img.src = imagePath;
-          img.onload = () => {
-            console.log(`Image loaded for property ${property.id}: ${imagePath}`);
-            resolve({ index, path: imagePath });
-          };
-          img.onerror = () => {
-            console.log(`Image failed to load for property ${property.id}: ${imagePath}`);
-            resolve({ index, path: 'https://via.placeholder.com/256x160?text=Image+Not+Found' });
-          };
+          const objectFolder = property.folder; // Изменено здесь
+          // Получаем отсортированные пути
+          const imagePaths = getSortedImagePaths({ developer, complex, objectFolder });
+          // Проверяем, существует ли хотя бы одно изображение (можно реализовать через fetch HEAD, но для статических файлов просто пробуем загрузить)
+          let found = false;
+          let imgPath = '';
+          let imgObj = new window.Image();
+          let checkIndex = 0;
+          function tryLoad() {
+            if (checkIndex >= imagePaths.length) {
+              resolve({ index, path: 'https://via.placeholder.com/256x160?text=Image+Not+Found' });
+              return;
+            }
+            imgObj = new window.Image();
+            imgObj.src = imagePaths[checkIndex];
+            imgObj.onload = () => resolve({ index, path: imagePaths[checkIndex], all: imagePaths });
+            imgObj.onerror = () => {
+              checkIndex++;
+              tryLoad();
+            };
+          }
+          tryLoad();
         });
       });
 
       const results = await Promise.all(imagePromises);
+      // Сохраняем массив всех путей для каждого property (для галереи)
       const sortedImages = results
         .sort((a, b) => a.index - b.index)
-        .map(result => result.path);
+        .map(result => ({
+          main: result.path,
+          all: result.all || [result.path]
+        }));
       setLoadedImages(sortedImages);
       setIsLoaded(true);
     };
@@ -71,22 +101,31 @@ function Home() {
   useEffect(() => {
     if (isLoaded && topProperties.length > 0) {
       const interval = setInterval(() => {
-        setCurrentSlide(prev => (prev + 1) % topProperties.length);
+        // Если пользователь недавно взаимодействовал, не листаем
+        if (
+          !userInteractedAt ||
+          Date.now() - userInteractedAt > 6000
+        ) {
+          setCurrentSlide(prev => (prev + 1) % topProperties.length);
+        }
       }, 4000);
       return () => clearInterval(interval);
     }
-  }, [isLoaded, topProperties.length]);
+  }, [isLoaded, topProperties.length, userInteractedAt]);
 
   const handlePrevSlide = () => {
     setCurrentSlide(prev => (prev - 1 + topProperties.length) % topProperties.length);
+    setUserInteractedAt(Date.now());
   };
 
   const handleNextSlide = () => {
     setCurrentSlide(prev => (prev + 1) % topProperties.length);
+    setUserInteractedAt(Date.now());
   };
 
   const handleDotClick = (index) => {
     setCurrentSlide(index);
+    setUserInteractedAt(Date.now());
   };
 
   if (loading) return <div className="p-8 text-center text-gray-600">Загрузка...</div>;
@@ -124,7 +163,7 @@ function Home() {
                         }`}
                       >
                         <img
-                          src={loadedImages[index]}
+                          src={loadedImages[index].main}
                           alt={property.title}
                           className="w-full h-full object-cover rounded-lg"
                         />
@@ -136,15 +175,6 @@ function Home() {
                             {isNotEmpty(tags?.price) && <p className="text-2xl font-semibold">{formatTag('price', tags.price)}</p>}
                             <h3 className="text-base">{property.title}</h3>
                             {isNotEmpty(tags?.area) && <p className="text-base">{formatTag('area', tags.area)}</p>}
-                            {isNotEmpty(tags?.rooms) && <p className="text-base">{formatTag('rooms', tags.rooms)}</p>}
-                            {isNotEmpty(tags?.city) && <p className="text-base">{formatTag('city', tags.city)}</p>}
-                            {isNotEmpty(tags?.delivery) && <p className="text-base">{formatTag('delivery', tags.delivery)}</p>}
-                            {isNotEmpty(tags?.['sea-distance']) && <p className="text-base">{formatTag('sea-distance', tags['sea-distance'])}</p>}
-                            {isNotEmpty(tags?.type) && <p className="text-base">{formatTag('type', tags.type)}</p>}
-                            {isNotEmpty(tags?.view) && <p className="text-base">{formatTag('view', tags.view)}</p>}
-                            {isNotEmpty(tags?.finishing) && <p className="text-base">{formatTag('finishing', tags.finishing)}</p>}
-                            {isNotEmpty(tags?.floor) && <p className="text-base">{formatTag('floor', tags.floor)}</p>}
-                            {isNotEmpty(tags?.payment) && <p className="text-base">{formatTag('payment', tags.payment)}</p>}
                           </div>
                         </Link>
                         <div

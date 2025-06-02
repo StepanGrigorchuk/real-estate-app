@@ -2,7 +2,6 @@ import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Lightbox from './Lightbox.jsx';
 import { getParsedTags } from '../utils/property';
-import { getImagePath } from '../utils/imagePath';
 import { formatTag, isNotEmpty } from '../utils/format';
 import { PARAM_NAMES, TELEGRAM_LINK } from '../constants';
 
@@ -21,25 +20,28 @@ function PropertyPage({ properties, setSelectedProperty }) {
       if (found) {
         setProperty(found);
         setError(null);
+        setLoading(false); // добавлено: явно завершаем загрузку
         return;
       }
     }
-    // Если не найден — загрузить с сервера
-    setLoading(true);
-    fetch(`/api/properties/${id}`)
-      .then(res => {
-        if (!res.ok) throw new Error('Объект не найден');
-        return res.json();
-      })
-      .then(data => {
-        setProperty(data.property || data); // поддержка разных форматов ответа
-        setError(null);
-      })
-      .catch(err => {
-        setError(err);
-        setProperty(null);
-      })
-      .finally(() => setLoading(false));
+    // Если не найден — не делаем fetch, просто показываем ошибку
+    setProperty(null);
+    setError(new Error('Объект не найден'));
+    setLoading(false);
+    // fetch(`/api/properties/${id}`)
+    //   .then(res => {
+    //     if (!res.ok) throw new Error('Объект не найден');
+    //     return res.json();
+    //   })
+    //   .then(data => {
+    //     setProperty(data.property || data); // поддержка разных форматов ответа
+    //     setError(null);
+    //   })
+    //   .catch(err => {
+    //     setError(err);
+    //     setProperty(null);
+    //   })
+    //   .finally(() => setLoading(false));
   }, [id, properties]);
 
   useEffect(() => {
@@ -51,10 +53,11 @@ function PropertyPage({ properties, setSelectedProperty }) {
     if (!property || !property.developer || !property.complex) return;
     const developer = property.developer;
     const complex = property.complex;
+    const objectFolder = property.folder || property.slug || property.id;
     const images = [];
     let index = 1;
     const checkNextImage = () => {
-      const imagePath = getImagePath({ developer, complex, id: property.id, index });
+      const imagePath = `/developers/${developer}/${complex}/${objectFolder}/${index}.jpg`;
       return new Promise((resolve) => {
         const img = new window.Image();
         img.src = imagePath;

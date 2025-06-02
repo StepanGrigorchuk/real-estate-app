@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { getParsedTags } from '../utils/property';
-import { getImagePath } from '../utils/imagePath';
 import { formatTag, isNotEmpty } from '../utils/format';
 import { PARAM_NAMES, TELEGRAM_LINK } from '../constants';
+import { imagePath } from '../utils/imagePath';
 
 function PropertyCard({ property, onTagClick, tagOptions }) {
   if (!property) {
@@ -16,11 +16,15 @@ function PropertyCard({ property, onTagClick, tagOptions }) {
 
   const developer = property.developer || '';
   const complex = property.complex || '';
-  const images = [
-    getImagePath({ developer, complex, id: property.id, index: 1 }),
-    getImagePath({ developer, complex, id: property.id, index: 2 }),
-    getImagePath({ developer, complex, id: property.id, index: 3 }),
-  ];
+  const objectFolder = property.folder || property.slug || property.id;
+  const images = [];
+  if (developer && complex && objectFolder) {
+    for (let i = 1; i <= 3; i++) {
+      images.push(`/developers/${developer}/${complex}/${objectFolder}/${i}.jpg`);
+    }
+  } else {
+    console.warn('PropertyCard: Недостаточно данных для формирования пути к изображению', { developer, complex, objectFolder, property });
+  }
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
