@@ -265,7 +265,7 @@ function Catalog({ onTagClick, filtersRef, tagFilter, resetTagFilter }) {
             </div>
           )}
         </div>
-        <div ref={cardsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 animate-fadeIn">
+        <div ref={cardsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 animate-fadeIn">
           {properties && properties.length > 0 ? (
             properties.map(property => {
               const images = generateImagePathsForProperty(property, properties, 3);

@@ -53,7 +53,7 @@ function PropertyCard({ property, onTagClick, tagOptions, images = [] }) {
         <img
           src={images[currentImageIndex]}
           alt={property.title}
-          className="w-full h-40 sm:h-48 md:h-56 object-cover rounded-t-lg bg-[var(--gray-200)]"
+          className="w-full h-48 sm:h-48 md:h-56 object-cover rounded-t-lg bg-[var(--gray-200)]"
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           onError={(e) => {
@@ -72,22 +72,22 @@ function PropertyCard({ property, onTagClick, tagOptions, images = [] }) {
           </div>
         </div>
       </div>
-      <div className="px-2 sm:px-4 pt-2">
+      <div className="px-3 sm:px-4 pt-4">
         {property.title && (
-          <h3 className="mb-1 line-clamp-2 min-h-[2.5em] text-sm sm:text-base text-[var(--gray-600)]" style={{ fontSize: 'var(--font-size-sm)' }}>{property.title}</h3>
+          <h3 className="mb-1 line-clamp-2 min-h-[1.4em] text-base sm:text-base text-[var(--gray-600)]" style={{ fontSize: 'clamp(1.05rem, 3vw + 0.8rem, 1.15rem)' }}>{property.title}</h3>
         )}
         {tags?.price && (
-          <p className="text-lg sm:text-2xl text-[var(--primary)] font-bold mb-2 sm:mb-3" style={{ fontSize: 'var(--font-size-lg)' }}>{tags.price.toLocaleString()} ₽</p>
+          <p className="text-xl sm:text-2xl text-[var(--primary)] font-bold mb-6 sm:mb-3" style={{ fontSize: 'clamp(1.25rem, 5vw + 1rem, 1.5rem)' }}>{tags.price.toLocaleString()} ₽</p>
         )}
-        <div className="flex flex-wrap gap-1 sm:gap-2">
+        <div className="flex flex-wrap gap-2 sm:gap-2">
           {tagsToDisplay
             .filter(tag => tag.key !== 'developer' && tag.key !== 'complex' && tag.key !== 'price' && tag.key !== 'title')
             .map(({ key, value }) => (
               <button
                 key={key}
                 onClick={(e) => { e.preventDefault(); onTagClick(key, value); }}
-                className="bg-[var(--blue-100)] text-[var(--primary)] px-2 py-1 rounded text-xs sm:text-sm hover:bg-[var(--blue-200)] transition"
-                style={{ fontSize: 'var(--font-size-xs)' }}
+                className="bg-[var(--blue-100)] text-[var(--primary)] px-3 py-1 rounded text-sm sm:text-sm hover:bg-[var(--blue-200)] transition"
+                style={{ fontSize: 'clamp(0.95rem, 2vw + 0.7rem, 1.05rem)' }}
               >
                 {formatTag(key, value)}
               </button>
