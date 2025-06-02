@@ -49,9 +49,9 @@ const RangeFilter = ({ label, filterKey, range, value, onChange }) => {
 
   return (
     <div>
-      <label className="block text-xs sm:text-sm font-medium text-[var(--gray-700)]">{label}</label>
+      <label className="block text-xs sm:text-sm font-medium text-[var(--gray-700)]" style={{ fontSize: 'var(--font-size-xs)' }}>{label}</label>
       <div className="flex flex-col sm:flex-row items-center gap-2 w-full">
-        <span className="text-xs sm:text-sm text-[var(--gray-600)]">от</span>
+        <span className="text-xs sm:text-sm text-[var(--gray-600)]" style={{ fontSize: 'var(--font-size-xs)' }}>от</span>
         <input
           type="range"
           min={safeMin}
@@ -69,9 +69,10 @@ const RangeFilter = ({ label, filterKey, range, value, onChange }) => {
             onBlur={e => handleValueChange(true, rawMinValue)}
             onKeyDown={e => e.key === 'Enter' && handleValueChange(true, rawMinValue)}
             className="p-1 border border-[var(--gray-200)] rounded-md w-full focus:ring-[var(--primary)] focus:border-[var(--primary)] overflow-hidden [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-xs sm:text-sm"
+            style={{ fontSize: 'var(--font-size-xs)' }}
           />
         </div>
-        <span className="text-xs sm:text-sm text-[var(--gray-600)]">до</span>
+        <span className="text-xs sm:text-sm text-[var(--gray-600)]" style={{ fontSize: 'var(--font-size-xs)' }}>до</span>
         <input
           type="range"
           min={safeMin}
@@ -89,6 +90,7 @@ const RangeFilter = ({ label, filterKey, range, value, onChange }) => {
             onBlur={e => handleValueChange(false, rawMaxValue)}
             onKeyDown={e => e.key === 'Enter' && handleValueChange(false, rawMaxValue)}
             className="p-1 border border-[var(--gray-200)] rounded-md w-full focus:ring-[var(--primary)] focus:border-[var(--primary)] overflow-hidden [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-xs sm:text-sm"
+            style={{ fontSize: 'var(--font-size-xs)' }}
           />
         </div>
       </div>

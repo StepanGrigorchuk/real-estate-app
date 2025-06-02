@@ -74,10 +74,10 @@ function PropertyCard({ property, onTagClick, tagOptions, images = [] }) {
       </div>
       <div className="px-2 sm:px-4 pt-2">
         {property.title && (
-          <h3 className="text-sm sm:text-base text-[var(--gray-600)] mb-1 line-clamp-2 min-h-[2.5em]">{property.title}</h3>
+          <h3 className="mb-1 line-clamp-2 min-h-[2.5em] text-sm sm:text-base text-[var(--gray-600)]" style={{ fontSize: 'var(--font-size-sm)' }}>{property.title}</h3>
         )}
         {tags?.price && (
-          <p className="text-lg sm:text-2xl text-[var(--primary)] font-bold mb-2 sm:mb-3">{tags.price.toLocaleString()} ₽</p>
+          <p className="text-lg sm:text-2xl text-[var(--primary)] font-bold mb-2 sm:mb-3" style={{ fontSize: 'var(--font-size-lg)' }}>{tags.price.toLocaleString()} ₽</p>
         )}
         <div className="flex flex-wrap gap-1 sm:gap-2">
           {tagsToDisplay
@@ -87,6 +87,7 @@ function PropertyCard({ property, onTagClick, tagOptions, images = [] }) {
                 key={key}
                 onClick={(e) => { e.preventDefault(); onTagClick(key, value); }}
                 className="bg-[var(--blue-100)] text-[var(--primary)] px-2 py-1 rounded text-xs sm:text-sm hover:bg-[var(--blue-200)] transition"
+                style={{ fontSize: 'var(--font-size-xs)' }}
               >
                 {formatTag(key, value)}
               </button>

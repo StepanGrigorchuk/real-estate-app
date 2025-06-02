@@ -54,11 +54,12 @@ function Lightbox({ images, initialImage, onClose }) {
       }}
       onWheel={handleWheel}
     >
-      <div className="absolute top-8 sm:top-24 text-[var(--gray-800)] text-xs sm:text-sm opacity-50 z-60">
+      <div className="absolute top-8 sm:top-24 text-[var(--gray-800)] text-xs sm:text-sm opacity-50 z-60" style={{ fontSize: 'var(--font-size-xs)' }}>
         Используйте колесо мыши для зума (x{zoomLevel.toFixed(1)})
       </div>
       <button
         className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-[var(--primary)] text-[var(--white)] p-2 sm:p-3 rounded-full shadow-md hover:bg-[var(--blue-600)] transition-all duration-300 ease-in-out"
+        style={{ fontSize: 'var(--font-size-xs)' }}
         onClick={(e) => {
           e.stopPropagation();
           setSelectedImage(galleryImages[(galleryImages.indexOf(selectedImage) - 1 + galleryImages.length) % galleryImages.length]);
@@ -93,6 +94,7 @@ function Lightbox({ images, initialImage, onClose }) {
       />
       <button
         className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[var(--primary)] text-[var(--white)] p-3 rounded-full shadow-md hover:bg-[var(--blue-600)] transition-all duration-300 ease-in-out"
+        style={{ fontSize: 'var(--font-size-xs)' }}
         onClick={(e) => {
           e.stopPropagation();
           setSelectedImage(galleryImages[(galleryImages.indexOf(selectedImage) + 1) % galleryImages.length]);
@@ -136,6 +138,7 @@ function Lightbox({ images, initialImage, onClose }) {
       </div>
       <button
         className="absolute top-4 right-4 text-[var(--gray-800)] text-2xl"
+        style={{ fontSize: 'var(--font-size-xl)' }}
         onClick={() => {
           onClose();
           setZoomLevel(1);

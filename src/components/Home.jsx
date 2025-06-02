@@ -132,87 +132,102 @@ function Home() {
   if (error) return <div className="p-8 text-center text-red-600">Ошибка загрузки: {error.message}</div>;
 
   return (
-    <section className="bg-[var(--white)] pt-20 sm:pt-24 pb-8 sm:pb-12 w-full min-h-screen flex flex-col px-2 sm:px-6 animate-fadeIn">
-      <div className="flex flex-col md:flex-row items-start justify-between w-full flex-grow gap-8 md:gap-0">
-        <div className="w-full md:w-1/2 pl-0 pr-0 md:pr-6 pt-4 md:pt-8">
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-[var(--gray-800)] mb-2 sm:mb-4">
-            Найдите дом своей мечты
-          </h1>
-          <p className="text-base sm:text-lg text-[var(--gray-600)] mb-6 sm:mb-12 max-w-lg">
-            Найдите идеальный дом с нашим каталогом. Умный поиск по цене, площади и другим параметрам поможет выбрать жильё, соответствующее вашим желаниям.
-          </p>
-          <Link
-            to="/catalog"
-            className="bg-gradient-to-r from-blue-500 to-blue-700 text-[var(--white)] px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:from-blue-600 hover:to-blue-800 hover:shadow-xl hover:scale-105 hover:brightness-110 transition-all duration-300 text-base sm:text-lg font-semibold inline-block"
-          >
-            Смотреть недвижку
-          </Link>
+    <section className="bg-[var(--white)] w-full min-h-screen flex flex-col px-2 sm:px-6 animate-fadeIn">
+      <div className="flex flex-col md:flex-row items-stretch justify-between w-full flex-grow min-h-screen">
+        {/* Центрируем текстовый блок вертикально и делаем отступы как у галереи */}
+        <div className="w-full md:w-1/2 flex items-center justify-center min-h-[300px] md:min-h-0 md:pl-0 md:pr-8" style={{minHeight: '70vh'}}>
+          <div className="max-w-lg w-full text-center md:text-left flex flex-col items-center md:items-start justify-center mx-auto">
+            <h1
+              className="font-bold text-[var(--gray-800)] mb-2 sm:mb-4"
+              style={{ fontSize: 'clamp(1.1rem, 2.5vw + 0.8rem, 2.1rem)', lineHeight: 1.1 }}
+            >
+              Найдите дом своей мечты
+            </h1>
+            <p
+              className="mb-6 sm:mb-12 max-w-lg"
+              style={{ fontSize: 'clamp(0.95rem, 1.5vw + 0.7rem, 1.15rem)', lineHeight: 1.4 }}
+            >
+              Найдите идеальный дом с нашим каталогом. Умный поиск по цене, площади и другим параметрам поможет выбрать жильё, соответствующее вашим желаниям.
+            </p>
+            <Link
+              to="/catalog"
+              className="bg-gradient-to-r from-blue-500 to-blue-700 text-[var(--white)] px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:from-blue-600 hover:to-blue-800 hover:shadow-xl hover:scale-105 hover:brightness-110 transition-all duration-300 font-semibold inline-block"
+              style={{ fontSize: 'clamp(1rem, 1.2vw + 0.8rem, 1.2rem)' }}
+            >
+              Смотреть недвижку
+            </Link>
+          </div>
         </div>
-        <div className="w-full md:w-1/2 flex-grow md:flex md:justify-end mt-4 md:mt-0 pr-0 relative">
-          {topProperties.length > 0 && isLoaded ? (
-            <div className="w-full max-w-full sm:max-w-xl">
-              <div className="w-full max-w-full sm:max-w-xl h-56 sm:h-[450px] rounded-lg shadow-lg relative overflow-hidden">
-                {topProperties.map((property, index) => {
-                  const tags = getParsedTags(property);
-                  return (
-                    loadedImages[index] && (
-                      <div
-                        key={property.id}
-                        className={`absolute w-full h-full transition-opacity duration-500 ${
-                          index === currentSlide ? 'opacity-100' : 'opacity-0'
-                        }`}
-                      >
-                        <img
-                          src={loadedImages[index].main}
-                          alt={property.title}
-                          className="w-full h-full object-cover rounded-lg"
-                        />
-                        <Link
-                          to={`/property/${property.id}`}
-                          className="absolute inset-0 z-10 flex justify-center items-center"
-                        >
-                          <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-black bg-opacity-50 text-white p-2 sm:p-4 rounded-lg z-20 text-xs sm:text-base">
-                            {isNotEmpty(tags?.price) && <p className="text-lg sm:text-2xl font-semibold">{formatTag('price', tags.price)}</p>}
-                            <h3 className="text-xs sm:text-base">{property.title}</h3>
-                            {isNotEmpty(tags?.area) && <p className="text-xs sm:text-base">{formatTag('area', tags.area)}</p>}
+        {/* Галерея с отступом сверху и индикацией под ней */}
+        <div className="w-full md:w-1/2 flex-grow flex md:justify-end mt-4 md:mt-0 pr-0 md:pl-8 relative min-h-[300px]" style={{minHeight: '70vh'}}>
+          <div className="flex flex-col w-full h-full items-center justify-center pt-8 md:pt-12">
+            {topProperties.length > 0 && isLoaded ? (
+              <>
+                <div className="w-full h-[40vh] sm:h-[60vh] md:h-[70vh] max-w-full flex items-center justify-center">
+                  <div className="w-full h-full rounded-lg shadow-lg relative overflow-hidden flex items-center justify-center">
+                    {topProperties.map((property, index) => {
+                      const tags = getParsedTags(property);
+                      return (
+                        loadedImages[index] && (
+                          <div
+                            key={property.id}
+                            className={`absolute w-full h-full transition-opacity duration-500 ${
+                              index === currentSlide ? 'opacity-100' : 'opacity-0'
+                            } flex items-end`}
+                          >
+                            <img
+                              src={loadedImages[index].main}
+                              alt={property.title}
+                              className="w-full h-full object-cover rounded-lg"
+                            />
+                            <Link
+                              to={`/property/${property.id}`}
+                              className="absolute inset-0 z-10 flex justify-center items-end md:items-center"
+                            >
+                              <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-black bg-opacity-50 text-white p-2 sm:p-4 rounded-lg z-20 text-xs sm:text-base">
+                                {isNotEmpty(tags?.price) && <p className="text-lg sm:text-2xl font-semibold">{formatTag('price', tags.price)}</p>}
+                                <h3 className="text-xs sm:text-base">{property.title}</h3>
+                                {isNotEmpty(tags?.area) && <p className="text-xs sm:text-base">{formatTag('area', tags.area)}</p>}
+                              </div>
+                            </Link>
+                            <div
+                              className={`absolute top-0 left-0 w-1/4 h-full cursor-pointer transition-opacity duration-300 z-10 bg-gradient-to-r from-black to-transparent`}
+                              style={{ opacity: isLeftHovered ? 0.4 : 0, transition: 'opacity 150ms ease-in-out' }}
+                              onMouseEnter={() => setIsLeftHovered(true)}
+                              onMouseLeave={() => setIsLeftHovered(false)}
+                              onClick={handlePrevSlide}
+                            />
+                            <div
+                              className={`absolute top-0 right-0 w-1/4 h-full cursor-pointer transition-opacity duration-300 z-10 bg-gradient-to-l from-black to-transparent`}
+                              style={{ opacity: isRightHovered ? 0.4 : 0, transition: 'opacity 150ms ease-in-out' }}
+                              onMouseEnter={() => setIsRightHovered(true)}
+                              onMouseLeave={() => setIsRightHovered(false)}
+                              onClick={handleNextSlide}
+                            />
                           </div>
-                        </Link>
-                        <div
-                          className={`absolute top-0 left-0 w-1/4 h-full cursor-pointer transition-opacity duration-300 z-10 bg-gradient-to-r from-black to-transparent`}
-                          style={{ opacity: isLeftHovered ? 0.4 : 0, transition: 'opacity 150ms ease-in-out' }}
-                          onMouseEnter={() => setIsLeftHovered(true)}
-                          onMouseLeave={() => setIsLeftHovered(false)}
-                          onClick={handlePrevSlide}
-                        />
-                        <div
-                          className={`absolute top-0 right-0 w-1/4 h-full cursor-pointer transition-opacity duration-300 z-10 bg-gradient-to-l from-black to-transparent`}
-                          style={{ opacity: isRightHovered ? 0.4 : 0, transition: 'opacity 150ms ease-in-out' }}
-                          onMouseEnter={() => setIsRightHovered(true)}
-                          onMouseLeave={() => setIsRightHovered(false)}
-                          onClick={handleNextSlide}
-                        />
-                      </div>
-                    )
-                  );
-                })}
+                        )
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="relative mt-2 flex gap-2 justify-center z-10 w-full">
+                  {topProperties.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`rounded-full cursor-pointer transition-all duration-300 ${
+                        index === currentSlide ? 'bg-blue-500 w-4 h-2' : 'bg-blue-500 bg-opacity-50 w-2 h-2'
+                      }`}
+                      onClick={() => handleDotClick(index)}
+                    />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="w-full h-[40vh] sm:h-[60vh] md:h-[70vh] bg-gray-200 rounded-lg shadow-lg flex items-center justify-center">
+                <p className="text-gray-600 text-xs sm:text-base">Нет данных для отображения</p>
               </div>
-              <div className="relative mt-2 flex gap-2 justify-center z-10">
-                {topProperties.map((_, index) => (
-                  <div
-                    key={index}
-                    className={`rounded-full cursor-pointer transition-all duration-300 ${
-                      index === currentSlide ? 'bg-blue-500 w-4 h-2' : 'bg-blue-500 bg-opacity-50 w-2 h-2'
-                    }`}
-                    onClick={() => handleDotClick(index)}
-                  />
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="w-full max-w-full sm:max-w-xl h-56 sm:h-[450px] bg-gray-200 rounded-lg shadow-lg flex items-center justify-center">
-              <p className="text-gray-600 text-xs sm:text-base">Нет данных для отображения</p>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </section>

@@ -18,6 +18,21 @@
   --blue-200: #bfdbfe; /* Светлый синий */
   --blue-100: #dbeafe; /* Очень светлый синий */
   --red-600: #dc2626; /* Красный для ошибок */
+
+  /* Fluid responsive font sizes */
+  --fluid-min-width: 320;
+  --fluid-max-width: 1440;
+  --fluid-screen: clamp(var(--fluid-min-width), 100vw, var(--fluid-max-width));
+  --fluid-bp: calc((var(--fluid-screen) - var(--fluid-min-width) * 1px) / (var(--fluid-max-width) - var(--fluid-min-width)));
+
+  /* Fluid font sizes using clamp for main text and headings */
+  --font-size-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.85rem);
+  --font-size-sm: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);
+  --font-size-base: clamp(1rem, 0.95rem + 0.5vw, 1.25rem);
+  --font-size-lg: clamp(1.125rem, 1rem + 0.8vw, 1.5rem);
+  --font-size-xl: clamp(1.25rem, 1.1rem + 1vw, 2rem);
+  --font-size-2xl: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
+  --font-size-3xl: clamp(1.875rem, 1.5rem + 2vw, 3rem);
 }
 
 @keyframes fadeIn {
@@ -35,6 +50,42 @@
   animation: fadeIn 0.5s ease-in-out forwards;
   color: var(--gray-600);
 }
+
+html {
+  font-size: var(--font-size-base);
+}
+
+body {
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  color: var(--gray-800);
+}
+
+h1 {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  line-height: 1.1;
+}
+h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  line-height: 1.15;
+}
+h3 {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  line-height: 1.2;
+}
+p, .text-base {
+  font-size: var(--font-size-base);
+}
+.text-xs { font-size: var(--font-size-xs); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+.text-2xl { font-size: var(--font-size-2xl); }
+.text-3xl { font-size: var(--font-size-3xl); }
 
 html,
 body {

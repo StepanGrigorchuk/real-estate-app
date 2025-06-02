@@ -360,6 +360,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
         <button
           onClick={toggleFilters}
           className="text-[var(--gray-600)] underline text-sm hover:text-[var(--gray-800)] transition"
+          style={{ fontSize: 'var(--font-size-sm)' }}
         >
           {isFiltersCollapsed ? "Развернуть фильтры" : "Свернуть фильтры"}
         </button>
@@ -367,12 +368,14 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
           <button
             onClick={resetFilters}
             className="px-4 py-2 bg-[var(--gray-200)] text-[var(--gray-800)] rounded-lg hover:bg-[var(--gray-300)] transition"
+            style={{ fontSize: 'var(--font-size-sm)' }}
           >
             Сбросить
           </button>
           <button
             onClick={applyFilters}
             className="px-4 py-2 bg-[var(--primary)] text-[var(--white)] rounded-lg hover:bg-[var(--blue-600)] transition"
+            style={{ fontSize: 'var(--font-size-sm)' }}
           >
             Показать {countToShow} вариантов
           </button>

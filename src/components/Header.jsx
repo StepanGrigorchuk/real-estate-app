@@ -42,10 +42,18 @@ function Header() {
           <img src="/logo.svg" alt="Логотип Компас" className="h-8 sm:h-10 w-auto" />
         </Link>
         <div className="flex gap-2 sm:gap-3 items-center">
-          <a href={TELEGRAM_LINK} className="hidden md:inline-block bg-primary text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-base hover:bg-blue-700 transition whitespace-nowrap">
+          <a
+            href={TELEGRAM_LINK}
+            className="hidden md:inline-block bg-primary text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-700 transition whitespace-nowrap text-xs sm:text-base"
+            style={{ fontSize: 'var(--font-size-sm)' }}
+          >
             Написать помощнику
           </a>
-          <a href="tel:+1234567890" className="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition flex items-center">
+          <a
+            href="tel:+1234567890"
+            className="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition flex items-center"
+            style={{ fontSize: 'var(--font-size-sm)' }}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5 sm:h-6 sm:w-6 text-primary"
