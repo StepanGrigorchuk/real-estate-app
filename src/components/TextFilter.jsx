@@ -69,7 +69,8 @@ const TextFilter = ({ label, filterKey, options, selectedValues, onChange, onRes
             style={{ background: 'var(--white)' }}
             onMouseLeave={handleMouseLeave}
           >            <div
-              className="p-3 sm:p-2 text-small text-[var(--primary)] hover:bg-[var(--gray-200)] cursor-pointer sticky top-0 bg-[var(--white)] z-10 whitespace-nowrap"
+              className="p-3 sm:p-2 text-small hover:bg-[var(--gray-200)] cursor-pointer sticky top-0 bg-[var(--white)] z-10 whitespace-nowrap"
+              style={{ color: 'var(--primary)' }}
               onClick={() => { onReset(filterKey); setIsOpen(false); }}
             >
               Сбросить
