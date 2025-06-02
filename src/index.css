@@ -5,10 +5,10 @@
 /* Определение палитры цветов */
 :root {
   --primary: #2563eb; /* Основной синий цвет 0533FF 2563eb*/
-  --white: #ffffff; /* Белый */
-  --gray-800: #1f2937; /* Тёмно-серый */
+  --white: #ffffff; /* Белый */  --gray-800: #1f2937; /* Тёмно-серый */
   --gray-700: #374151; /* Тёмный серый для текста */
   --gray-600: #4b5563; /* Средний серый */
+  --gray-500: #6b7280; /* Серый для неактивных элементов */
   --gray-400: #9ca3af; /* Светлый серый */
   --gray-300: #d6d8dc; /* Светло-серый */
   --gray-200: #e5e7eb; /* Светло-серый */
@@ -24,15 +24,39 @@
   --fluid-max-width: 1440;
   --fluid-screen: clamp(var(--fluid-min-width), 100vw, var(--fluid-max-width));
   --fluid-bp: calc((var(--fluid-screen) - var(--fluid-min-width) * 1px) / (var(--fluid-max-width) - var(--fluid-min-width)));
+  /* Comprehensive Font Size System - Fluid responsive sizing */
+  --font-size-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.85rem);         /* 12-13.6px */
+  --font-size-sm: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);           /* 14-16px */
+  --font-size-base: clamp(1rem, 0.95rem + 0.5vw, 1.25rem);         /* 16-20px */
+  --font-size-lg: clamp(1.125rem, 1rem + 0.8vw, 1.5rem);           /* 18-24px */
+  --font-size-xl: clamp(1.25rem, 1.1rem + 1vw, 2rem);              /* 20-32px */
+  --font-size-2xl: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);          /* 24-40px */
+  --font-size-3xl: clamp(1.875rem, 1.5rem + 2vw, 3rem);            /* 30-48px */
+  --font-size-4xl: clamp(2.25rem, 1.8rem + 2.5vw, 3.5rem);         /* 36-56px */
+  --font-size-5xl: clamp(2.625rem, 2rem + 3vw, 4rem);              /* 42-64px */
 
-  /* Fluid font sizes using clamp for main text and headings */
-  --font-size-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.85rem);
-  --font-size-sm: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);
-  --font-size-base: clamp(1rem, 0.95rem + 0.5vw, 1.25rem);
-  --font-size-lg: clamp(1.125rem, 1rem + 0.8vw, 1.5rem);
-  --font-size-xl: clamp(1.25rem, 1.1rem + 1vw, 2rem);
-  --font-size-2xl: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
-  --font-size-3xl: clamp(1.875rem, 1.5rem + 2vw, 3rem);
+  /* Additional specialized sizes for UI components */
+  --font-size-micro: clamp(0.625rem, 0.6rem + 0.1vw, 0.7rem);      /* 10-11.2px - для мелких элементов */
+  --font-size-caption: clamp(0.8rem, 0.75rem + 0.25vw, 0.9rem);    /* 12.8-14.4px - для подписей */
+  --font-size-button: clamp(0.9rem, 0.85rem + 0.35vw, 1.1rem);     /* 14.4-17.6px - для кнопок */
+  --font-size-tag: clamp(0.85rem, 0.8rem + 0.3vw, 1rem);           /* 13.6-16px - для тегов */
+  --font-size-price: clamp(1.2rem, 1.1rem + 1.2vw, 1.8rem);        /* 19.2-28.8px - для цен */
+  --font-size-hero: clamp(2rem, 1.5rem + 2.5vw, 3.2rem);           /* 32-51.2px - для главных заголовков */
+
+  /* Font Weight System */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Line Height System */
+  --line-height-tight: 1.1;
+  --line-height-snug: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
 }
 
 @keyframes fadeIn {
@@ -57,35 +81,144 @@ html {
 
 body {
   font-size: var(--font-size-base);
-  line-height: 1.5;
+  line-height: var(--line-height-normal);
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-weight: var(--font-weight-normal);
   color: var(--gray-800);
 }
 
-h1 {
+/* Comprehensive Typography System */
+
+/* Headings with consistent styling */
+h1, .heading-1 {
+  font-size: var(--font-size-hero);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--gray-800);
+}
+
+h2, .heading-2 {
   font-size: var(--font-size-3xl);
-  font-weight: 700;
-  line-height: 1.1;
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--gray-800);
 }
-h2 {
+
+h3, .heading-3 {
   font-size: var(--font-size-2xl);
-  font-weight: 700;
-  line-height: 1.15;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-snug);
+  color: var(--gray-800);
 }
-h3 {
+
+h4, .heading-4 {
   font-size: var(--font-size-xl);
-  font-weight: 600;
-  line-height: 1.2;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-snug);
+  color: var(--gray-700);
 }
-p, .text-base {
+
+h5, .heading-5 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-snug);
+  color: var(--gray-700);
+}
+
+h6, .heading-6 {
   font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  color: var(--gray-700);
 }
+
+/* Text styles */
+p, .text-body {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-normal);
+  color: var(--gray-700);
+}
+
+.text-lead {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+  font-weight: var(--font-weight-normal);
+  color: var(--gray-600);
+}
+
+.text-small {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-normal);
+  color: var(--gray-600);
+}
+
+.text-caption {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-normal);
+  color: var(--gray-500);
+}
+
+.text-micro {
+  font-size: var(--font-size-micro);
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-normal);
+  color: var(--gray-500);
+}
+
+/* Utility classes for font sizes */
 .text-xs { font-size: var(--font-size-xs); }
 .text-sm { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
 .text-lg { font-size: var(--font-size-lg); }
 .text-xl { font-size: var(--font-size-xl); }
 .text-2xl { font-size: var(--font-size-2xl); }
 .text-3xl { font-size: var(--font-size-3xl); }
+.text-4xl { font-size: var(--font-size-4xl); }
+.text-5xl { font-size: var(--font-size-5xl); }
+
+/* Specialized utility classes */
+.text-button {
+  font-size: var(--font-size-button);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-snug);
+}
+
+.text-tag {
+  font-size: var(--font-size-tag);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-snug);
+}
+
+.text-price {
+  font-size: var(--font-size-price);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--primary);
+}
+
+.text-hero {
+  font-size: var(--font-size-hero);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+}
+
+/* Font weight utilities */
+.font-light { font-weight: var(--font-weight-light); }
+.font-normal { font-weight: var(--font-weight-normal); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: var(--font-weight-bold); }
+.font-extrabold { font-weight: var(--font-weight-extrabold); }
+
+/* Line height utilities */
+.leading-tight { line-height: var(--line-height-tight); }
+.leading-snug { line-height: var(--line-height-snug); }
+.leading-normal { line-height: var(--line-height-normal); }
+.leading-relaxed { line-height: var(--line-height-relaxed); }
+.leading-loose { line-height: var(--line-height-loose); }
 
 html,
 body {

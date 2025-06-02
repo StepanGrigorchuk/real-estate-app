@@ -40,16 +40,14 @@ const TextFilter = ({ label, filterKey, options, selectedValues, onChange, onRes
   }, [safeSelectedValues]);
 
   return (
-    <div className="relative w-full max-w-full">
-      <label
-        className="block font-medium text-[var(--gray-700)] text-[0.95rem] md:text-[0.85rem]"
+    <div className="relative w-full max-w-full">      <label
+        className="block font-medium text-[var(--gray-700)] text-small"
       >
         {label}
       </label>
       <div className="relative mt-2">
         <div
-          ref={containerRef}
-          className="p-3 sm:p-2 border border-[var(--gray-200)] rounded-md w-full bg-[var(--white)] cursor-pointer focus:ring-[var(--primary)] focus:border-[var(--primary)] overflow-hidden relative text-[0.95rem] md:text-[0.85rem]"
+          ref={containerRef}          className="p-3 sm:p-2 border border-[var(--gray-200)] rounded-md w-full bg-[var(--white)] cursor-pointer focus:ring-[var(--primary)] focus:border-[var(--primary)] overflow-hidden relative text-small"
           onClick={toggleDropdown}
           style={{
             background: showArrow
@@ -60,7 +58,7 @@ const TextFilter = ({ label, filterKey, options, selectedValues, onChange, onRes
         >
           <span
             ref={textRef}
-            className={`${safeSelectedValues.length === 0 ? 'text-[var(--gray-400)]' : 'text-[var(--gray-700)]'} text-[0.95rem] md:text-[0.85rem] whitespace-nowrap`}
+            className={`${safeSelectedValues.length === 0 ? 'text-[var(--gray-400)]' : 'text-[var(--gray-700)]'} text-small whitespace-nowrap`}
           >
             {safeSelectedValues.length === 0 ? 'Выберите' : safeSelectedValues.join(', ')}
           </span>
@@ -68,14 +66,13 @@ const TextFilter = ({ label, filterKey, options, selectedValues, onChange, onRes
             <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-r from-transparent to-[var(--white)] pointer-events-none" />
           )}
         </div>
-        {isOpen && (
-          <div
-            className="absolute top-0 left-0 w-full bg-[var(--white)] border border-[var(--gray-200)] rounded-md shadow-lg max-h-60 overflow-y-auto z-[1000] text-[0.95rem] md:text-[0.85rem]"
+        {isOpen && (          <div
+            className="absolute top-0 left-0 w-full bg-[var(--white)] border border-[var(--gray-200)] rounded-md shadow-lg max-h-60 overflow-y-auto z-[1000] text-small"
             style={{ background: 'var(--white)' }}
             onMouseLeave={handleMouseLeave}
           >
             <div
-              className="p-3 sm:p-2 text-[0.95rem] md:text-[0.85rem] text-[var(--blue-600)] hover:bg-[var(--gray-200)] cursor-pointer sticky top-0 bg-[var(--white)] z-10 whitespace-nowrap"
+              className="p-3 sm:p-2 text-small text-[var(--blue-600)] hover:bg-[var(--gray-200)] cursor-pointer sticky top-0 bg-[var(--white)] z-10 whitespace-nowrap"
               onClick={() => { onReset(filterKey); setIsOpen(false); }}
             >
               Сбросить
@@ -84,10 +81,9 @@ const TextFilter = ({ label, filterKey, options, selectedValues, onChange, onRes
               className="relative z-0"
               style={{ background: 'linear-gradient(to bottom, transparent 90%, var(--white) 100%)' }}
             >
-              {options.map(value => (
-                <div
+              {options.map(value => (                <div
                   key={value}
-                  className="p-3 sm:p-2 text-[0.95rem] md:text-[0.85rem] text-[var(--gray-700)] hover:bg-[var(--gray-200)] flex items-center cursor-pointer whitespace-nowrap"
+                  className="p-3 sm:p-2 text-small text-[var(--gray-700)] hover:bg-[var(--gray-200)] flex items-center cursor-pointer whitespace-nowrap"
                   onClick={() => handleCheckboxChange(value)}
                 >
                   <input

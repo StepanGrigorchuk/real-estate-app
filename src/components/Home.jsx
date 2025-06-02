@@ -136,23 +136,15 @@ function Home() {
       <div className="flex flex-col md:flex-row items-stretch justify-between w-full flex-grow min-h-screen">
         {/* Центрируем текстовый блок вертикально и делаем отступы как у галереи */}
         <div className="w-full md:w-1/2 flex items-start md:items-center justify-center pt-36 md:pt-0 min-h-[300px] md:min-h-0 md:pl-0 md:pr-8" style={{minHeight: 'auto'}}>
-          <div className="max-w-lg w-full text-center md:text-left flex flex-col items-center md:items-start justify-center mx-auto">
-            <h1
-              className="font-bold text-[var(--gray-800)] mb-2 sm:mb-4"
-              style={{ fontSize: 'clamp(1.25rem, 6vw + 0.8rem, 2.1rem)', lineHeight: 1.1 }}
-            >
+          <div className="max-w-lg w-full text-center md:text-left flex flex-col items-center md:items-start justify-center mx-auto">            <h1 className="text-hero text-[var(--gray-800)] mb-2 sm:mb-4">
               Найдите дом своей мечты
             </h1>
-            <p
-              className="mb-12 sm:mb-12 max-w-lg"
-              style={{ fontSize: 'clamp(1.05rem, 4vw + 0.7rem, 1.15rem)', lineHeight: 1.4 }}
-            >
+            <p className="text-lead mb-12 sm:mb-12 max-w-lg">
               Найдите идеальный дом с нашим каталогом. Умный поиск по цене, площади и другим параметрам поможет выбрать жильё, соответствующее вашим желаниям.
             </p>
             <Link
               to="/catalog"
-              className="bg-gradient-to-r from-blue-500 to-blue-700 text-[var(--white)] px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:from-blue-600 hover:to-blue-800 hover:shadow-xl hover:scale-105 hover:brightness-110 transition-all duration-300 font-semibold inline-block"
-              style={{ fontSize: 'clamp(1.1rem, 3vw + 0.8rem, 1.2rem)' }}
+              className="bg-gradient-to-r from-blue-500 to-blue-700 text-[var(--white)] px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:from-blue-600 hover:to-blue-800 hover:shadow-xl hover:scale-105 hover:brightness-110 transition-all duration-300 text-button inline-block"
             >
               Смотреть недвижку
             </Link>
@@ -183,11 +175,10 @@ function Home() {
                             <Link
                               to={`/property/${property.id}`}
                               className="absolute inset-0 z-10 flex justify-center items-end md:items-center"
-                            >
-                              <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-black bg-opacity-50 text-white p-2 sm:p-4 rounded-lg z-20" style={{ fontSize: 'clamp(0.95rem, 3vw + 0.7rem, 1.05rem)' }}>
-                                {isNotEmpty(tags?.price) && <p className="font-semibold" style={{ fontSize: 'clamp(1.2rem, 5vw + 1rem, 1.5rem)' }}>{formatTag('price', tags.price)}</p>}
-                                <h3 style={{ fontSize: 'clamp(0.95rem, 2vw + 0.7rem, 1.05rem)' }}>{property.title}</h3>
-                                {isNotEmpty(tags?.area) && <p style={{ fontSize: 'clamp(0.9rem, 1.5vw + 0.6rem, 0.95rem)' }}>{formatTag('area', tags.area)}</p>}
+                            >                              <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-black bg-opacity-50 text-white p-2 sm:p-4 rounded-lg z-20 text-small">
+                                {isNotEmpty(tags?.price) && <p className="text-price text-white">{formatTag('price', tags.price)}</p>}
+                                <h3 className="text-tag">{property.title}</h3>
+                                {isNotEmpty(tags?.area) && <p className="text-caption">{formatTag('area', tags.area)}</p>}
                               </div>
                             </Link>
                             <div
@@ -224,7 +215,7 @@ function Home() {
               </>
             ) : (
               <div className="w-full h-[40vh] sm:h-[60vh] md:h-[70vh] bg-gray-200 rounded-lg shadow-lg flex items-center justify-center">
-                <p className="text-gray-600 text-xs sm:text-base">Нет данных для отображения</p>
+                <p className="text-gray-600 text-small">Нет данных для отображения</p>
               </div>
             )}
           </div>

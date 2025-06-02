@@ -212,7 +212,7 @@ function Catalog({ onTagClick, filtersRef, tagFilter, resetTagFilter }) {
               backgroundSize: '1rem',
             }}
           >
-            <span className={`${sortOption === 'none' ? 'text-gray-400' : 'text-gray-700'} text-sm whitespace-nowrap`}>
+            <span className={`${sortOption === 'none' ? 'text-gray-400' : 'text-gray-700'} text-small whitespace-nowrap`}>
               {sortOption === 'none' ? 'Без сортировки' :
                sortOption === 'price-asc' ? 'Сначала дешевле' :
                sortOption === 'price-desc' ? 'Сначала дороже' :

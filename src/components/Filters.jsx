@@ -359,22 +359,18 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
       <div className="flex justify-between items-center gap-4 mt-4 px-6 z-10">
         <button
           onClick={toggleFilters}
-          className="text-[var(--gray-600)] underline text-[0.95rem] md:text-[0.85rem] hover:text-[var(--gray-800)] transition"
+          className="text-[var(--gray-600)] underline text-small hover:text-[var(--gray-800)] transition"
         >
           {isFiltersCollapsed ? "Развернуть фильтры" : "Свернуть фильтры"}
         </button>
-        <div className="flex gap-4">
-          <button
+        <div className="flex gap-4">          <button
             onClick={resetFilters}
-            className="px-4 py-2 bg-[var(--gray-200)] text-[var(--gray-600)] rounded-lg hover:bg-[var(--gray-300)] transition"
-            style={{ fontSize: 'var(--font-size-sm)' }}
+            className="px-4 py-2 bg-[var(--gray-200)] text-[var(--gray-600)] rounded-lg hover:bg-[var(--gray-300)] transition text-button"
           >
             Сбросить
-          </button>
-          <button
+          </button>          <button
             onClick={applyFilters}
-            className="px-4 py-2 bg-[var(--primary)] text-[var(--white)] rounded-lg hover:bg-[var(--blue-600)] transition"
-            style={{ fontSize: 'var(--font-size-sm)' }}
+            className="px-4 py-2 bg-[var(--primary)] text-[var(--white)] rounded-lg hover:bg-[var(--blue-600)] transition text-button"
           >
             Показать {countToShow} вариантов
           </button>

@@ -72,12 +72,11 @@ function PropertyCard({ property, onTagClick, tagOptions, images = [] }) {
           </div>
         </div>
       </div>
-      <div className="px-3 sm:px-4 pt-4">
-        {property.title && (
-          <h3 className="mb-1 line-clamp-2 min-h-[1.4em] text-base sm:text-base text-[var(--gray-600)]" style={{ fontSize: 'clamp(1.05rem, 3vw + 0.8rem, 1.15rem)' }}>{property.title}</h3>
+      <div className="px-3 sm:px-4 pt-4">        {property.title && (
+          <h3 className="mb-1 line-clamp-2 min-h-[1.4em] text-lg text-[var(--gray-600)]">{property.title}</h3>
         )}
         {tags?.price && (
-          <p className="text-xl sm:text-2xl text-[var(--primary)] font-bold mb-6 sm:mb-3" style={{ fontSize: 'clamp(1.25rem, 5vw + 1rem, 1.5rem)' }}>{tags.price.toLocaleString()} ₽</p>
+          <p className="text-price mb-6 sm:mb-3">{tags.price.toLocaleString()} ₽</p>
         )}
         <div className="flex flex-wrap gap-2 sm:gap-2">
           {tagsToDisplay
@@ -86,8 +85,7 @@ function PropertyCard({ property, onTagClick, tagOptions, images = [] }) {
               <button
                 key={key}
                 onClick={(e) => { e.preventDefault(); onTagClick(key, value); }}
-                className="bg-[var(--blue-100)] text-[var(--primary)] px-3 py-1 rounded text-sm sm:text-sm hover:bg-[var(--blue-200)] transition"
-                style={{ fontSize: 'clamp(0.95rem, 2vw + 0.7rem, 1.05rem)' }}
+                className="bg-[var(--blue-100)] text-[var(--primary)] px-3 py-1 rounded text-tag hover:bg-[var(--blue-200)] transition"
               >
                 {formatTag(key, value)}
               </button>
