@@ -54,12 +54,7 @@ function PropertyCard({ property, onTagClick, tagOptions, images = [] }) {
           src={images[currentImageIndex]}
           alt={property.title}
           className="w-full h-48 sm:h-48 md:h-56 object-cover rounded-t-lg bg-[var(--gray-200)]"
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          onError={(e) => {
-            e.target.src = 'https://via.placeholder.com/256x160?text=Image+Not+Found';
-            e.target.alt = "Изображение не найдено";
-          }}
+          onMouseMove={handleMouseMove}          onMouseLeave={handleMouseLeave}
         />
         <div className="absolute bottom-2 left-0 right-0 px-4">
           <div className="flex justify-between gap-2">

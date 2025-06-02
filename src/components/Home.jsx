@@ -65,10 +65,9 @@ function Home() {
           let found = false;
           let imgPath = '';
           let imgObj = new window.Image();
-          let checkIndex = 0;
-          function tryLoad() {
+          let checkIndex = 0;          function tryLoad() {
             if (checkIndex >= imagePaths.length) {
-              resolve({ index, path: 'https://via.placeholder.com/256x160?text=Image+Not+Found' });
+              resolve({ index, path: null }); // Вместо placeholder возвращаем null
               return;
             }
             imgObj = new window.Image();
@@ -81,12 +80,11 @@ function Home() {
           }
           tryLoad();
         });
-      });
-
-      const results = await Promise.all(imagePromises);
-      // Сохраняем массив всех путей для каждого property (для галереи)
+      });      const results = await Promise.all(imagePromises);
+      // Сохраняем массив всех путей для каждого property (для галереи), фильтруем null
       const sortedImages = results
         .sort((a, b) => a.index - b.index)
+        .filter(result => result.path !== null) // Фильтруем null изображения
         .map(result => ({
           main: result.path,
           all: result.all || [result.path]

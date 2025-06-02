@@ -213,14 +213,8 @@ function Lightbox({ images, initialImage, onClose }) {
         }}
         onMouseDown={handleImageMouseDown}
         onMouseUp={handleImageMouseUp}
-        onClick={e => e.stopPropagation()}
-        onDragStart={e => e.preventDefault()}
+        onClick={e => e.stopPropagation()}        onDragStart={e => e.preventDefault()}
         draggable={false}
-        onError={(e) => {
-          console.log(`Lightbox: Не удалось загрузить изображение: ${selectedImage}`);
-          e.target.src = 'https://via.placeholder.com/600x400?text=Image+Not+Found';
-          e.target.alt = "Изображение в лайтбоксе не найдено";
-        }}
       />
       <button
         className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[var(--primary)] text-[var(--white)] p-3 rounded-full shadow-md hover:bg-[var(--blue-600)] transition-all duration-300 ease-in-out"
@@ -256,13 +250,7 @@ function Lightbox({ images, initialImage, onClose }) {
               className={`w-16 h-16 object-cover rounded cursor-pointer bg-[var(--gray-200)] ${img === selectedImage ? 'border-2 border-[var(--primary)] opacity-100' : 'opacity-70'}`}              onClick={(e) => {
                 e.stopPropagation();
                 setSelectedImage(img);
-                setZoomLevel(1);
-                setImagePosition({ x: 0, y: 0 });
-              }}
-              onError={(e) => {
-                console.log(`Lightbox: Не удалось загрузить мини-превью: ${img}`);
-                e.target.src = 'https://via.placeholder.com/64x64?text=Image+Not+Found';
-                e.target.alt = "Мини-превью не найдено";
+                setZoomLevel(1);                setImagePosition({ x: 0, y: 0 });
               }}
             />
           ))}

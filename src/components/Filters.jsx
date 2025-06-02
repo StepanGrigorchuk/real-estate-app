@@ -264,9 +264,20 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
   return (
     <div ref={ref} className="bg-[var(--gray-50)] p-2 sm:p-4 rounded-lg shadow-sm relative z-[1000] mt-4 sm:mt-10 w-full max-w-full overflow-x-auto">
       <div>        {isFiltersCollapsed ? (
-          <animated.div style={animationPropsCollapsed} className="overflow-visible z-[1000]">            <div className="flex items-center justify-between gap-6 px-2 sm:px-6">
+          <animated.div style={animationPropsCollapsed} className="overflow-visible z-[1000]">            <div className="flex items-center justify-between gap-16 px-2 sm:px-6">
+              {/* Цена - занимает больше места */}
+              <div className="flex-1 min-w-0">
+                <RangeFilter
+                  label="Цена (₽)"
+                  filterKey="price"
+                  range={serverRanges.price}
+                  value={tempFilters.price}
+                  onChange={handleFilterChange}
+                />
+              </div>
+              
               {/* Комнаты */}
-              <div className="flex-1">
+              <div className="flex-shrink-0 w-32 sm:w-64">
                 <TextFilter
                   label="Комнаты"
                   filterKey="rooms"
@@ -278,7 +289,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
               </div>
               
               {/* Отделка */}
-              <div className="flex-1">
+              <div className="flex-shrink-0 w-32 sm:w-64">
                 <TextFilter
                   label="Отделка"
                   filterKey="finishing"
@@ -286,17 +297,6 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
                   selectedValues={tempFilters.finishing}
                   onChange={handleFilterChange}
                   onReset={handleResetFilter}
-                />
-              </div>
-              
-              {/* Цена */}
-              <div className="flex-1">
-                <RangeFilter
-                  label="Цена (₽)"
-                  filterKey="price"
-                  range={serverRanges.price}
-                  value={tempFilters.price}
-                  onChange={handleFilterChange}
                 />
               </div>
             </div>

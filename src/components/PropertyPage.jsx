@@ -185,12 +185,7 @@ function PropertyPage({ properties, setSelectedProperty }) {
                       <img
                         key={index}
                         src={img}
-                        alt={`Фото ${index + 1}`}                        className="w-full h-full object-contain rounded cursor-pointer bg-[var(--gray-200)]"
-                        onClick={() => !hasDragged && setSelectedImage(img)}
-                        onError={e => {
-                          e.target.src = 'https://via.placeholder.com/256x160?text=Image+Not+Found';
-                          e.target.alt = 'Изображение не найдено';
-                        }}
+                        alt={`Фото ${index + 1}`}                        className="w-full h-full object-contain rounded cursor-pointer bg-[var(--gray-200)]"                        onClick={() => !hasDragged && setSelectedImage(img)}
                         draggable={false}
                       />
                     ))
@@ -201,7 +196,7 @@ function PropertyPage({ properties, setSelectedProperty }) {
               </div>              <div className="mt-4">
                 <div 
                   ref={miniGalleryRef}
-                  className="flex gap-2 overflow-x-auto custom-scrollbar rounded-md p-2"
+                  className="flex gap-2 overflow-x-auto custom-scrollbar"
                 >
                   {loadedImages.length > 0 ? (
                     loadedImages.map((img, index) => (
@@ -209,12 +204,7 @@ function PropertyPage({ properties, setSelectedProperty }) {
                         key={index}
                         src={img}
                         alt={`Мини-превью ${index + 1}`}
-                        className="w-16 h-16 object-cover rounded cursor-pointer bg-[var(--gray-200)]"
-                        onClick={() => setSelectedImage(img)}
-                        onError={e => {
-                          e.target.src = 'https://via.placeholder.com/64x64?text=Image+Not+Found';
-                          e.target.alt = 'Мини-превью не найдено';
-                        }}
+                        className="w-16 h-16 object-cover rounded cursor-pointer bg-[var(--gray-200)]"                        onClick={() => setSelectedImage(img)}
                         draggable={false}
                       />
                     ))
