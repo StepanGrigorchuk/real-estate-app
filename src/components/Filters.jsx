@@ -330,7 +330,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
           </animated.div>
         ) : (
           <animated.div style={animationPropsExpanded} className="overflow-hidden z-[1000]">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 sm:gap-x-32 gap-y-4 sm:gap-y-6 px-2 sm:px-6 mb-8 sm:mb-14">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-[clamp(1.5rem,4vw,4.5rem)] gap-y-4 md:gap-y-8 px-2 sm:px-6 mb-8 sm:mb-14">
               {filterConfig.filter(f => f.type !== "range").map(filter => (
                 <TextFilter
                   key={filter.key}
