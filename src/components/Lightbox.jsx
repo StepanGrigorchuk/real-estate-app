@@ -24,24 +24,22 @@ function Lightbox({ images, initialImage, onClose }) {
       return () => clearTimeout(timer);
     }
   }, [initialImage]);
-
   // Блокировка скролла страницы при открытом лайтбоксе
   useEffect(() => {
     if (selectedImage) {
-      // Сохраняем текущую позицию скролла и блокируем скролл
+      // Более мягкая блокировка скролла без position: fixed
       const scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
+      document.body.style.height = '100vh';
       
       return () => {
         // Восстанавливаем скролл при закрытии
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
         document.body.style.overflow = '';
-        window.scrollTo(0, scrollY);
+        document.body.style.height = '';
+        // Восстанавливаем позицию только если она изменилась
+        if (window.scrollY !== scrollY) {
+          window.scrollTo(0, scrollY);
+        }
       };
     }
   }, [selectedImage]);
@@ -70,22 +68,26 @@ function Lightbox({ images, initialImage, onClose }) {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedImage, galleryImages, onClose]);
-  const handleWheel = (e) => {
+  }, [selectedImage, galleryImages, onClose]);  const handleWheel = (e) => {
     e.preventDefault();
+    e.stopPropagation();
+    
     const delta = e.deltaY > 0 ? -0.1 : 0.1;
     const newZoomLevel = Math.max(1, Math.min(zoomLevel + delta, 3));
-    setZoomLevel(newZoomLevel);
+    
+    // Округляем до одного знака после запятой для стабильности
+    const roundedZoomLevel = Math.round(newZoomLevel * 10) / 10;
+    setZoomLevel(roundedZoomLevel);
     
     // Сброс позиции при зуме 1x
-    if (newZoomLevel === 1) {
+    if (roundedZoomLevel === 1) {
       setImagePosition({ x: 0, y: 0 });
     }
   };
-
   // Функции для перетаскивания изображения
   const handleImageMouseDown = (e) => {
     if (zoomLevel <= 1) return; // Перетаскивание только при зуме
+    e.preventDefault();
     e.stopPropagation();
     setIsDraggingImage(true);
     setDragStart({
@@ -95,48 +97,72 @@ function Lightbox({ images, initialImage, onClose }) {
       imageY: imagePosition.y
     });
   };
+  
   const handleImageMouseMove = (e) => {
     if (!isDraggingImage || zoomLevel <= 1) return;
+    e.preventDefault();
+    
     const deltaX = e.clientX - dragStart.x;
     const deltaY = e.clientY - dragStart.y;
+    
+    // Ограничиваем перемещение для предотвращения слишком больших смещений
+    const maxMove = 500; // максимальное смещение в пикселях
+    const clampedX = Math.max(-maxMove, Math.min(maxMove, dragStart.imageX + deltaX));
+    const clampedY = Math.max(-maxMove, Math.min(maxMove, dragStart.imageY + deltaY));
+    
     setImagePosition({
-      x: dragStart.imageX + deltaX,
-      y: dragStart.imageY + deltaY
+      x: clampedX,
+      y: clampedY
     });
   };
-
-  const handleImageMouseUp = () => {
+  const handleImageMouseUp = (e) => {
+    e.preventDefault();
     setIsDraggingImage(false);
   };
 
   useEffect(() => {
-    const handleGlobalMouseUp = () => setIsDraggingImage(false);
-    const handleGlobalMouseMove = (e) => {
+    const handleGlobalMouseUp = (e) => {
       if (isDraggingImage) {
+        e.preventDefault();
+        setIsDraggingImage(false);
+      }
+    };
+    
+    const handleGlobalMouseMove = (e) => {
+      if (isDraggingImage && zoomLevel > 1) {
+        e.preventDefault();
         handleImageMouseMove(e);
       }
     };
     
-    document.addEventListener('mouseup', handleGlobalMouseUp);
-    document.addEventListener('mousemove', handleGlobalMouseMove);
-    
-    return () => {
-      document.removeEventListener('mouseup', handleGlobalMouseUp);
-      document.removeEventListener('mousemove', handleGlobalMouseMove);
-    };
+    // Добавляем обработчики только при активном перетаскивании
+    if (isDraggingImage) {
+      document.addEventListener('mouseup', handleGlobalMouseUp, { passive: false });
+      document.addEventListener('mousemove', handleGlobalMouseMove, { passive: false });
+      
+      return () => {
+        document.removeEventListener('mouseup', handleGlobalMouseUp);
+        document.removeEventListener('mousemove', handleGlobalMouseMove);
+      };
+    }
   }, [isDraggingImage, dragStart, imagePosition, zoomLevel]);
 
   if (!selectedImage) return null;
 
-  return (
-    <div
-      className="fixed inset-0 bg-white bg-opacity-80 flex flex-col items-center justify-center z-50 overflow-auto transition-opacity duration-300 p-2 sm:p-0"
-      style={{ opacity: selectedImage ? 1 : 0 }}
+  return (    <div
+      className="fixed inset-0 bg-white bg-opacity-80 flex flex-col items-center justify-center z-50 transition-opacity duration-300 p-2 sm:p-0"
+      style={{ 
+        opacity: selectedImage ? 1 : 0,
+        overflow: 'hidden',
+        touchAction: 'none'
+      }}
       onClick={() => {
         onClose();
         setZoomLevel(1);
-      }}      onWheel={handleWheel}
-    >      {showZoomHint && (
+        setImagePosition({ x: 0, y: 0 });
+      }}
+      onWheel={handleWheel}
+    >{showZoomHint && (
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 text-white text-opacity-80 px-4 py-2 z-[60] transition-opacity duration-300 pointer-events-none">
           <span className="text-sm font-medium drop-shadow-lg">Используйте колесо мыши для зума</span>
         </div>
@@ -176,11 +202,19 @@ function Lightbox({ images, initialImage, onClose }) {
         }`}
         style={{ 
           transform: `scale(${zoomLevel}) translate(${imagePosition.x / zoomLevel}px, ${imagePosition.y / zoomLevel}px)`,
+          transformOrigin: 'center center',
           userSelect: 'none',
-          transition: isDraggingImage ? 'none' : 'transform 0.2s ease-out'
+          WebkitUserSelect: 'none',
+          msUserSelect: 'none',
+          WebkitUserDrag: 'none',
+          transition: isDraggingImage ? 'none' : 'transform 0.2s ease-out',
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden'
         }}
         onMouseDown={handleImageMouseDown}
+        onMouseUp={handleImageMouseUp}
         onClick={e => e.stopPropagation()}
+        onDragStart={e => e.preventDefault()}
         draggable={false}
         onError={(e) => {
           console.log(`Lightbox: Не удалось загрузить изображение: ${selectedImage}`);
