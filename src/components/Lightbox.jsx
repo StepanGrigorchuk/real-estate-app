@@ -46,7 +46,7 @@ function Lightbox({ images, initialImage, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 bg-[var(--white)] bg-opacity-[0.9] flex flex-col items-center justify-center z-50 overflow-auto transition-opacity duration-300"
+      className="fixed inset-0 bg-white bg-opacity-80 flex flex-col items-center justify-center z-50 overflow-auto transition-opacity duration-300"
       style={{ opacity: selectedImage ? 1 : 0 }}
       onClick={() => {
         onClose();

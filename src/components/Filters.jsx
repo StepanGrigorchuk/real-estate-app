@@ -262,10 +262,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
   }
 
   return (
-    <div ref={ref} className="bg-[var(--gray-50)] p-4 rounded-lg shadow-sm relative z-[1000]">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold text-[var(--gray-800)] z-0">Фильтры</h3>
-      </div>
+    <div ref={ref} className="bg-[var(--gray-50)] p-4 rounded-lg shadow-sm relative z-[1000] mt-10">
       <div>
         {isFiltersCollapsed ? (
           <animated.div style={animationPropsCollapsed} className="overflow-visible z-[1000]">
