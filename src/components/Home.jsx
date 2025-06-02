@@ -135,7 +135,7 @@ function Home() {
     <section className="bg-[var(--white)] w-full min-h-screen flex flex-col px-2 sm:px-6 animate-fadeIn">
       <div className="flex flex-col md:flex-row items-stretch justify-between w-full flex-grow min-h-screen">
         {/* Центрируем текстовый блок вертикально и делаем отступы как у галереи */}
-        <div className="w-full md:w-1/2 flex items-center justify-center min-h-[300px] md:min-h-0 md:pl-0 md:pr-8" style={{minHeight: '70vh'}}>
+        <div className="w-full md:w-1/2 flex items-start md:items-center justify-center pt-36 md:pt-0 min-h-[300px] md:min-h-0 md:pl-0 md:pr-8" style={{minHeight: 'auto'}}>
           <div className="max-w-lg w-full text-center md:text-left flex flex-col items-center md:items-start justify-center mx-auto">
             <h1
               className="font-bold text-[var(--gray-800)] mb-2 sm:mb-4"
@@ -144,7 +144,7 @@ function Home() {
               Найдите дом своей мечты
             </h1>
             <p
-              className="mb-6 sm:mb-12 max-w-lg"
+              className="mb-12 sm:mb-12 max-w-lg"
               style={{ fontSize: 'clamp(1.05rem, 4vw + 0.7rem, 1.15rem)', lineHeight: 1.4 }}
             >
               Найдите идеальный дом с нашим каталогом. Умный поиск по цене, площади и другим параметрам поможет выбрать жильё, соответствующее вашим желаниям.
@@ -159,7 +159,7 @@ function Home() {
           </div>
         </div>
         {/* Галерея с отступом сверху и индикацией под ней */}
-        <div className="w-full md:w-1/2 flex-grow flex md:justify-end mt-2 md:mt-0 pr-0 md:pl-8 relative min-h-[300px]" style={{minHeight: '70vh'}}>
+        <div className="w-full md:w-1/2 flex-grow flex md:justify-end mt-8 md:mt-0 pr-0 md:pl-8 relative min-h-[300px]" style={{minHeight: '70vh'}}>
           <div className="flex flex-col w-full h-full items-center justify-center pt-4 md:pt-12">
             {topProperties.length > 0 && isLoaded ? (
               <>
