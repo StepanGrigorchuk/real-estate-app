@@ -27,7 +27,7 @@
   --font-size-xs: clamp(0.7rem, 0.65rem + 0.2vw, 0.8rem);          /* 11.2-12.8px */
   --font-size-sm: clamp(0.8rem, 0.75rem + 0.25vw, 0.9rem);         /* 12.8-14.4px */
   --font-size-base: clamp(1rem, 0.95rem + 0.35vw, 1.1rem);         /* 16-17.6px (увеличено для мобилки) */
-  --font-size-lg: clamp(1.1rem, 1rem + 0.6vw, 1.3rem);             /* 17.6-20.8px */
+  --font-size-lg: clamp(1.1rem, 1rem + 0.6vw, 1.2rem);             /* 17.6-20.8px */
   --font-size-xl: clamp(1.2rem, 1.1rem + 0.8vw, 1.6rem);           /* 19.2-25.6px */
   --font-size-2xl: clamp(1.4rem, 1.2rem + 1.2vw, 2rem);            /* 22.4-32px */
   --font-size-3xl: clamp(1.7rem, 1.4rem + 1.5vw, 2.4rem);          /* 27.2-38.4px */
@@ -40,7 +40,7 @@
   --font-size-button: clamp(0.95rem, 0.9rem + 0.3vw, 1.1rem);      /* 15.2-17.6px - для кнопок (увеличено) */
   --font-size-tag: clamp(0.8rem, 0.75rem + 0.25vw, 0.9rem);        /* 12.8-14.4px - для тегов */
   --font-size-price: clamp(1.2rem, 1.1rem + 0.8vw, 1.5rem);        /* 19.2-24px - для цен */
-  --font-size-hero: clamp(2rem, 1.6rem + 2vw, 2.8rem);             /* 32-44.8px - для главных заголовков (увеличено) */
+  --font-size-hero: clamp(3rem, 2rem + 2vw, 8rem);             /* 32-44.8px - для главных заголовков (увеличено) */
 
   /* Font Weight System */
   --font-weight-light: 300;
@@ -140,8 +140,8 @@ p, .text-body {
 }
 
 .text-lead {
-  font-size: var(--font-size-lg);
-  line-height: var(--line-height-relaxed);
+  font-size: clamp(1.3rem, 1rem + 0.6vw, 1.2rem); ;
+  line-height: var(--line-height-normal);
   font-weight: var(--font-weight-normal);
   color: var(--gray-600);
 }
