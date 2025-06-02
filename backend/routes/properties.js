@@ -1,6 +1,11 @@
 const express = require('express');
 const Property = require('../models/Property');
 const router = express.Router();
+  
+function isNonEmpty(val) {
+  if (Array.isArray(val)) return val.length > 0 && val.some(v => v && v !== '');
+  return val != null && val !== '';
+}
 
 // Получить объекты с фильтрацией, сортировкой и пагинацией
 router.get('/', async (req, res) => {
@@ -10,8 +15,6 @@ router.get('/', async (req, res) => {
       priceMax,
       areaMin,
       areaMax,
-      deliveryMin,
-      deliveryMax,
       floorMin,
       floorMax,
       rooms,
@@ -20,38 +23,57 @@ router.get('/', async (req, res) => {
       view,
       finishing,
       payment,
-      'sea-distance': seaDistance,
       sort,
       limit = 20,
       skip = 0,
     } = req.query;
 
+    // --- ФОРМИРОВАНИЕ ФИЛЬТРА ---
     const filter = {};
-    if (priceMin || priceMax) filter['tags.price'] = {};
-    if (priceMin) filter['tags.price'].$gte = Number(priceMin);
-    if (priceMax) filter['tags.price'].$lte = Number(priceMax);
-    if (areaMin || areaMax) filter['tags.area'] = {};
-    if (areaMin) filter['tags.area'].$gte = Number(areaMin);
-    if (areaMax) filter['tags.area'].$lte = Number(areaMax);
-    if (deliveryMin || deliveryMax) filter['tags.delivery'] = {};
-    if (deliveryMin) filter['tags.delivery'].$gte = Number(deliveryMin);
-    if (deliveryMax) filter['tags.delivery'].$lte = Number(deliveryMax);
-    if (floorMin || floorMax) filter['tags.floor'] = {};
-    if (floorMin) filter['tags.floor'].$gte = Number(floorMin);
-    if (floorMax) filter['tags.floor'].$lte = Number(floorMax);
-    if (rooms) filter['tags.rooms'] = { $in: Array.isArray(rooms) ? rooms : [rooms] };
-    if (city) filter['tags.city'] = { $in: Array.isArray(city) ? city : [city] };
-    if (type) filter['tags.type'] = { $in: Array.isArray(type) ? type : [type] };
-    if (view) filter['tags.view'] = { $in: Array.isArray(view) ? view : [view] };
-    if (finishing) filter['tags.finishing'] = { $in: Array.isArray(finishing) ? finishing : [finishing] };
-    if (payment) filter['tags.payment'] = { $in: Array.isArray(payment) ? payment : [payment] };
-    if (seaDistance) filter['tags.sea-distance'] = { $in: Array.isArray(seaDistance) ? seaDistance : [seaDistance] };
 
+    // Диапазоны
+    if (priceMin !== undefined || priceMax !== undefined) {
+      const priceFilter = {};
+      if (priceMin !== undefined && priceMin !== '') priceFilter.$gte = Number(priceMin);
+      if (priceMax !== undefined && priceMax !== '') priceFilter.$lte = Number(priceMax);
+      if (Object.keys(priceFilter).length) filter['tags.price'] = priceFilter;
+    }
+    if (areaMin !== undefined || areaMax !== undefined) {
+      const areaFilter = {};
+      if (areaMin !== undefined && areaMin !== '') areaFilter.$gte = Number(areaMin);
+      if (areaMax !== undefined && areaMax !== '') areaFilter.$lte = Number(areaMax);
+      if (Object.keys(areaFilter).length) filter['tags.area'] = areaFilter;
+    }
+    if (floorMin !== undefined || floorMax !== undefined) {
+      const floorFilter = {};
+      if (floorMin !== undefined && floorMin !== '') floorFilter.$gte = Number(floorMin);
+      if (floorMax !== undefined && floorMax !== '') floorFilter.$lte = Number(floorMax);
+      if (Object.keys(floorFilter).length) filter['tags.floor'] = floorFilter;
+    }
+
+    // Фильтры-списки
+    function addInFilter(field, value) {
+      if (value === undefined) return;
+      let arr = Array.isArray(value) ? value : [value];
+      arr = arr.filter(v => v !== undefined && v !== null && v !== '');
+      if (arr.length > 0) filter[`tags.${field}`] = { $in: arr };
+    }
+    addInFilter('rooms', rooms);
+    addInFilter('city', city);
+    addInFilter('type', type);
+    addInFilter('view', view);
+    addInFilter('finishing', finishing);
+    addInFilter('payment', payment);
+
+    // --- СОРТИРОВКА ---
     let sortObj = {};
     if (sort === 'price-asc') sortObj['tags.price'] = 1;
     if (sort === 'price-desc') sortObj['tags.price'] = -1;
     if (sort === 'area-asc') sortObj['tags.area'] = 1;
     if (sort === 'area-desc') sortObj['tags.area'] = -1;
+
+    // DEBUG: log filter and query
+    console.log('FILTER:', JSON.stringify(filter), 'QUERY:', JSON.stringify(req.query));
 
     const total = await Property.countDocuments(filter);
     const properties = await Property.find(filter)
@@ -62,6 +84,50 @@ router.get('/', async (req, res) => {
     res.json({ total, properties });
   } catch (err) {
     console.error('Ошибка в /api/properties:', err);
+    res.status(500).json({ error: err.message || 'Internal server error' });
+  }
+});
+
+// Получить диапазоны min/max для числовых фильтров по всей базе
+router.get('/ranges', async (req, res) => {
+  try {
+    const pipeline = [
+      {
+        $group: {
+          _id: null,
+          priceMin: { $min: "$tags.price" },
+          priceMax: { $max: "$tags.price" },
+          areaMin: { $min: "$tags.area" },
+          areaMax: { $max: "$tags.area" },
+          deliveryMin: { $min: "$tags.delivery" },
+          deliveryMax: { $max: "$tags.delivery" },
+          floorMin: { $min: "$tags.floor" },
+          floorMax: { $max: "$tags.floor" }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          price: { min: "$priceMin", max: "$priceMax" },
+          area: { min: "$areaMin", max: "$areaMax" },
+          delivery: { min: "$deliveryMin", max: "$deliveryMax" },
+          floor: { min: "$floorMin", max: "$floorMax" }
+        }
+      }
+    ];
+    const result = await Property.aggregate(pipeline);
+    if (!result[0]) {
+      // Fallback: если нет данных, возвращаем структуру с null
+      return res.json({
+        price: { min: null, max: null },
+        area: { min: null, max: null },
+        delivery: { min: null, max: null },
+        floor: { min: null, max: null }
+      });
+    }
+    res.json(result[0]);
+  } catch (err) {
+    console.error('Ошибка в /api/properties/ranges:', err);
     res.status(500).json({ error: err.message || 'Internal server error' });
   }
 });

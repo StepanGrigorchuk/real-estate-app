@@ -84,3 +84,19 @@ html, body, * {
   width: 0;
   appearance: none;
 }
+
+.scroll-to-filters-btn {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.5s, transform 0.5s;
+  pointer-events: none;
+}
+.scroll-to-filters-btn--visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.scroll-to-filters-btn:hover {
+  background: var(--blue-600);
+  box-shadow: 0 6px 20px rgba(37,99,235,0.18);
+}

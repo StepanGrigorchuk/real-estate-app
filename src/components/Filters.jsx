@@ -4,74 +4,67 @@ import TextFilter from './TextFilter';
 import RangeFilter from './RangeFilter';
 
 const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initialFilters, cardsRef, tagFilter, resetTagFilter, onTagOptionsChange, total }, ref) => {
-  const ranges = useMemo(() => {
-    const ranges = {
-      price: { min: Infinity, max: -Infinity },
-      delivery: { min: Infinity, max: -Infinity },
-      area: { min: Infinity, max: -Infinity },
-      floor: { min: Infinity, max: -Infinity },
-    };
-    properties.forEach(property => {
-      if (property.tags && typeof property.tags === 'object') {
-        // Для отладки: посмотреть структуру tags
-        // console.log('property.tags:', property.tags);
-        if (typeof property.tags.delivery === 'number' && !isNaN(property.tags.delivery)) {
-          ranges.delivery.min = Math.min(ranges.delivery.min, property.tags.delivery);
-          ranges.delivery.max = Math.max(ranges.delivery.max, property.tags.delivery);
-        }
-        if (typeof property.tags.area === 'number' && !isNaN(property.tags.area)) {
-          ranges.area.min = Math.min(ranges.area.min, property.tags.area);
-          ranges.area.max = Math.max(ranges.area.max, property.tags.area);
-        }
-        if (typeof property.tags.price === 'number' && !isNaN(property.tags.price)) {
-          ranges.price.min = Math.min(ranges.price.min, property.tags.price);
-          ranges.price.max = Math.max(ranges.price.max, property.tags.price);
-        }
-        if (typeof property.tags.floor === 'number' && !isNaN(property.tags.floor)) {
-          ranges.floor.min = Math.min(ranges.floor.min, property.tags.floor);
-          ranges.floor.max = Math.max(ranges.floor.max, property.tags.floor);
-        }
-      }
-    });
-    Object.keys(ranges).forEach(key => {
-      if (ranges[key].min === Infinity) ranges[key].min = null;
-      if (ranges[key].max === -Infinity) ranges[key].max = null;
-    });
-    return ranges;
-  }, [properties]);
-
-  const tagOptions = useMemo(() => {
-    const options = {};
-    properties.forEach(property => {
-      if (property.tags && typeof property.tags === 'object') {
-        Object.entries(property.tags).forEach(([key, value]) => {
-          if (!options[key]) options[key] = new Set();
-          options[key].add(String(value)); // сохраняем как есть, без изменения регистра
-        });
-      }
-    });
-    return options;
-  }, [properties]);
+  // Диапазоны min/max теперь только с backend
+  const [serverRanges, setServerRanges] = useState({ price: { min: null, max: null }, area: { min: null, max: null }, delivery: { min: null, max: null }, floor: { min: null, max: null } });
+  const [rangesLoading, setRangesLoading] = useState(true);
+  const [rangesError, setRangesError] = useState(null);
 
   useEffect(() => {
-    if (onTagOptionsChange) {
-      onTagOptionsChange(tagOptions);
-    }
-  }, [tagOptions, onTagOptionsChange]);
+    setRangesLoading(true);
+    setRangesError(null);
+    fetch('/api/properties/ranges')
+      .then(res => {
+        if (!res.ok) throw new Error('Ошибка загрузки диапазонов');
+        return res.json();
+      })
+      .then(data => {
+        setServerRanges(data);
+        setRangesLoading(false);
+      })
+      .catch((err) => {
+        setServerRanges({ price: { min: null, max: null }, area: { min: null, max: null }, delivery: { min: null, max: null }, floor: { min: null, max: null } });
+        setRangesError(err.message || 'Ошибка загрузки диапазонов');
+        setRangesLoading(false);
+      });
+  }, []);
+
+  // Получение tagOptions с сервера (уникальные значения для фильтров)
+  const [serverTagOptions, setServerTagOptions] = useState({});
+  useEffect(() => {
+    fetch('/api/properties?limit=0')
+      .then(res => res.json())
+      .then(data => {
+        const options = {};
+        (data.properties || []).forEach(property => {
+          if (property.tags && typeof property.tags === 'object') {
+            Object.entries(property.tags).forEach(([key, value]) => {
+              if (!options[key]) options[key] = new Set();
+              options[key].add(String(value));
+            });
+          }
+        });
+        // Преобразуем Set в массивы
+        Object.keys(options).forEach(key => {
+          options[key] = Array.from(options[key]);
+        });
+        setServerTagOptions(options);
+        if (onTagOptionsChange) onTagOptionsChange(options);
+      });
+  }, []);
 
   const dynamicInitialFilters = {
     ...initialFilters,
     // Новый набор фильтров только по актуальным тегам
-    price: { min: ranges.price?.min ?? 0, max: ranges.price?.max ?? 0 },
+    price: { min: serverRanges.price?.min ?? 0, max: serverRanges.price?.max ?? 0 },
     rooms: [],
     city: [],
-    delivery: { min: ranges.delivery?.min ?? 0, max: ranges.delivery?.max ?? 0 },
-    area: { min: ranges.area?.min ?? 0, max: ranges.area?.max ?? 0 },
+    delivery: { min: serverRanges.delivery?.min ?? 0, max: serverRanges.delivery?.max ?? 0 },
+    area: { min: serverRanges.area?.min ?? 0, max: serverRanges.area?.max ?? 0 },
     'sea-distance': [],
     type: [],
     view: [],
     finishing: [],
-    floor: { min: ranges.floor?.min ?? 0, max: ranges.floor?.max ?? 0 },
+    floor: { min: serverRanges.floor?.min ?? 0, max: serverRanges.floor?.max ?? 0 },
     payment: [],
   };
 
@@ -83,7 +76,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
   // Сброс фильтров при изменении ranges (то есть когда properties загружены)
   useEffect(() => {
     setTempFilters(dynamicInitialFilters);
-  }, [ranges.price.min, ranges.price.max, ranges.area.min, ranges.area.max, ranges.delivery.min, ranges.delivery.max, ranges.floor.min, ranges.floor.max]);
+  }, [serverRanges.price.min, serverRanges.price.max, serverRanges.area.min, serverRanges.area.max, serverRanges.delivery.min, serverRanges.delivery.max, serverRanges.floor.min, serverRanges.floor.max]);
 
   const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(() => {
     const savedCollapsed = localStorage.getItem('isFiltersCollapsed');
@@ -127,16 +120,19 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
     return <div className="text-[var(--red-600)] p-4">Ошибка: данные для фильтров недоступны</div>;
   }
 
+  // Проверка готовности serverRanges для RangeFilter
+  const isRangesReady = serverRanges && ['price','area','delivery','floor'].every(key => key in serverRanges);
+
+  // Используем serverTagOptions вместо tagOptions для фильтров
   const filterConfig = [
-    { label: "Цена (₽)", key: "price", type: "range", range: ranges.price },
-    { label: "Комнатность", key: "rooms", options: Array.from(tagOptions.rooms || []) },
-    { label: "Город", key: "city", options: Array.from(tagOptions.city || []) },
-    { label: "Расстояние до моря", key: "sea-distance", options: Array.from(tagOptions['sea-distance'] || []) },
-    { label: "Тип", key: "type", options: Array.from(tagOptions.type || []) },
-    { label: "Вид из окна", key: "view", options: Array.from(tagOptions.view || []) },
-    { label: "Отделка", key: "finishing", options: Array.from(tagOptions.finishing || []) },
-    { label: "Этаж", key: "floor", type: "range", range: ranges.floor },
-    { label: "Способ оплаты", key: "payment", options: Array.from(tagOptions.payment || []) },
+    { label: "Цена (₽)", key: "price", type: "range", range: serverRanges.price },
+    { label: "Комнатность", key: "rooms", options: serverTagOptions.rooms || [] },
+    { label: "Город", key: "city", options: serverTagOptions.city || [] },
+    { label: "Тип", key: "type", options: serverTagOptions.type || [] },
+    { label: "Вид из окна", key: "view", options: serverTagOptions.view || [] },
+    { label: "Отделка", key: "finishing", options: serverTagOptions.finishing || [] },
+    { label: "Этаж", key: "floor", type: "range", range: serverRanges.floor },
+    { label: "Способ оплаты", key: "payment", options: serverTagOptions.payment || [] },
   ];
 
   // Счётчик подходящих объектов с сервера
@@ -145,26 +141,25 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
   // Формируем query string для фильтров
   const buildQuery = (filters) => {
     const params = new URLSearchParams();
-    if (filters.price?.min) params.append('priceMin', filters.price.min);
-    if (filters.price?.max) params.append('priceMax', filters.price.max);
-    if (filters.area?.min) params.append('areaMin', filters.area.min);
-    if (filters.area?.max) params.append('areaMax', filters.area.max);
-    if (filters.delivery?.min) params.append('deliveryMin', filters.delivery.min);
-    if (filters.delivery?.max) params.append('deliveryMax', filters.delivery.max);
-    if (filters.floor?.min) params.append('floorMin', filters.floor.min);
-    if (filters.floor?.max) params.append('floorMax', filters.floor.max);
+    if (filters.price?.min != null) params.append('priceMin', filters.price.min);
+    if (filters.price?.max != null) params.append('priceMax', filters.price.max);
+    if (filters.area?.min != null) params.append('areaMin', filters.area.min);
+    if (filters.area?.max != null) params.append('areaMax', filters.area.max);
+    if (filters.floor?.min != null) params.append('floorMin', filters.floor.min);
+    if (filters.floor?.max != null) params.append('floorMax', filters.floor.max);
     ['rooms','city','type','view','finishing','payment','sea-distance'].forEach(key => {
       if (Array.isArray(filters[key]) && filters[key].length > 0) {
-        filters[key].forEach(val => params.append(key, val));
+        filters[key].filter(v => v && v !== '').forEach(val => params.append(key, val));
       }
     });
+    params.append('limit', '20'); // limit всегда 20, не 0
     return params.toString();
   };
 
   // Получаем count с сервера при изменении фильтров
   useEffect(() => {
     const query = buildQuery(tempFilters);
-    fetch(`/api/properties?${query}&limit=0`)
+    fetch(`/api/properties?${query}`)
       .then(res => res.json())
       .then(data => setServerCount(data.total || 0))
       .catch(() => setServerCount(0));
@@ -207,8 +202,22 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
 
   const resetFilters = () => {
     console.log("Filters: Resetting filters:", dynamicInitialFilters);
-    setTempFilters(dynamicInitialFilters);
-    onApplyFilters(dynamicInitialFilters);
+    const cleanFilters = {};
+    Object.entries(dynamicInitialFilters).forEach(([key, val]) => {
+      if (typeof val === 'object' && val !== null && ('min' in val || 'max' in val)) {
+        if (val.min != null || val.max != null) {
+          cleanFilters[key] = {};
+          if (val.min != null) cleanFilters[key].min = val.min;
+          if (val.max != null) cleanFilters[key].max = val.max;
+        }
+      } else if (Array.isArray(val)) {
+        if (val.length > 0) cleanFilters[key] = val;
+      } else if (val != null && val !== '') {
+        cleanFilters[key] = val;
+      }
+    });
+    setTempFilters(cleanFilters);
+    onApplyFilters(cleanFilters);
     resetTagFilter();
     localStorage.removeItem('tempFilters');
     localStorage.removeItem('isFiltersCollapsed');
@@ -242,6 +251,16 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
   });
   const countToShow = serverCount;
 
+  if (rangesLoading) {
+    return <div className="text-center text-gray-600 p-6">Загрузка диапазонов фильтров...</div>;
+  }
+  if (rangesError) {
+    return <div className="text-center text-red-600 p-6">Ошибка загрузки диапазонов: {rangesError}</div>;
+  }
+  if (!isRangesReady) {
+    return <div className="text-center text-gray-600 p-6">Диапазоны фильтров недоступны. Попробуйте позже.</div>;
+  }
+
   return (
     <div ref={ref} className="bg-[var(--gray-50)] p-4 rounded-lg shadow-sm relative z-[1000]">
       <div className="flex justify-between items-center mb-4">
@@ -255,18 +274,8 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
                 <TextFilter
                   label="Комнаты"
                   filterKey="rooms"
-                  options={Array.from(tagOptions.rooms || [])}
+                  options={Array.from(serverTagOptions.rooms || [])}
                   selectedValues={tempFilters.rooms}
-                  onChange={handleFilterChange}
-                  onReset={handleResetFilter}
-                />
-              </div>
-              <div className="col-span-1">
-                <TextFilter
-                  label="ЖК"
-                  filterKey="complex"
-                  options={Array.from(tagOptions.complex || [])}
-                  selectedValues={tempFilters.complex}
                   onChange={handleFilterChange}
                   onReset={handleResetFilter}
                 />
@@ -275,7 +284,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
                 <TextFilter
                   label="Отделка"
                   filterKey="finishing"
-                  options={Array.from(tagOptions.finishing || [])}
+                  options={Array.from(serverTagOptions.finishing || [])}
                   selectedValues={tempFilters.finishing}
                   onChange={handleFilterChange}
                   onReset={handleResetFilter}
@@ -285,7 +294,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
                 <RangeFilter
                   label="Цена (₽)"
                   filterKey="price"
-                  range={ranges.price}
+                  range={serverRanges.price}
                   value={tempFilters.price}
                   onChange={handleFilterChange}
                 />
