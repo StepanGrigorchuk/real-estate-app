@@ -17,8 +17,7 @@ const RangeFilter = ({ label, filterKey, range, value, onChange }) => {
 
   const formatNumber = (num) => num?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') || '';
   const parseNumber = (str) => parseInt(str.replace(/\s/g, ''), 10) || 0;
-  
-  const handleValueChange = (isMinField, newValue) => {
+    const handleValueChange = (isMinField, newValue) => {
     let parsedValue = isPriceField ? parseNumber(newValue) : parseInt(newValue);
     if (isNaN(parsedValue)) parsedValue = safeMin;
     parsedValue = Math.min(Math.max(parsedValue, safeMin), safeMax);
@@ -31,6 +30,29 @@ const RangeFilter = ({ label, filterKey, range, value, onChange }) => {
       const newMax = Math.max(parsedValue, safeValueMin);
       onChange(filterKey, { min: safeValueMin, max: newMax });
       setRawMaxValue(isPriceField ? formatNumber(newMax) : newMax.toString());
+    }
+  };
+  // Обработка клика по треку слайдера
+  const handleTrackClick = (event) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
+    const percentage = clickX / rect.width;
+    const clickValue = safeMin + (percentage * (safeMax - safeMin));
+    
+    // Определяем, какая ручка ближе к месту клика
+    const distanceToMin = Math.abs(clickValue - safeValueMin);
+    const distanceToMax = Math.abs(clickValue - safeValueMax);
+    
+    // Для цены используем строковое представление, для остальных - число
+    const roundedValue = Math.round(clickValue);
+    const valueToPass = isPriceField ? roundedValue.toString() : roundedValue;
+    
+    if (distanceToMin <= distanceToMax) {
+      // Перемещаем минимальную ручку
+      handleValueChange(true, valueToPass);
+    } else {
+      // Перемещаем максимальную ручку
+      handleValueChange(false, valueToPass);
     }
   };
   
@@ -50,12 +72,15 @@ const RangeFilter = ({ label, filterKey, range, value, onChange }) => {
   }
   return (
     <div className="space-y-3 w-full" data-filter={filterKey}>
-      <label className="block font-medium text-[var(--gray-700)] text-small">{label}</label>
-        {/* Простой dual-range слайдер */}      <div className="relative w-full">
-        <div className="relative h-2 bg-[var(--gray-200)] rounded-lg w-full">
+      <label className="block font-medium text-[var(--gray-700)] text-small">{label}</label>      {/* Простой dual-range слайдер */}
+      <div className="relative w-full">
+        <div 
+          className="relative h-2 bg-[var(--gray-200)] rounded-lg w-full cursor-pointer"
+          onClick={handleTrackClick}
+        >
           {/* Активная область между значениями */}
           <div 
-            className="absolute h-full bg-[var(--primary)] rounded-lg"
+            className="absolute h-full bg-[var(--primary)] rounded-lg pointer-events-none"
             style={{
               left: `${((safeValueMin - safeMin) / (safeMax - safeMin)) * 100}%`,
               width: `${((safeValueMax - safeValueMin) / (safeMax - safeMin)) * 100}%`
@@ -84,8 +109,8 @@ const RangeFilter = ({ label, filterKey, range, value, onChange }) => {
             style={{ zIndex: 2 }}
           />
         </div>
-      </div>{/* Поля ввода под слайдером */}
-      <div className="grid grid-cols-2 gap-4 w-full">
+      </div>      {/* Поля ввода под слайдером */}
+      <div className="flex justify-between items-center w-full">
         <div className="flex items-center gap-2">
           <span className="text-caption text-[var(--gray-600)] whitespace-nowrap">от</span>
           <input
@@ -95,7 +120,7 @@ const RangeFilter = ({ label, filterKey, range, value, onChange }) => {
             onFocus={e => e.target.select()}
             onBlur={e => handleValueChange(true, rawMinValue)}
             onKeyDown={e => e.key === 'Enter' && handleValueChange(true, rawMinValue)}
-            className="w-24 p-2 text-small border border-[var(--gray-200)] rounded focus:ring-[var(--primary)] focus:border-[var(--primary)] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="w-32 p-2 text-small border border-[var(--gray-200)] rounded focus:ring-[var(--primary)] focus:border-[var(--primary)] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
         
@@ -108,7 +133,7 @@ const RangeFilter = ({ label, filterKey, range, value, onChange }) => {
             onFocus={e => e.target.select()}
             onBlur={e => handleValueChange(false, rawMaxValue)}
             onKeyDown={e => e.key === 'Enter' && handleValueChange(false, rawMaxValue)}
-            className="w-24 p-2 text-small border border-[var(--gray-200)] rounded focus:ring-[var(--primary)] focus:border-[var(--primary)] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="w-32 p-2 text-small border border-[var(--gray-200)] rounded focus:ring-[var(--primary)] focus:border-[var(--primary)] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
       </div>
