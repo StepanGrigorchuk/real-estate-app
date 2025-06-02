@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Lightbox from './Lightbox.jsx';
 import { getParsedTags } from '../utils/property';
 import { formatTag, isNotEmpty } from '../utils/format';
@@ -13,6 +13,10 @@ function PropertyPage({ properties, setSelectedProperty }) {
   const [error, setError] = useState(null);
   const [loadedImages, setLoadedImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const galleryRef = useRef(null);
+  const miniGalleryRef = useRef(null);  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, scrollLeft: 0 });
+  const [hasDragged, setHasDragged] = useState(false);
 
   // Найти объект в props, если есть
   useEffect(() => {
@@ -47,23 +51,105 @@ function PropertyPage({ properties, setSelectedProperty }) {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
-  }, []);
-
-  // Загрузка изображений
+  }, []);  // Загрузка изображений
   useEffect(() => {
     if (!property || !property.developer || !property.complex || !properties) return;
+    
     const developer = property.developer;
     const complex = property.complex;
     const n = getNForProperty(property, properties);
-    const images = [];
-    for (let i = 1; i <= 20; i++) {
-      images.push(imagePath({ developer, complex, n, i }));
-    }
-    setLoadedImages(images);
+    
+    // Проверяем изображения последовательно и добавляем только существующие
+    const checkImages = async () => {
+      setLoadedImages([]); // Очищаем предыдущие изображения
+      const validImages = [];
+      let consecutiveFailures = 0;
+      
+      for (let i = 1; i <= 20; i++) {
+        const imgPath = imagePath({ developer, complex, n, i });
+        
+        try {
+          // Создаем промис для проверки загрузки изображения
+          const isImageValid = await new Promise((resolve) => {
+            const img = new Image();
+            const timeout = setTimeout(() => {
+              img.onload = null;
+              img.onerror = null;
+              resolve(false);
+            }, 3000); // Тайм-аут 3 секунды
+            
+            img.onload = () => {
+              clearTimeout(timeout);
+              resolve(true);
+            };
+            
+            img.onerror = () => {
+              clearTimeout(timeout);
+              resolve(false);
+            };
+            
+            img.src = imgPath;
+          });
+          
+          if (isImageValid) {
+            validImages.push(imgPath);
+            consecutiveFailures = 0; // Сбрасываем счетчик неудач
+          } else {
+            consecutiveFailures++;
+            // Если 3 изображения подряд не загружаются, прекращаем поиск
+            if (consecutiveFailures >= 3) {
+              break;
+            }
+          }
+        } catch (error) {
+          consecutiveFailures++;
+          if (consecutiveFailures >= 3) {
+            break;
+          }
+        }
+      }
+      
+      setLoadedImages(validImages);
+    };
+    
+    checkImages();
   }, [property, properties]);
-
   // Безопасно получить параметры объекта
   const parsedTags = getParsedTags(property);
+  // Функции для перетаскивания галереи
+  const handleMouseDown = (e, ref) => {
+    setIsDragging(true);
+    setHasDragged(false);
+    setDragStart({
+      x: e.pageX,
+      scrollLeft: ref.current.scrollLeft
+    });
+  };
+  const handleMouseMove = (e, ref) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX;
+    const walk = (x - dragStart.x); // Убираем множитель для естественной скорости
+    
+    // Отмечаем что было перетаскивание если движение больше 5px
+    if (Math.abs(walk) > 5) {
+      setHasDragged(true);
+    }
+    
+    ref.current.scrollLeft = dragStart.scrollLeft - walk;
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    // Сбрасываем флаг перетаскивания через небольшую задержку
+    setTimeout(() => setHasDragged(false), 100);
+  };
+
+  useEffect(() => {
+    const handleGlobalMouseUp = () => setIsDragging(false);
+    document.addEventListener('mouseup', handleGlobalMouseUp);
+    return () => document.removeEventListener('mouseup', handleGlobalMouseUp);
+  }, []);
 
   if (loading) {
     return <div className="text-[var(--gray-800)] p-6 animate-fadeIn">Загрузка...</div>;
@@ -84,30 +170,39 @@ function PropertyPage({ properties, setSelectedProperty }) {
         {/* Удалён локальный <style> для скроллбара, теперь используется глобальный из index.css */}
         <div className="w-full flex-grow">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="md:col-span-2 flex flex-col">
-              <div className="rounded-lg">
-                <div className="flex gap-4 overflow-x-auto custom-scrollbar h-[calc(100vh-300px)] bg-white">
+            <div className="md:col-span-2 flex flex-col">              <div className="rounded-lg">
+                <div 
+                  ref={galleryRef}
+                  className={`flex gap-4 overflow-x-auto custom-scrollbar h-[calc(100vh-300px)] bg-white ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+                  onMouseDown={(e) => handleMouseDown(e, galleryRef)}
+                  onMouseMove={(e) => handleMouseMove(e, galleryRef)}
+                  onMouseUp={handleMouseUp}
+                  onMouseLeave={handleMouseUp}
+                  style={{ userSelect: 'none' }}
+                >
                   {loadedImages.length > 0 ? (
                     loadedImages.map((img, index) => (
                       <img
                         key={index}
                         src={img}
-                        alt={`Фото ${index + 1}`}
-                        className="w-full h-full object-contain rounded cursor-pointer bg-[var(--gray-200)]"
-                        onClick={() => setSelectedImage(img)}
+                        alt={`Фото ${index + 1}`}                        className="w-full h-full object-contain rounded cursor-pointer bg-[var(--gray-200)]"
+                        onClick={() => !hasDragged && setSelectedImage(img)}
                         onError={e => {
                           e.target.src = 'https://via.placeholder.com/256x160?text=Image+Not+Found';
                           e.target.alt = 'Изображение не найдено';
                         }}
+                        draggable={false}
                       />
                     ))
                   ) : (
                     <p className="text-[var(--gray-600)]">Изображения отсутствуют</p>
                   )}
                 </div>
-              </div>
-              <div className="mt-4">
-                <div className="flex gap-2 overflow-x-auto custom-scrollbar bg-[#f3f4f6] rounded-md p-2">
+              </div>              <div className="mt-4">
+                <div 
+                  ref={miniGalleryRef}
+                  className="flex gap-2 overflow-x-auto custom-scrollbar rounded-md p-2"
+                >
                   {loadedImages.length > 0 ? (
                     loadedImages.map((img, index) => (
                       <img
@@ -120,6 +215,7 @@ function PropertyPage({ properties, setSelectedProperty }) {
                           e.target.src = 'https://via.placeholder.com/64x64?text=Image+Not+Found';
                           e.target.alt = 'Мини-превью не найдено';
                         }}
+                        draggable={false}
                       />
                     ))
                   ) : (
