@@ -131,23 +131,22 @@ function Home() {
   if (error) return <div className="p-8 text-center text-red-600">Ошибка загрузки: {error.message}</div>;
 
   return (
-    <section className="bg-[var(--white)] w-full min-h-screen flex flex-col px-2 sm:px-6 animate-fadeIn">
-      <div className="flex flex-col md:flex-row items-stretch justify-between w-full flex-grow min-h-screen">
-        {/* Центрируем текстовый блок вертикально и делаем отступы как у галереи */}
-        <div className="w-full md:w-1/2 flex items-start md:items-center justify-center pt-36 md:pt-0 min-h-[300px] md:min-h-0 md:pl-0 md:pr-8" style={{minHeight: 'auto'}}>
-          <div className="max-w-lg w-full text-center md:text-left flex flex-col items-center md:items-start justify-center mx-auto">            <h1 className="text-hero text-[var(--gray-800)] mb-2 sm:mb-4">
+    <section className="bg-[var(--white)] w-full min-h-screen flex flex-col px-2 sm:px-6 animate-fadeIn">      <div className="flex flex-col md:flex-row items-stretch justify-between w-full flex-grow min-h-screen">
+        {/* Центрируем текстовый блок вертикально и делаем отступы как у галереи */}        <div className="w-full md:w-1/2 flex items-start md:items-center justify-center pt-28 md:pt-0 min-h-[300px] md:min-h-0 md:pl-0 md:pr-8" style={{minHeight: 'auto'}}>
+          <div className="max-w-lg w-full text-left md:text-left flex flex-col items-start md:items-start justify-center mx-auto">
+            <h1 className="text-hero text-[var(--gray-800)] mb-2 sm:mb-4 text-left">
               Найдите дом своей мечты
-            </h1>
-            <p className="text-lead mb-12 sm:mb-12 max-w-lg">
-              Найдите идеальный дом с нашим каталогом. Умный поиск по цене, площади и другим параметрам поможет выбрать жильё, соответствующее вашим желаниям.
-            </p>            <HeroButton to="/catalog">
-              Смотреть недвижку
-            </HeroButton>
+            </h1>            <p className="text-lead mb-10 sm:mb-8 max-w-lg text-left">
+              Найдите идеальный дом с нашим каталогом. Умный поиск по цене, площади и другим параметрам поможет выбрать жильё, соответствующее вашим желаниям.            </p>
+            <div className="w-full flex justify-center md:justify-start mt-0 md:mt-4">
+              <HeroButton to="/catalog">
+                Смотреть недвижку
+              </HeroButton>
+            </div>
           </div>
-        </div>
-        {/* Галерея с отступом сверху и индикацией под ней */}
-        <div className="w-full md:w-1/2 flex-grow flex md:justify-end mt-8 md:mt-0 pr-0 md:pl-8 relative min-h-[300px]" style={{minHeight: '70vh'}}>
-          <div className="flex flex-col w-full h-full items-center justify-center pt-4 md:pt-12">
+        </div>        {/* Галерея с отступом сверху и индикацией под ней */}
+        <div className="w-full md:w-1/2 flex-grow flex md:justify-end mt-16 md:mt-0 pr-0 md:pl-8 relative min-h-[300px]" style={{minHeight: '70vh'}}>
+          <div className="flex flex-col w-full h-full items-center justify-center pt-12 md:pt-4">
             {topProperties.length > 0 && isLoaded ? (
               <>
                 <div className="w-full h-[50vh] sm:h-[60vh] md:h-[70vh] max-w-full flex items-center justify-center">
@@ -166,14 +165,13 @@ function Home() {
                               src={loadedImages[index].main}
                               alt={property.title}
                               className="w-full h-full object-cover rounded-lg"
-                            />
-                            <Link
+                            />                            <Link
                               to={`/property/${property.id}`}
                               className="absolute inset-0 z-10 flex justify-center items-end md:items-center"
-                            >                              <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-black bg-opacity-50 text-white p-2 sm:p-4 rounded-lg z-20 text-small">
-                                {isNotEmpty(tags?.price) && <p className="text-price !text-white">{formatTag('price', tags.price)}</p>}
-                                <h3 className="text-tag !text-white">{property.title}</h3>
-                                {isNotEmpty(tags?.area) && <p className="text-caption !text-white">{formatTag('area', tags.area)}</p>}
+                            >                              <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-black bg-opacity-50 text-white p-2 sm:p-4 rounded-lg z-20 text-lead sm:text-small">
+                                {isNotEmpty(tags?.price) && <p className="!text-white text-2xl sm:text-price font-bold">{formatTag('price', tags.price)}</p>}
+                                <h3 className="!text-white text-lead sm:text-tag font-normal">{property.title}</h3>
+                                {isNotEmpty(tags?.area) && <p className="!text-white text-lead sm:text-caption font-normal">{formatTag('area', tags.area)}</p>}
                               </div>
                             </Link>
                             <div
