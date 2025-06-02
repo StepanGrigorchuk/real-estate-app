@@ -23,25 +23,24 @@
   --fluid-min-width: 320;
   --fluid-max-width: 1440;
   --fluid-screen: clamp(var(--fluid-min-width), 100vw, var(--fluid-max-width));
-  --fluid-bp: calc((var(--fluid-screen) - var(--fluid-min-width) * 1px) / (var(--fluid-max-width) - var(--fluid-min-width)));
-  /* Comprehensive Font Size System - Fluid responsive sizing */
-  --font-size-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.85rem);         /* 12-13.6px */
-  --font-size-sm: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);           /* 14-16px */
-  --font-size-base: clamp(1rem, 0.95rem + 0.5vw, 1.25rem);         /* 16-20px */
-  --font-size-lg: clamp(1.125rem, 1rem + 0.8vw, 1.5rem);           /* 18-24px */
-  --font-size-xl: clamp(1.25rem, 1.1rem + 1vw, 2rem);              /* 20-32px */
-  --font-size-2xl: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);          /* 24-40px */
-  --font-size-3xl: clamp(1.875rem, 1.5rem + 2vw, 3rem);            /* 30-48px */
-  --font-size-4xl: clamp(2.25rem, 1.8rem + 2.5vw, 3.5rem);         /* 36-56px */
-  --font-size-5xl: clamp(2.625rem, 2rem + 3vw, 4rem);              /* 42-64px */
+  --fluid-bp: calc((var(--fluid-screen) - var(--fluid-min-width) * 1px) / (var(--fluid-max-width) - var(--fluid-min-width)));  /* Comprehensive Font Size System - Fluid responsive sizing (уменьшенные размеры) */
+  --font-size-xs: clamp(0.7rem, 0.65rem + 0.2vw, 0.8rem);          /* 11.2-12.8px */
+  --font-size-sm: clamp(0.8rem, 0.75rem + 0.25vw, 0.9rem);         /* 12.8-14.4px */
+  --font-size-base: clamp(0.9rem, 0.85rem + 0.35vw, 1.1rem);       /* 14.4-17.6px (уменьшено) */
+  --font-size-lg: clamp(1rem, 0.9rem + 0.6vw, 1.3rem);             /* 16-20.8px */
+  --font-size-xl: clamp(1.1rem, 1rem + 0.8vw, 1.6rem);             /* 17.6-25.6px */
+  --font-size-2xl: clamp(1.3rem, 1.1rem + 1.2vw, 2rem);            /* 20.8-32px */
+  --font-size-3xl: clamp(1.6rem, 1.3rem + 1.5vw, 2.4rem);          /* 25.6-38.4px */
+  --font-size-4xl: clamp(1.9rem, 1.5rem + 2vw, 2.8rem);            /* 30.4-44.8px */
+  --font-size-5xl: clamp(2.2rem, 1.8rem + 2.5vw, 3.2rem);          /* 35.2-51.2px */
 
   /* Additional specialized sizes for UI components */
-  --font-size-micro: clamp(0.625rem, 0.6rem + 0.1vw, 0.7rem);      /* 10-11.2px - для мелких элементов */
-  --font-size-caption: clamp(0.8rem, 0.75rem + 0.25vw, 0.9rem);    /* 12.8-14.4px - для подписей */
-  --font-size-button: clamp(0.9rem, 0.85rem + 0.35vw, 1.1rem);     /* 14.4-17.6px - для кнопок */
-  --font-size-tag: clamp(0.85rem, 0.8rem + 0.3vw, 1rem);           /* 13.6-16px - для тегов */
-  --font-size-price: clamp(1.2rem, 1.1rem + 1.2vw, 1.8rem);        /* 19.2-28.8px - для цен */
-  --font-size-hero: clamp(2rem, 1.5rem + 2.5vw, 3.2rem);           /* 32-51.2px - для главных заголовков */
+  --font-size-micro: clamp(0.6rem, 0.55rem + 0.1vw, 0.65rem);      /* 9.6-10.4px - для мелких элементов */
+  --font-size-caption: clamp(0.75rem, 0.7rem + 0.2vw, 0.85rem);    /* 12-13.6px - для подписей */
+  --font-size-button: clamp(0.85rem, 0.8rem + 0.3vw, 1rem);        /* 13.6-16px - для кнопок */
+  --font-size-tag: clamp(0.8rem, 0.75rem + 0.25vw, 0.9rem);        /* 12.8-14.4px - для тегов */
+  --font-size-price: clamp(1.1rem, 1rem + 0.8vw, 1.5rem);          /* 17.6-24px - для цен */
+  --font-size-hero: clamp(1.8rem, 1.4rem + 2vw, 2.8rem);           /* 28.8-44.8px - для главных заголовков */
 
   /* Font Weight System */
   --font-weight-light: 300;

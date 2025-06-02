@@ -4,6 +4,7 @@ import { getParsedTags } from '../utils/property';
 import { formatTag, isNotEmpty } from '../utils/format';
 import { PARAM_NAMES, TELEGRAM_LINK } from '../constants';
 import { imagePath } from '../utils/imagePath';
+import HeroButton from './HeroButton';
 
 function getSortedImagePaths({ developer, complex, objectFolder }) {
   // Получаем n из objectFolder (ожидается формат developer_complex_n)
@@ -139,13 +140,9 @@ function Home() {
             </h1>
             <p className="text-lead mb-12 sm:mb-12 max-w-lg">
               Найдите идеальный дом с нашим каталогом. Умный поиск по цене, площади и другим параметрам поможет выбрать жильё, соответствующее вашим желаниям.
-            </p>
-            <Link
-              to="/catalog"
-              className="bg-gradient-to-r from-blue-500 to-blue-700 text-[var(--white)] px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:from-blue-600 hover:to-blue-800 hover:shadow-xl hover:scale-105 hover:brightness-110 transition-all duration-300 text-button inline-block"
-            >
+            </p>            <HeroButton to="/catalog">
               Смотреть недвижку
-            </Link>
+            </HeroButton>
           </div>
         </div>
         {/* Галерея с отступом сверху и индикацией под ней */}
@@ -174,9 +171,9 @@ function Home() {
                               to={`/property/${property.id}`}
                               className="absolute inset-0 z-10 flex justify-center items-end md:items-center"
                             >                              <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-black bg-opacity-50 text-white p-2 sm:p-4 rounded-lg z-20 text-small">
-                                {isNotEmpty(tags?.price) && <p className="text-price text-white">{formatTag('price', tags.price)}</p>}
-                                <h3 className="text-tag">{property.title}</h3>
-                                {isNotEmpty(tags?.area) && <p className="text-caption">{formatTag('area', tags.area)}</p>}
+                                {isNotEmpty(tags?.price) && <p className="text-price !text-white">{formatTag('price', tags.price)}</p>}
+                                <h3 className="text-tag !text-white">{property.title}</h3>
+                                {isNotEmpty(tags?.area) && <p className="text-caption !text-white">{formatTag('area', tags.area)}</p>}
                               </div>
                             </Link>
                             <div

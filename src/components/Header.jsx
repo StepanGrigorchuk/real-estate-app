@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { TELEGRAM_LINK } from '../constants';
+import SimpleButton from './SimpleButton';
 
 function Header() {
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
@@ -41,12 +42,12 @@ function Header() {
         <Link to="/" reloadDocument className="flex items-center min-w-[40px]">
           <img src="/logo.svg" alt="Логотип Компас" className="h-10 md:h-8 w-auto" />
         </Link>
-        <div className="flex gap-3 sm:gap-3 items-center">          <a
+        <div className="flex gap-3 sm:gap-3 items-center">          <SimpleButton
             href={TELEGRAM_LINK}
-            className="hidden md:inline-flex bg-primary text-white px-3 md:px-6 py-2 md:py-2 h-12 md:h-10 min-w-[120px] md:min-w-[150px] items-center justify-center rounded-lg hover:bg-blue-800 active:bg-blue-900 transition-all duration-200 whitespace-nowrap text-button border border-transparent hover:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="hidden md:inline-flex h-12 md:h-10 min-w-[120px] md:min-w-[150px] items-center justify-center whitespace-nowrap border border-transparent hover:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
           >
             <span className="w-full text-center">Написать помощнику</span>
-          </a>
+          </SimpleButton>
           <a
             href="tel:+1234567890"
             className="bg-primary md:bg-white p-3 md:p-2 h-12 md:h-10 rounded-lg shadow-md transition flex items-center hover:bg-blue-700 md:hover:bg-gray-200"

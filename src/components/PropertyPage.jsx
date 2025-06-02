@@ -5,6 +5,7 @@ import { getParsedTags } from '../utils/property';
 import { formatTag, isNotEmpty } from '../utils/format';
 import { PARAM_NAMES, TELEGRAM_LINK } from '../constants';
 import { imagePath, getNForProperty } from '../utils/imagePath';
+import HeroButton from './HeroButton';
 
 function PropertyPage({ properties, setSelectedProperty }) {
   const { id } = useParams();
@@ -237,13 +238,12 @@ function PropertyPage({ properties, setSelectedProperty }) {
                         </span>
                       </div>
                     ))}
-                </div>
-                <a
+                </div>                <HeroButton
                   href={TELEGRAM_LINK}
-                  className="inline-block w-full text-center bg-gradient-to-r from-blue-500 to-blue-700 text-[var(--white)] px-6 py-3 rounded-lg hover:from-blue-600 hover:to-blue-800 hover:shadow-xl hover:scale-105 hover:brightness-110 transition-all duration-300 font-medium"
+                  className="w-full text-center"
                 >
                   Забронировать
-                </a>
+                </HeroButton>
               </div>
             </div>
           </div>

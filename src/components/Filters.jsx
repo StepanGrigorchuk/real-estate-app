@@ -2,6 +2,7 @@ import { useState, forwardRef, useEffect, useMemo } from 'react';
 import { useSpring, animated } from 'react-spring';
 import TextFilter from './TextFilter';
 import RangeFilter from './RangeFilter';
+import SimpleButton from './SimpleButton';
 
 const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initialFilters, cardsRef, tagFilter, resetTagFilter, onTagOptionsChange, total }, ref) => {
   // Диапазоны min/max теперь только с backend
@@ -341,18 +342,16 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
           className="text-[var(--gray-600)] underline text-small hover:text-[var(--gray-800)] transition"
         >
           {isFiltersCollapsed ? "Развернуть фильтры" : "Свернуть фильтры"}
-        </button>
-        <div className="flex gap-4">          <button
+        </button>        <div className="flex gap-4">          <SimpleButton
             onClick={resetFilters}
-            className="px-4 py-2 bg-[var(--gray-200)] text-[var(--gray-600)] rounded-lg hover:bg-[var(--gray-300)] transition text-button"
+            variant="secondary"
           >
             Сбросить
-          </button>          <button
+          </SimpleButton>          <SimpleButton
             onClick={applyFilters}
-            className="px-4 py-2 bg-[var(--primary)] text-[var(--white)] rounded-lg hover:bg-[var(--blue-600)] transition text-button"
           >
             Показать {countToShow} вариантов
-          </button>
+          </SimpleButton>
         </div>
       </div>
     </div>
