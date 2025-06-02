@@ -38,16 +38,12 @@ const TextFilter = ({ label, filterKey, options, selectedValues, onChange, onRes
     window.addEventListener('resize', updateArrowVisibility);
     return () => window.removeEventListener('resize', updateArrowVisibility);
   }, [safeSelectedValues]);
-
   return (
-    <div className="relative w-full max-w-full">      <label
-        className="block font-medium text-[var(--gray-700)] text-small"
-      >
-        {label}
-      </label>
-      <div className="relative mt-2">
+    <div className="relative w-full max-w-full">
+      <div className="relative">
         <div
-          ref={containerRef}          className="p-3 sm:p-2 border border-[var(--gray-200)] rounded-md w-full bg-[var(--white)] cursor-pointer focus:ring-[var(--primary)] focus:border-[var(--primary)] overflow-hidden relative text-small"
+          ref={containerRef}
+          className="p-3 sm:p-2 border border-[var(--gray-200)] rounded-md w-full bg-[var(--white)] cursor-pointer focus:ring-[var(--primary)] focus:border-[var(--primary)] overflow-hidden relative text-small"
           onClick={toggleDropdown}
           style={{
             background: showArrow
@@ -55,12 +51,14 @@ const TextFilter = ({ label, filterKey, options, selectedValues, onChange, onRes
               : 'none',
             backgroundSize: '1rem',
           }}
-        >
-          <span
+        >          <span
             ref={textRef}
-            className={`${safeSelectedValues.length === 0 ? 'text-[var(--gray-400)]' : 'text-[var(--gray-700)]'} text-small whitespace-nowrap`}
+            className="text-small whitespace-nowrap"
+            style={{
+              color: safeSelectedValues.length === 0 ? 'var(--gray-400)' : 'var(--gray-700)'
+            }}
           >
-            {safeSelectedValues.length === 0 ? 'Выберите' : safeSelectedValues.join(', ')}
+            {safeSelectedValues.length === 0 ? label : safeSelectedValues.join(', ')}
           </span>
           {showArrow && (
             <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-r from-transparent to-[var(--white)] pointer-events-none" />
@@ -70,9 +68,8 @@ const TextFilter = ({ label, filterKey, options, selectedValues, onChange, onRes
             className="absolute top-0 left-0 w-full bg-[var(--white)] border border-[var(--gray-200)] rounded-md shadow-lg max-h-60 overflow-y-auto z-[1000] text-small"
             style={{ background: 'var(--white)' }}
             onMouseLeave={handleMouseLeave}
-          >
-            <div
-              className="p-3 sm:p-2 text-small text-[var(--blue-600)] hover:bg-[var(--gray-200)] cursor-pointer sticky top-0 bg-[var(--white)] z-10 whitespace-nowrap"
+          >            <div
+              className="p-3 sm:p-2 text-small text-[var(--primary)] hover:bg-[var(--gray-200)] cursor-pointer sticky top-0 bg-[var(--white)] z-10 whitespace-nowrap"
               onClick={() => { onReset(filterKey); setIsOpen(false); }}
             >
               Сбросить
