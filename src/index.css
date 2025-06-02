@@ -284,3 +284,97 @@ html, body, * {
   background: var(--blue-600);
   box-shadow: 0 6px 20px rgba(37,99,235,0.18);
 }
+
+/* Simple Range Slider Styles */
+.simple-range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  height: 8px;
+}
+
+.simple-range-slider:focus {
+  outline: none;
+}
+
+/* WebKit (Chrome, Safari, Edge) */
+.simple-range-slider::-webkit-slider-track {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  height: 8px;
+}
+
+.simple-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--primary);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 3;
+}
+
+.simple-range-slider::-webkit-slider-thumb:hover {
+  background: var(--blue-600);
+  transform: scale(1.1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Firefox */
+.simple-range-slider::-moz-range-track {
+  background: transparent;
+  height: 8px;
+  border: none;
+}
+
+.simple-range-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: var(--primary);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.simple-range-slider::-moz-range-thumb:hover {
+  background: var(--blue-600);
+  transform: scale(1.1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Специальные стили для двойного слайдера */
+.range-slider-min {
+  pointer-events: none;
+}
+
+.range-slider-min::-webkit-slider-thumb {
+  pointer-events: auto;
+  position: relative;
+}
+
+.range-slider-min::-moz-range-thumb {
+  pointer-events: auto;
+}
+
+.range-slider-max {
+  pointer-events: none;
+}
+
+.range-slider-max::-webkit-slider-thumb {
+  pointer-events: auto;
+  position: relative;
+}
+
+.range-slider-max::-moz-range-thumb {
+  pointer-events: auto;
+}

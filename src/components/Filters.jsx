@@ -327,10 +327,10 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
                 />
               </div>
             </div>
-          </animated.div>
-        ) : (
+          </animated.div>        ) : (
           <animated.div style={animationPropsExpanded} className="overflow-hidden z-[1000]">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-[clamp(1.5rem,4vw,4.5rem)] gap-y-4 md:gap-y-8 px-2 sm:px-6 mb-8 sm:mb-14">
+            {/* Text Filters Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-[clamp(1.5rem,4vw,4.5rem)] gap-y-4 md:gap-y-8 px-2 sm:px-6 mb-8 sm:mb-12">
               {filterConfig.filter(f => f.type !== "range").map(filter => (
                 <TextFilter
                   key={filter.key}
@@ -342,16 +342,22 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
                   onReset={handleResetFilter}
                 />
               ))}
-              {filterConfig.filter(f => f.type === "range").map(filter => (
-                <RangeFilter
-                  key={filter.key}
-                  label={filter.label}
-                  filterKey={filter.key}
-                  range={filter.range}
-                  value={tempFilters[filter.key]}
-                  onChange={handleFilterChange}
-                />
-              ))}
+            </div>
+            
+            {/* Range Filters - Full Width Horizontal Row */}
+            <div className="w-full px-2 sm:px-6 mb-8 sm:mb-14">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-[clamp(2rem,5vw,6rem)] gap-y-6">
+                {filterConfig.filter(f => f.type === "range").map(filter => (
+                  <RangeFilter
+                    key={filter.key}
+                    label={filter.label}
+                    filterKey={filter.key}
+                    range={filter.range}
+                    value={tempFilters[filter.key]}
+                    onChange={handleFilterChange}
+                  />
+                ))}
+              </div>
             </div>
           </animated.div>
         )}
