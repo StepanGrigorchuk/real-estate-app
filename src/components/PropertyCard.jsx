@@ -48,16 +48,15 @@ function PropertyCard({ property, onTagClick, tagOptions, images = [] }) {
   ].filter(tag => isNotEmpty(tag.value));
 
   return (
-    <Link to={`/property/${property.id}`} className="bg-[var(--white)] rounded-lg shadow-md pb-4 hover:shadow-lg transition block animate-fadeIn">
+    <Link to={`/property/${property.id}`} className="bg-[var(--white)] rounded-lg shadow-md pb-4 hover:shadow-lg transition block animate-fadeIn w-full max-w-full">
       <div className="relative">
         <img
           src={images[currentImageIndex]}
           alt={property.title}
-          className="w-full h-48 object-cover rounded-t-lg bg-[var(--gray-200)]"
+          className="w-full h-40 sm:h-48 md:h-56 object-cover rounded-t-lg bg-[var(--gray-200)]"
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           onError={(e) => {
-            console.log(`PropertyCard: Не удалось загрузить изображение: ${images[currentImageIndex]}`);
             e.target.src = 'https://via.placeholder.com/256x160?text=Image+Not+Found';
             e.target.alt = "Изображение не найдено";
           }}
@@ -73,21 +72,21 @@ function PropertyCard({ property, onTagClick, tagOptions, images = [] }) {
           </div>
         </div>
       </div>
-      <div className="px-4 pt-2">
+      <div className="px-2 sm:px-4 pt-2">
         {property.title && (
-          <h3 className="text-base text-[var(--gray-600)] mb-1">{property.title}</h3>
+          <h3 className="text-sm sm:text-base text-[var(--gray-600)] mb-1 line-clamp-2 min-h-[2.5em]">{property.title}</h3>
         )}
         {tags?.price && (
-          <p className="text-2xl text-[var(--primary)] font-bold mb-3">{tags.price.toLocaleString()} ₽</p>
+          <p className="text-lg sm:text-2xl text-[var(--primary)] font-bold mb-2 sm:mb-3">{tags.price.toLocaleString()} ₽</p>
         )}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1 sm:gap-2">
           {tagsToDisplay
             .filter(tag => tag.key !== 'developer' && tag.key !== 'complex' && tag.key !== 'price' && tag.key !== 'title')
             .map(({ key, value }) => (
               <button
                 key={key}
                 onClick={(e) => { e.preventDefault(); onTagClick(key, value); }}
-                className="bg-[var(--blue-100)] text-[var(--primary)] px-2 py-1 rounded text-sm hover:bg-[var(--blue-200)] transition"
+                className="bg-[var(--blue-100)] text-[var(--primary)] px-2 py-1 rounded text-xs sm:text-sm hover:bg-[var(--blue-200)] transition"
               >
                 {formatTag(key, value)}
               </button>

@@ -49,18 +49,18 @@ const RangeFilter = ({ label, filterKey, range, value, onChange }) => {
 
   return (
     <div>
-      <label className="block text-sm font-medium text-[var(--gray-700)]">{label}</label>
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-[var(--gray-600)]">от</span>
+      <label className="block text-xs sm:text-sm font-medium text-[var(--gray-700)]">{label}</label>
+      <div className="flex flex-col sm:flex-row items-center gap-2 w-full">
+        <span className="text-xs sm:text-sm text-[var(--gray-600)]">от</span>
         <input
           type="range"
           min={safeMin}
           max={safeMax}
           value={safeValueMin}
           onChange={e => handleValueChange(true, e.target.value)}
-          className="w-full"
+          className="w-full sm:w-32"
         />
-        <div className="relative min-w-[100px]">
+        <div className="relative min-w-[60px] sm:min-w-[100px] w-full sm:w-auto">
           <input
             type={isPriceField ? "text" : "number"}
             value={isPriceField ? rawMinValue : safeValueMin}
@@ -68,19 +68,19 @@ const RangeFilter = ({ label, filterKey, range, value, onChange }) => {
             onFocus={e => e.target.select()}
             onBlur={e => handleValueChange(true, rawMinValue)}
             onKeyDown={e => e.key === 'Enter' && handleValueChange(true, rawMinValue)}
-            className="p-1 border border-[var(--gray-200)] rounded-md w-full focus:ring-[var(--primary)] focus:border-[var(--primary)] overflow-hidden [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="p-1 border border-[var(--gray-200)] rounded-md w-full focus:ring-[var(--primary)] focus:border-[var(--primary)] overflow-hidden [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-xs sm:text-sm"
           />
         </div>
-        <span className="text-sm text-[var(--gray-600)]">до</span>
+        <span className="text-xs sm:text-sm text-[var(--gray-600)]">до</span>
         <input
           type="range"
           min={safeMin}
           max={safeMax}
           value={safeValueMax}
           onChange={e => handleValueChange(false, e.target.value)}
-          className="w-full"
+          className="w-full sm:w-32"
         />
-        <div className="relative min-w-[100px]">
+        <div className="relative min-w-[60px] sm:min-w-[100px] w-full sm:w-auto">
           <input
             type={isPriceField ? "text" : "number"}
             value={isPriceField ? rawMaxValue : safeValueMax}
@@ -88,7 +88,7 @@ const RangeFilter = ({ label, filterKey, range, value, onChange }) => {
             onFocus={e => e.target.select()}
             onBlur={e => handleValueChange(false, rawMaxValue)}
             onKeyDown={e => e.key === 'Enter' && handleValueChange(false, rawMaxValue)}
-            className="p-1 border border-[var(--gray-200)] rounded-md w-full focus:ring-[var(--primary)] focus:border-[var(--primary)] overflow-hidden [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="p-1 border border-[var(--gray-200)] rounded-md w-full focus:ring-[var(--primary)] focus:border-[var(--primary)] overflow-hidden [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-xs sm:text-sm"
           />
         </div>
       </div>

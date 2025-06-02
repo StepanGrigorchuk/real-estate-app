@@ -262,17 +262,47 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
   }
 
   return (
-    <div ref={ref} className="bg-[var(--gray-50)] p-4 rounded-lg shadow-sm relative z-[1000] mt-10">
+    <div ref={ref} className="bg-[var(--gray-50)] p-2 sm:p-4 rounded-lg shadow-sm relative z-[1000] mt-4 sm:mt-10 w-full max-w-full overflow-x-auto">
       <div>
         {isFiltersCollapsed ? (
           <animated.div style={animationPropsCollapsed} className="overflow-visible z-[1000]">
-            <div className="grid grid-cols-6 gap-4 px-6">
+            <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 sm:gap-4 px-2 sm:px-6">
               <div className="col-span-1">
                 <TextFilter
                   label="Комнаты"
                   filterKey="rooms"
                   options={Array.from(serverTagOptions.rooms || [])}
                   selectedValues={tempFilters.rooms}
+                  onChange={handleFilterChange}
+                  onReset={handleResetFilter}
+                />
+              </div>
+              <div className="col-span-1">
+                <TextFilter
+                  label="Город"
+                  filterKey="city"
+                  options={Array.from(serverTagOptions.city || [])}
+                  selectedValues={tempFilters.city}
+                  onChange={handleFilterChange}
+                  onReset={handleResetFilter}
+                />
+              </div>
+              <div className="col-span-1">
+                <TextFilter
+                  label="Тип"
+                  filterKey="type"
+                  options={Array.from(serverTagOptions.type || [])}
+                  selectedValues={tempFilters.type}
+                  onChange={handleFilterChange}
+                  onReset={handleResetFilter}
+                />
+              </div>
+              <div className="col-span-1">
+                <TextFilter
+                  label="Вид из окна"
+                  filterKey="view"
+                  options={Array.from(serverTagOptions.view || [])}
+                  selectedValues={tempFilters.view}
                   onChange={handleFilterChange}
                   onReset={handleResetFilter}
                 />
@@ -287,7 +317,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
                   onReset={handleResetFilter}
                 />
               </div>
-              <div className="col-span-3">
+              <div className="col-span-2">
                 <RangeFilter
                   label="Цена (₽)"
                   filterKey="price"
@@ -300,7 +330,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
           </animated.div>
         ) : (
           <animated.div style={animationPropsExpanded} className="overflow-hidden z-[1000]">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-32 gap-y-6 px-6 mb-14">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 sm:gap-x-32 gap-y-4 sm:gap-y-6 px-2 sm:px-6 mb-8 sm:mb-14">
               {filterConfig.filter(f => f.type !== "range").map(filter => (
                 <TextFilter
                   key={filter.key}
@@ -312,8 +342,6 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
                   onReset={handleResetFilter}
                 />
               ))}
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-48 gap-y-12 px-6 mb-24">
               {filterConfig.filter(f => f.type === "range").map(filter => (
                 <RangeFilter
                   key={filter.key}

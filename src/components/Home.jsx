@@ -132,26 +132,26 @@ function Home() {
   if (error) return <div className="p-8 text-center text-red-600">Ошибка загрузки: {error.message}</div>;
 
   return (
-    <section className="bg-[var(--white)] pt-24 pb-12 w-full min-h-screen flex flex-col px-6 animate-fadeIn">
-      <div className="flex flex-col md:flex-row items-start justify-between w-full flex-grow">
-        <div className="w-full md:w-1/2 pl-0 pr-6 pt-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-[var(--gray-800)] mb-4">
+    <section className="bg-[var(--white)] pt-20 sm:pt-24 pb-8 sm:pb-12 w-full min-h-screen flex flex-col px-2 sm:px-6 animate-fadeIn">
+      <div className="flex flex-col md:flex-row items-start justify-between w-full flex-grow gap-8 md:gap-0">
+        <div className="w-full md:w-1/2 pl-0 pr-0 md:pr-6 pt-4 md:pt-8">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-[var(--gray-800)] mb-2 sm:mb-4">
             Найдите дом своей мечты
           </h1>
-          <p className="text-lg text-[var(--gray-600)] mb-12 max-w-lg">
+          <p className="text-base sm:text-lg text-[var(--gray-600)] mb-6 sm:mb-12 max-w-lg">
             Найдите идеальный дом с нашим каталогом. Умный поиск по цене, площади и другим параметрам поможет выбрать жильё, соответствующее вашим желаниям.
           </p>
           <Link
             to="/catalog"
-            className="bg-gradient-to-r from-blue-500 to-blue-700 text-[var(--white)] px-6 py-3 rounded-lg hover:from-blue-600 hover:to-blue-800 hover:shadow-xl hover:scale-105 hover:brightness-110 transition-all duration-300 text-lg font-semibold inline-block"
+            className="bg-gradient-to-r from-blue-500 to-blue-700 text-[var(--white)] px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:from-blue-600 hover:to-blue-800 hover:shadow-xl hover:scale-105 hover:brightness-110 transition-all duration-300 text-base sm:text-lg font-semibold inline-block"
           >
             Смотреть недвижку
           </Link>
         </div>
-        <div className="w-full md:w-1/2 flex-grow md:flex md:justify-end mt-6 md:mt-0 pr-0 relative">
+        <div className="w-full md:w-1/2 flex-grow md:flex md:justify-end mt-4 md:mt-0 pr-0 relative">
           {topProperties.length > 0 && isLoaded ? (
-            <div className="w-full max-w-xl">
-              <div className="w-full max-w-xl h-[450px] rounded-lg shadow-lg relative overflow-hidden">
+            <div className="w-full max-w-full sm:max-w-xl">
+              <div className="w-full max-w-full sm:max-w-xl h-56 sm:h-[450px] rounded-lg shadow-lg relative overflow-hidden">
                 {topProperties.map((property, index) => {
                   const tags = getParsedTags(property);
                   return (
@@ -171,10 +171,10 @@ function Home() {
                           to={`/property/${property.id}`}
                           className="absolute inset-0 z-10 flex justify-center items-center"
                         >
-                          <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white p-4 rounded-lg z-20">
-                            {isNotEmpty(tags?.price) && <p className="text-2xl font-semibold">{formatTag('price', tags.price)}</p>}
-                            <h3 className="text-base">{property.title}</h3>
-                            {isNotEmpty(tags?.area) && <p className="text-base">{formatTag('area', tags.area)}</p>}
+                          <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-black bg-opacity-50 text-white p-2 sm:p-4 rounded-lg z-20 text-xs sm:text-base">
+                            {isNotEmpty(tags?.price) && <p className="text-lg sm:text-2xl font-semibold">{formatTag('price', tags.price)}</p>}
+                            <h3 className="text-xs sm:text-base">{property.title}</h3>
+                            {isNotEmpty(tags?.area) && <p className="text-xs sm:text-base">{formatTag('area', tags.area)}</p>}
                           </div>
                         </Link>
                         <div
@@ -209,8 +209,8 @@ function Home() {
               </div>
             </div>
           ) : (
-            <div className="w-full max-w-xl h-[450px] bg-gray-200 rounded-lg shadow-lg flex items-center justify-center">
-              <p className="text-gray-600">Нет данных для отображения</p>
+            <div className="w-full max-w-full sm:max-w-xl h-56 sm:h-[450px] bg-gray-200 rounded-lg shadow-lg flex items-center justify-center">
+              <p className="text-gray-600 text-xs sm:text-base">Нет данных для отображения</p>
             </div>
           )}
         </div>

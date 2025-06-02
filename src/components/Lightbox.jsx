@@ -46,7 +46,7 @@ function Lightbox({ images, initialImage, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 bg-white bg-opacity-80 flex flex-col items-center justify-center z-50 overflow-auto transition-opacity duration-300"
+      className="fixed inset-0 bg-white bg-opacity-80 flex flex-col items-center justify-center z-50 overflow-auto transition-opacity duration-300 p-2 sm:p-0"
       style={{ opacity: selectedImage ? 1 : 0 }}
       onClick={() => {
         onClose();
@@ -54,11 +54,11 @@ function Lightbox({ images, initialImage, onClose }) {
       }}
       onWheel={handleWheel}
     >
-      <div className="absolute top-24 text-[var(--gray-800)] text-sm opacity-50 z-60">
+      <div className="absolute top-8 sm:top-24 text-[var(--gray-800)] text-xs sm:text-sm opacity-50 z-60">
         Используйте колесо мыши для зума (x{zoomLevel.toFixed(1)})
       </div>
       <button
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[var(--primary)] text-[var(--white)] p-3 rounded-full shadow-md hover:bg-[var(--blue-600)] transition-all duration-300 ease-in-out"
+        className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-[var(--primary)] text-[var(--white)] p-2 sm:p-3 rounded-full shadow-md hover:bg-[var(--blue-600)] transition-all duration-300 ease-in-out"
         onClick={(e) => {
           e.stopPropagation();
           setSelectedImage(galleryImages[(galleryImages.indexOf(selectedImage) - 1 + galleryImages.length) % galleryImages.length]);
@@ -66,7 +66,7 @@ function Lightbox({ images, initialImage, onClose }) {
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
+          className="h-5 w-5 sm:h-6 sm:w-6"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

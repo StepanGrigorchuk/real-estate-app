@@ -188,8 +188,8 @@ function Catalog({ onTagClick, filtersRef, tagFilter, resetTagFilter }) {
 
   return (
     <>
-      <section className="bg-white min-h-screen p-6 animate-fadeIn" style={{ position: 'static' }}>
-        <div className="pt-6 mb-6">
+      <section className="bg-white min-h-screen p-2 sm:p-6 animate-fadeIn" style={{ position: 'static' }}>
+        <div className="pt-4 sm:pt-6 mb-4 sm:mb-6">
           <Filters
             ref={filtersRef}
             properties={properties}
@@ -265,7 +265,7 @@ function Catalog({ onTagClick, filtersRef, tagFilter, resetTagFilter }) {
             </div>
           )}
         </div>
-        <div ref={cardsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fadeIn">
+        <div ref={cardsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 animate-fadeIn">
           {properties && properties.length > 0 ? (
             properties.map(property => {
               const images = generateImagePathsForProperty(property, properties, 3);
@@ -280,7 +280,7 @@ function Catalog({ onTagClick, filtersRef, tagFilter, resetTagFilter }) {
               );
             })
           ) : (
-            <div className="text-gray-600 text-center">Нет объектов, соответствующих фильтрам</div>
+            <div className="text-gray-600 text-center col-span-full py-8">Нет объектов, соответствующих фильтрам</div>
           )}
         </div>
       </section>
@@ -289,13 +289,23 @@ function Catalog({ onTagClick, filtersRef, tagFilter, resetTagFilter }) {
         <button
           ref={scrollButtonRef}
           onClick={scrollToFilters}
-          className={`fixed bottom-6 right-6 z-[100] bg-[var(--primary)] text-white p-3 rounded-full shadow-lg pointer-events-auto
-            scroll-to-filters-btn
-            ${showScrollButton ? 'scroll-to-filters-btn--visible' : ''}`}
-          aria-label="Наверх к фильтрам"
+          className={`fixed bottom-4 right-4 z-50 p-3 sm:p-4 rounded-full bg-primary text-white shadow-lg transition-all duration-300 scroll-to-filters-btn${showScrollButton ? ' scroll-to-filters-btn--visible' : ''}`}
+          aria-label="К фильтрам"
         >
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M18 15l-6-6-6 6" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 sm:h-6 sm:w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+              transform="rotate(-90 12 12)"
+            />
           </svg>
         </button>
       )}
