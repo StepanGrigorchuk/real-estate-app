@@ -6,6 +6,33 @@ import Catalog from "./components/Catalog.jsx";
 import PropertyPage from "./components/PropertyPage.jsx";
 import Footer from "./components/Footer.jsx";
 
+function CookieConsent() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    if (!localStorage.getItem('cookieConsent')) {
+      setVisible(true);
+    }
+  }, []);
+  const handleAccept = () => {
+    localStorage.setItem('cookieConsent', 'true');
+    setVisible(false);
+  };
+  if (!visible) return null;
+  return (
+    <div className="fixed bottom-0 left-0 w-full z-[9999] flex justify-center animate-fadeIn">
+      <div className="bg-white border border-[var(--gray-200)] shadow-lg rounded-lg px-4 py-3 mb-6 flex flex-col sm:flex-row items-center gap-3 max-w-xl w-full mx-2 sm:mx-0">
+        <span className="text-[var(--gray-700)] text-sm sm:text-base">Мы используем cookie-файлы для улучшения работы сайта. Продолжая пользоваться сайтом, вы соглашаетесь с <a href="/privacy" className="underline hover:text-[var(--primary)] transition">политикой конфиденциальности</a>.</span>
+        <button
+          onClick={handleAccept}
+          className="px-5 py-2 bg-[var(--primary)] text-white rounded-lg font-medium hover:bg-blue-800 active:bg-blue-900 transition-all duration-200 text-sm sm:text-base shadow-sm"
+        >
+          Хорошо
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [tagFilter, setTagFilter] = useState(null);
@@ -69,6 +96,7 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen bg-white">
       <Header />
+      <CookieConsent />
       <main className="flex-grow w-full">
         {/* Удалён временный DEBUG-блок */}
         <Routes>

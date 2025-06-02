@@ -51,7 +51,7 @@ function Header() {
           </a>
           <a
             href="tel:+1234567890"
-            className="bg-primary md:bg-white p-3 md:p-2 h-12 md:h-10 rounded-lg shadow-md transition flex items-center hover:bg-blue-700 md:hover:bg-gray-100"
+            className="bg-primary md:bg-white p-3 md:p-2 h-12 md:h-10 rounded-lg shadow-md transition flex items-center hover:bg-blue-700 md:hover:bg-gray-200"
             style={{ fontSize: '0.1rem' }}
           >
             <svg
