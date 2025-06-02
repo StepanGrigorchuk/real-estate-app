@@ -261,10 +261,9 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
   if (!isRangesReady) {
     return <div className="text-center text-gray-600 p-6">Диапазоны фильтров недоступны. Попробуйте позже.</div>;
   }
-
   return (
-    <div ref={ref} className="bg-[var(--gray-50)] p-2 sm:p-4 rounded-lg shadow-sm relative z-[1000] mt-4 sm:mt-10 w-full max-w-full overflow-x-auto">
-      <div>        {isFiltersCollapsed ? (
+    <div ref={ref} className="bg-[var(--gray-50)] p-2 sm:p-4 rounded-lg shadow-sm relative z-[1000] mt-24 sm:mt-10 w-full max-w-full overflow-x-auto">
+      <div>{isFiltersCollapsed ? (
           <animated.div style={animationPropsCollapsed} className="overflow-visible z-[1000]">            <div className="flex items-center justify-between gap-16 px-2 sm:px-6">
               {/* Цена - занимает больше места */}
               <div className="flex-1 min-w-0">
