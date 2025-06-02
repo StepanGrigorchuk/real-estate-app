@@ -1,5 +1,5 @@
 // Единый файл констант для проекта
-export const TELEGRAM_LINK = 'https://t.me/yourmanager';
+export const TELEGRAM_LINK = 'https://t.me/annainvestkrim';
 export const DEVELOPERS = [
   'lsr', 'stroygrad', 'golubaya_volna', 'yuzhny_bereg', 'krymskaya_riviera',
   'ЖилСтрой', 'Новострой', 'СтройГрад'

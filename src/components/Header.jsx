@@ -31,7 +31,7 @@ function Header() {
 
   return (
     <header
-      className={`bg-white shadow-md py-4 sm:py-5 px-4 sm:px-6 fixed w-full z-10 transition-transform duration-500`}
+      className={`bg-white shadow-md py-4 md:py-3 sm:py-5 px-4 md:px-4 sm:px-6 fixed w-full z-10 transition-transform duration-500`}
       style={{
         transform: isHeaderVisible ? 'translateY(0)' : 'translateY(-100%)',
         transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
@@ -39,24 +39,24 @@ function Header() {
     >
       <div className="max-w-7xl mx-auto flex flex-row flex-wrap justify-between items-center gap-3 sm:gap-0">
         <Link to="/" reloadDocument className="flex items-center min-w-[40px]">
-          <img src="/logo.svg" alt="Логотип Компас" className="h-10 sm:h-10 w-auto" />
+          <img src="/logo.svg" alt="Логотип Компас" className="h-10 md:h-8 w-auto" />
         </Link>
         <div className="flex gap-3 sm:gap-3 items-center">
           <a
             href={TELEGRAM_LINK}
-            className="hidden md:inline-block bg-primary text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-700 transition whitespace-nowrap text-base sm:text-base"
-            style={{ fontSize: 'clamp(1rem, 2vw + 0.8rem, 1.1rem)' }}
+            className="hidden md:inline-flex bg-primary text-white px-3 md:px-6 py-2 md:py-2 h-12 md:h-10 min-w-[120px] md:min-w-[150px] items-center justify-center rounded-lg hover:bg-blue-800 active:bg-blue-900 transition-all duration-200 whitespace-nowrap font-regular border border-transparent hover:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            style={{ fontSize: 'var(--font-size-sm)' }}
           >
-            Написать помощнику
+            <span className="w-full text-center">Написать помощнику</span>
           </a>
           <a
             href="tel:+1234567890"
-            className="bg-primary md:bg-white p-3 rounded-lg shadow-md hover:bg-blue-700 transition flex items-center"
-            style={{ fontSize: 'clamp(1.1rem, 2vw + 0.8rem, 1.15rem)' }}
+            className="bg-primary md:bg-white p-3 md:p-2 h-12 md:h-10 rounded-lg shadow-md transition flex items-center hover:bg-blue-700 md:hover:bg-gray-100"
+            style={{ fontSize: '0.1rem' }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-7 w-7 sm:h-6 sm:w-6 text-white md:text-primary"
+              className="h-7 md:h-6 w-7 md:w-6 sm:h-6 sm:w-6 text-white md:text-primary"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
