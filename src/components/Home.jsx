@@ -134,7 +134,7 @@ function Home() {
   return (
     <section className="bg-[var(--white)] pt-24 pb-12 w-full min-h-screen flex flex-col px-6 animate-fadeIn">
       <div className="flex flex-col md:flex-row items-start justify-between w-full flex-grow">
-        <div className="w-full md:w-1/2 pl-0 pr-6">
+        <div className="w-full md:w-1/2 pl-0 pr-6 pt-8">
           <h1 className="text-4xl md:text-5xl font-bold text-[var(--gray-800)] mb-4">
             Найдите дом своей мечты
           </h1>
