@@ -4,6 +4,7 @@ import Lightbox from './Lightbox.jsx';
 import { getParsedTags } from '../utils/property';
 import { formatTag, isNotEmpty } from '../utils/format';
 import { PARAM_NAMES, TELEGRAM_LINK } from '../constants';
+import { imagePath, getNForProperty } from '../utils/imagePath';
 
 function PropertyPage({ properties, setSelectedProperty }) {
   const { id } = useParams();
@@ -50,27 +51,16 @@ function PropertyPage({ properties, setSelectedProperty }) {
 
   // Загрузка изображений
   useEffect(() => {
-    if (!property || !property.developer || !property.complex) return;
+    if (!property || !property.developer || !property.complex || !properties) return;
     const developer = property.developer;
     const complex = property.complex;
-    const objectFolder = property.folder || property.slug || property.id;
+    const n = getNForProperty(property, properties);
     const images = [];
-    let index = 1;
-    const checkNextImage = () => {
-      const imagePath = `/developers/${developer}/${complex}/${objectFolder}/${index}.jpg`;
-      return new Promise((resolve) => {
-        const img = new window.Image();
-        img.src = imagePath;
-        img.onload = () => {
-          images.push(imagePath);
-          index++;
-          checkNextImage().then(resolve);
-        };
-        img.onerror = () => resolve();
-      });
-    };
-    checkNextImage().then(() => setLoadedImages(images));
-  }, [property]);
+    for (let i = 1; i <= 20; i++) {
+      images.push(imagePath({ developer, complex, n, i }));
+    }
+    setLoadedImages(images);
+  }, [property, properties]);
 
   // Безопасно получить параметры объекта
   const parsedTags = getParsedTags(property);
