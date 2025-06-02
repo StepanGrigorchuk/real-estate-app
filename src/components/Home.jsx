@@ -139,31 +139,31 @@ function Home() {
           <div className="max-w-lg w-full text-center md:text-left flex flex-col items-center md:items-start justify-center mx-auto">
             <h1
               className="font-bold text-[var(--gray-800)] mb-2 sm:mb-4"
-              style={{ fontSize: 'clamp(1.1rem, 2.5vw + 0.8rem, 2.1rem)', lineHeight: 1.1 }}
+              style={{ fontSize: 'clamp(1.25rem, 6vw + 0.8rem, 2.1rem)', lineHeight: 1.1 }}
             >
               Найдите дом своей мечты
             </h1>
             <p
               className="mb-6 sm:mb-12 max-w-lg"
-              style={{ fontSize: 'clamp(0.95rem, 1.5vw + 0.7rem, 1.15rem)', lineHeight: 1.4 }}
+              style={{ fontSize: 'clamp(1.05rem, 4vw + 0.7rem, 1.15rem)', lineHeight: 1.4 }}
             >
               Найдите идеальный дом с нашим каталогом. Умный поиск по цене, площади и другим параметрам поможет выбрать жильё, соответствующее вашим желаниям.
             </p>
             <Link
               to="/catalog"
               className="bg-gradient-to-r from-blue-500 to-blue-700 text-[var(--white)] px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:from-blue-600 hover:to-blue-800 hover:shadow-xl hover:scale-105 hover:brightness-110 transition-all duration-300 font-semibold inline-block"
-              style={{ fontSize: 'clamp(1rem, 1.2vw + 0.8rem, 1.2rem)' }}
+              style={{ fontSize: 'clamp(1.1rem, 3vw + 0.8rem, 1.2rem)' }}
             >
               Смотреть недвижку
             </Link>
           </div>
         </div>
         {/* Галерея с отступом сверху и индикацией под ней */}
-        <div className="w-full md:w-1/2 flex-grow flex md:justify-end mt-4 md:mt-0 pr-0 md:pl-8 relative min-h-[300px]" style={{minHeight: '70vh'}}>
-          <div className="flex flex-col w-full h-full items-center justify-center pt-8 md:pt-12">
+        <div className="w-full md:w-1/2 flex-grow flex md:justify-end mt-2 md:mt-0 pr-0 md:pl-8 relative min-h-[300px]" style={{minHeight: '70vh'}}>
+          <div className="flex flex-col w-full h-full items-center justify-center pt-4 md:pt-12">
             {topProperties.length > 0 && isLoaded ? (
               <>
-                <div className="w-full h-[40vh] sm:h-[60vh] md:h-[70vh] max-w-full flex items-center justify-center">
+                <div className="w-full h-[50vh] sm:h-[60vh] md:h-[70vh] max-w-full flex items-center justify-center">
                   <div className="w-full h-full rounded-lg shadow-lg relative overflow-hidden flex items-center justify-center">
                     {topProperties.map((property, index) => {
                       const tags = getParsedTags(property);
@@ -184,10 +184,10 @@ function Home() {
                               to={`/property/${property.id}`}
                               className="absolute inset-0 z-10 flex justify-center items-end md:items-center"
                             >
-                              <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-black bg-opacity-50 text-white p-2 sm:p-4 rounded-lg z-20 text-xs sm:text-base">
-                                {isNotEmpty(tags?.price) && <p className="text-lg sm:text-2xl font-semibold">{formatTag('price', tags.price)}</p>}
-                                <h3 className="text-xs sm:text-base">{property.title}</h3>
-                                {isNotEmpty(tags?.area) && <p className="text-xs sm:text-base">{formatTag('area', tags.area)}</p>}
+                              <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-black bg-opacity-50 text-white p-2 sm:p-4 rounded-lg z-20" style={{ fontSize: 'clamp(0.95rem, 3vw + 0.7rem, 1.05rem)' }}>
+                                {isNotEmpty(tags?.price) && <p className="font-semibold" style={{ fontSize: 'clamp(1.2rem, 5vw + 1rem, 1.5rem)' }}>{formatTag('price', tags.price)}</p>}
+                                <h3 style={{ fontSize: 'clamp(0.95rem, 2vw + 0.7rem, 1.05rem)' }}>{property.title}</h3>
+                                {isNotEmpty(tags?.area) && <p style={{ fontSize: 'clamp(0.9rem, 1.5vw + 0.6rem, 0.95rem)' }}>{formatTag('area', tags.area)}</p>}
                               </div>
                             </Link>
                             <div
