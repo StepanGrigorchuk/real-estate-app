@@ -33,3 +33,26 @@ export function generateImagePathsForComplex({ developer, complex, filesByObject
     return files.map(file => `/developers/${developer}/${complex}/${folder}/${file}`);
   });
 }
+
+// Генерация массива путей к изображениям для одного объекта (property)
+// Возвращает массив путей вида /developers/developer/complex/developer_complex_n/i.jpg для i=1..maxImages
+export function generateImagePathsForProperty(property, allProperties, maxImages = 20) {
+  if (!property || !property.developer || !property.complex) return [];
+  // n вычисляем как в getNForProperty
+  let n = 1;
+  if (allProperties && Array.isArray(allProperties)) {
+    const { developer, complex, id } = property;
+    const sameComplex = allProperties.filter(
+      p => p.developer === developer && p.complex === complex
+    );
+    const idx = sameComplex.findIndex(p => String(p.id) === String(id));
+    n = idx >= 0 ? idx + 1 : 1;
+  }
+  const { developer, complex } = property;
+  const paths = [];
+  for (let i = 1; i <= maxImages; i++) {
+    const folder = `${developer}_${complex}_${n}`;
+    paths.push(`/developers/${developer}/${complex}/${folder}/${i}.jpg`);
+  }
+  return paths;
+}

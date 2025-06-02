@@ -3,9 +3,8 @@ import { useState } from 'react';
 import { getParsedTags } from '../utils/property';
 import { formatTag, isNotEmpty } from '../utils/format';
 import { PARAM_NAMES, TELEGRAM_LINK } from '../constants';
-import { imagePath, getNForProperty } from '../utils/imagePath';
 
-function PropertyCard({ property, onTagClick, tagOptions, allProperties }) {
+function PropertyCard({ property, onTagClick, tagOptions, images = [] }) {
   if (!property) {
     console.error("PropertyCard: Invalid property data:", property);
     return <div className="bg-[var(--white)] rounded-lg shadow-md p-4">Ошибка: данные объекта недоступны</div>;
@@ -13,19 +12,6 @@ function PropertyCard({ property, onTagClick, tagOptions, allProperties }) {
 
   // Безопасно получаем tags
   const tags = getParsedTags(property);
-
-  const developer = property.developer || '';
-  const complex = property.complex || '';
-  // Получаем n для property внутри своего комплекса
-  const n = getNForProperty(property, allProperties || []);
-  const images = [];
-  if (developer && complex && n) {
-    for (let i = 1; i <= 3; i++) {
-      images.push(imagePath({ developer, complex, n, i }));
-    }
-  } else {
-    console.warn('PropertyCard: Недостаточно данных для формирования пути к изображению', { developer, complex, n, property });
-  }
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
