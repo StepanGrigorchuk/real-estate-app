@@ -335,19 +335,45 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
             </div>
           </animated.div>
         )}
+      </div>      {/* Mobile layout - vertical stack */}
+      <div className="block sm:hidden mt-4 px-2 space-y-3 z-10">
+        <SimpleButton
+          onClick={applyFilters}
+          className="w-full"
+        >
+          Показать {countToShow} вариантов
+        </SimpleButton>
+        <SimpleButton
+          onClick={resetFilters}
+          variant="secondary"
+          className="w-full"
+        >
+          Сбросить
+        </SimpleButton>
+        <button
+          onClick={toggleFilters}
+          className="text-[var(--gray-600)] underline text-small hover:text-[var(--gray-800)] transition block w-full text-center"
+        >
+          {isFiltersCollapsed ? "Развернуть фильтры" : "Свернуть фильтры"}
+        </button>
       </div>
-      <div className="flex justify-between items-center gap-4 mt-4 px-6 z-10">
+      
+      {/* Desktop layout - horizontal */}
+      <div className="hidden sm:flex justify-between items-center gap-4 mt-4 px-6 z-10">
         <button
           onClick={toggleFilters}
           className="text-[var(--gray-600)] underline text-small hover:text-[var(--gray-800)] transition"
         >
           {isFiltersCollapsed ? "Развернуть фильтры" : "Свернуть фильтры"}
-        </button>        <div className="flex gap-4">          <SimpleButton
+        </button>
+        <div className="flex gap-4">
+          <SimpleButton
             onClick={resetFilters}
             variant="secondary"
           >
             Сбросить
-          </SimpleButton>          <SimpleButton
+          </SimpleButton>
+          <SimpleButton
             onClick={applyFilters}
           >
             Показать {countToShow} вариантов
