@@ -25,7 +25,7 @@
   --fluid-screen: clamp(var(--fluid-min-width), 100vw, var(--fluid-max-width));
   --fluid-bp: calc((var(--fluid-screen) - var(--fluid-min-width) * 1px) / (var(--fluid-max-width) - var(--fluid-min-width)));  /* Comprehensive Font Size System - Fluid responsive sizing (увеличенные для мобилки) */
   --font-size-xs: clamp(0.7rem, 0.65rem + 0.2vw, 0.8rem);          /* 11.2-12.8px */
-  --font-size-sm: clamp(0.8rem, 0.75rem + 0.25vw, 0.9rem);         /* 12.8-14.4px */
+  --font-size-sm: clamp(0.9rem, 0.9rem + 0.3vw, 0.9rem);         /* 12.8-14.4px */
   --font-size-base: clamp(1rem, 0.95rem + 0.35vw, 1.1rem);         /* 16-17.6px (увеличено для мобилки) */
   --font-size-lg: clamp(1.1rem, 1rem + 0.6vw, 1.2rem);             /* 17.6-20.8px */
   --font-size-xl: clamp(1.2rem, 1.1rem + 0.8vw, 1.6rem);           /* 19.2-25.6px */
@@ -37,8 +37,8 @@
   /* Additional specialized sizes for UI components */
   --font-size-micro: clamp(0.6rem, 0.55rem + 0.1vw, 0.65rem);      /* 9.6-10.4px - для мелких элементов */
   --font-size-caption: clamp(0.75rem, 0.7rem + 0.2vw, 0.85rem);    /* 12-13.6px - для подписей */
-  --font-size-button: clamp(0.95rem, 0.9rem + 0.3vw, 1.1rem);      /* 15.2-17.6px - для кнопок (увеличено) */
-  --font-size-tag: clamp(0.8rem, 0.75rem + 0.25vw, 0.9rem);        /* 12.8-14.4px - для тегов */
+  --font-size-button: clamp(1rem, 0.9rem + 0.3vw, 1rem);      /* 15.2-17.6px - для кнопок (увеличено) */
+  --font-size-tag: clamp(1rem, 0.75rem + 0.25vw, 1.1rem);        /* 12.8-14.4px - для тегов */
   --font-size-price: clamp(1.2rem, 1.1rem + 0.8vw, 1.5rem);        /* 19.2-24px - для цен */
   --font-size-hero: clamp(3rem, 2rem + 2vw, 8rem);             /* 32-44.8px - для главных заголовков (увеличено) */
 
