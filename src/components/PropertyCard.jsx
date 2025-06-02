@@ -48,7 +48,7 @@ function PropertyCard({ property, onTagClick, tagOptions, images = [] }) {
   ].filter(tag => isNotEmpty(tag.value));
 
   return (
-    <Link to={`/property/${property.id}`} className="bg-[var(--white)] rounded-lg shadow-md pb-4 hover:shadow-lg transition block animate-fadeIn w-full max-w-full">
+    <Link to={`/property/${property.id}`} className="bg-[var(--white)] rounded-lg shadow-md pb-4 hover:shadow-lg transition block animate-fadeIn w-full max-w-full min-w-[320px]">
       <div className="relative">
         <img
           src={images[currentImageIndex]}
