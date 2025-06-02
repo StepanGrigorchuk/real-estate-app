@@ -6,17 +6,16 @@ import RangeFilter from './RangeFilter';
 const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initialFilters, cardsRef, tagFilter, resetTagFilter, onTagOptionsChange }, ref) => {
   const ranges = useMemo(() => {
     const ranges = {
-      yearBuilt: { min: Infinity, max: -Infinity },
-      area: { min: Infinity, max: -Infinity },
       price: { min: Infinity, max: -Infinity },
+      delivery: { min: Infinity, max: -Infinity },
+      area: { min: Infinity, max: -Infinity },
       floor: { min: Infinity, max: -Infinity },
     };
-
     properties.forEach(property => {
       if (property.tags && typeof property.tags === 'object') {
-        if (property.tags.yearBuilt) {
-          ranges.yearBuilt.min = Math.min(ranges.yearBuilt.min, property.tags.yearBuilt);
-          ranges.yearBuilt.max = Math.max(ranges.yearBuilt.max, property.tags.yearBuilt);
+        if (property.tags.delivery) {
+          ranges.delivery.min = Math.min(ranges.delivery.min, property.tags.delivery);
+          ranges.delivery.max = Math.max(ranges.delivery.max, property.tags.delivery);
         }
         if (property.tags.area) {
           ranges.area.min = Math.min(ranges.area.min, property.tags.area);
@@ -32,12 +31,10 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
         }
       }
     });
-
     Object.keys(ranges).forEach(key => {
       if (ranges[key].min === Infinity) ranges[key].min = 0;
       if (ranges[key].max === -Infinity) ranges[key].max = 100;
     });
-
     return ranges;
   }, [properties]);
 
@@ -47,22 +44,10 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
       if (property.tags && typeof property.tags === 'object') {
         Object.entries(property.tags).forEach(([key, value]) => {
           if (!options[key]) options[key] = new Set();
-          if (key === 'parking') {
-            const formattedValue = value === true || value === 'true' || value === 'Есть' ? 'Есть парковка' : 'Нет парковки';
-            options[key].add(formattedValue);
-          } else {
-            options[key].add(String(value).charAt(0).toUpperCase() + String(value).slice(1));
-          }
+          options[key].add(String(value)); // сохраняем как есть, без изменения регистра
         });
       }
     });
-
-    options.developer = new Set(properties.map(p => p.developer ? String(p.developer).charAt(0).toUpperCase() + String(p.developer).slice(1) : null).filter(d => d));
-    options.complex = new Set(properties.map(p => p.complex ? String(p.complex).charAt(0).toUpperCase() + String(p.complex).slice(1) : null).filter(c => c));
-    options.finishing = new Set(['Мебель', 'Чистовая', 'Штукатурка']);
-    options.district = new Set(['Курортный', 'Спальный', 'Отдалённый']);
-    options.material = new Set(['Кирпич', 'Бетон', 'Дерево', 'Панель']);
-    options.parking = new Set(['Нет парковки', 'Есть парковка']);
     return options;
   }, [properties]);
 
@@ -74,22 +59,18 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
 
   const dynamicInitialFilters = {
     ...initialFilters,
-    type: [],
+    // Новый набор фильтров только по актуальным тегам
+    price: { min: ranges.price?.min ?? 0, max: ranges.price?.max ?? 0 },
     rooms: [],
-    developer: [],
-    complex: [],
-    yearBuilt: { min: ranges.yearBuilt.min, max: ranges.yearBuilt.max },
-    material: [],
-    area: { min: ranges.area.min, max: ranges.area.max },
-    price: { min: ranges.price.min, max: ranges.price.max },
-    floor: { min: ranges.floor.min, max: ranges.floor.max },
-    bedrooms: [],
-    bathrooms: [],
-    parking: [],
-    condition: [],
-    location: [],
+    city: [],
+    delivery: { min: ranges.delivery?.min ?? 0, max: ranges.delivery?.max ?? 0 },
+    area: { min: ranges.area?.min ?? 0, max: ranges.area?.max ?? 0 },
+    'sea-distance': [],
+    type: [],
+    view: [],
     finishing: [],
-    district: [],
+    floor: { min: ranges.floor?.min ?? 0, max: ranges.floor?.max ?? 0 },
+    payment: [],
   };
 
   const [tempFilters, setTempFilters] = useState(() => {
@@ -139,22 +120,15 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
   }
 
   const filterConfig = [
-    { label: "Тип", key: "type", options: [...tagOptions.type] },
-    { label: "Комнаты", key: "rooms", options: ["1-комнатная", "2-комнатная", "3-комнатная", "4-комнатная"] },
-    { label: "Застройщик", key: "developer", options: [...tagOptions.developer] },
-    { label: "ЖК", key: "complex", options: [...tagOptions.complex] },
-    { label: "Материал здания", key: "material", options: [...tagOptions.material] },
-    { label: "Количество спален", key: "bedrooms", options: [...tagOptions.bedrooms] },
-    { label: "Количество ванных комнат", key: "bathrooms", options: [...tagOptions.bathrooms] },
-    { label: "Парковка", key: "parking", options: [...tagOptions.parking] },
-    { label: "Состояние", key: "condition", options: [...tagOptions.condition] },
-    { label: "Местоположение", key: "location", options: [...tagOptions.location] },
-    { label: "Отделка", key: "finishing", options: [...tagOptions.finishing] },
-    { label: "Район", key: "district", options: [...tagOptions.district] },
-    { label: "Год сдачи", key: "yearBuilt", type: "range", range: ranges.yearBuilt },
-    { label: "Площадь (м²)", key: "area", type: "range", range: ranges.area },
     { label: "Цена (₽)", key: "price", type: "range", range: ranges.price },
+    { label: "Комнатность", key: "rooms", options: Array.from(tagOptions.rooms || []) },
+    { label: "Город", key: "city", options: Array.from(tagOptions.city || []) },
+    { label: "Расстояние до моря", key: "sea-distance", options: Array.from(tagOptions['sea-distance'] || []) },
+    { label: "Тип", key: "type", options: Array.from(tagOptions.type || []) },
+    { label: "Вид из окна", key: "view", options: Array.from(tagOptions.view || []) },
+    { label: "Отделка", key: "finishing", options: Array.from(tagOptions.finishing || []) },
     { label: "Этаж", key: "floor", type: "range", range: ranges.floor },
+    { label: "Способ оплаты", key: "payment", options: Array.from(tagOptions.payment || []) },
   ];
 
   const getFilteredCount = (filters) => {
@@ -269,7 +243,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
                 <TextFilter
                   label="Комнаты"
                   filterKey="rooms"
-                  options={["1-комнатная", "2-комнатная", "3-комнатная", "4-комнатная"]}
+                  options={Array.from(tagOptions.rooms || [])}
                   selectedValues={tempFilters.rooms}
                   onChange={handleFilterChange}
                   onReset={handleResetFilter}
@@ -279,7 +253,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
                 <TextFilter
                   label="ЖК"
                   filterKey="complex"
-                  options={[...tagOptions.complex]}
+                  options={Array.from(tagOptions.complex || [])}
                   selectedValues={tempFilters.complex}
                   onChange={handleFilterChange}
                   onReset={handleResetFilter}
@@ -289,7 +263,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
                 <TextFilter
                   label="Отделка"
                   filterKey="finishing"
-                  options={[...tagOptions.finishing]}
+                  options={Array.from(tagOptions.finishing || [])}
                   selectedValues={tempFilters.finishing}
                   onChange={handleFilterChange}
                   onReset={handleResetFilter}

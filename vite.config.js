@@ -6,4 +6,9 @@ export default defineConfig({
   resolve: {
     extensions: ['.js', '.jsx'], // Автоматически разрешаем .jsx
   },
+  server: {
+    proxy: {
+      '/api': 'http://localhost:3000',
+    },
+  },
 });

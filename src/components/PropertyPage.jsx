@@ -4,36 +4,93 @@ import Lightbox from './Lightbox.jsx';
 
 function PropertyPage({ properties, setSelectedProperty }) {
   const { id } = useParams();
-  
-  console.log("PropertyPage: Received ID from URL:", id);
-  console.log("PropertyPage: Received properties:", properties);
+  const [property, setProperty] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [loadedImages, setLoadedImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  // Найти объект в props, если есть
+  useEffect(() => {
+    if (Array.isArray(properties) && properties.length > 0) {
+      const found = properties.find(p => String(p.id) === String(id));
+      if (found) {
+        setProperty(found);
+        setError(null);
+        return;
+      }
+    }
+    // Если не найден — загрузить с сервера
+    setLoading(true);
+    fetch(`/api/properties/${id}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Объект не найден');
+        return res.json();
+      })
+      .then(data => {
+        setProperty(data.property || data); // поддержка разных форматов ответа
+        setError(null);
+      })
+      .catch(err => {
+        setError(err);
+        setProperty(null);
+      })
+      .finally(() => setLoading(false));
+  }, [id, properties]);
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'auto',
-    });
-    console.log("PropertyPage: Scrolled to top on mount, scrollY:", window.scrollY);
+    window.scrollTo({ top: 0, behavior: 'auto' });
   }, []);
 
-  if (!properties || !Array.isArray(properties)) {
-    console.error("PropertyPage: Properties is not an array or is undefined");
-    return <div className="text-[var(--gray-800)] p-6 animate-fadeIn">Ошибка: данные недвижимости недоступны</div>;
+  // Загрузка изображений
+  useEffect(() => {
+    if (!property || !property.developer || !property.complex) return;
+    const developer = property.developer.replace(/\s+/g, '');
+    const complex = property.complex.replace(/\s+/g, '');
+    const images = [];
+    let index = 1;
+    const checkNextImage = () => {
+      const imagePath = `/developers/${developer}/${complex}/${property.id}/images/${property.id}-${index}.jpg`;
+      return new Promise((resolve) => {
+        const img = new window.Image();
+        img.src = imagePath;
+        img.onload = () => {
+          images.push(imagePath);
+          index++;
+          checkNextImage().then(resolve);
+        };
+        img.onerror = () => resolve();
+      });
+    };
+    checkNextImage().then(() => setLoadedImages(images));
+  }, [property]);
+
+  // Безопасно получить параметры объекта
+  let parsedTags = {};
+  if (property && property.tags) {
+    if (typeof property.tags === 'string') {
+      try {
+        parsedTags = JSON.parse(property.tags);
+      } catch (e) {
+        parsedTags = {};
+      }
+    } else if (typeof property.tags === 'object' && property.tags !== null) {
+      parsedTags = property.tags;
+    }
   }
 
-  const property = properties.find(p => p.id === id);
-
+  if (loading) {
+    return <div className="text-[var(--gray-800)] p-6 animate-fadeIn">Загрузка...</div>;
+  }
+  if (error) {
+    return <div className="text-[var(--gray-800)] p-6 animate-fadeIn">Ошибка: {error.message || error.toString()}</div>;
+  }
   if (!property) {
-    console.error(`PropertyPage: Property with ID ${id} not found`);
-    return <div className="text-[var(--gray-800)] p-6 animate-fadeIn">Объект с ID ${id} не найден</div>;
+    return <div className="text-[var(--gray-800)] p-6 animate-fadeIn">Объект с ID {id} не найден</div>;
   }
-
   if (!property.developer || !property.complex) {
-    console.error(`PropertyPage: Property ${id} is missing required fields: developer or complex`, property);
     return <div className="text-[var(--gray-800)] p-6 animate-fadeIn">Ошибка: объект не содержит необходимые данные</div>;
   }
-
-  setSelectedProperty(property);
 
   const paramNames = {
     type: 'Тип',
@@ -47,47 +104,11 @@ function PropertyPage({ properties, setSelectedProperty }) {
     bathrooms: 'Ванные комнаты',
     parking: 'Парковка',
     condition: 'Состояние',
+    delivery: 'Срок сдачи',
+    'sea-distance': 'Расстояние до моря',
+    payment: 'Способ оплаты',
+    view: 'Вид из окна',
   };
-
-  const [loadedImages, setLoadedImages] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  const developer = property.developer.replace(/\s+/g, '');
-  const complex = property.complex.replace(/\s+/g, '');
-
-  useEffect(() => {
-    const images = [];
-    const promises = [];
-    let index = 1;
-
-    const checkNextImage = () => {
-      const imagePath = `/developers/${developer}/${complex}/${property.id}/images/${property.id}-${index}.jpg`;
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.src = imagePath;
-        console.log(`PropertyPage: Проверяем изображение ${index} для ID ${property.id}: ${imagePath}`);
-
-        img.onload = () => {
-          console.log(`PropertyPage: Изображение ${index} загружено для ID ${property.id}: ${imagePath}`);
-          images.push(imagePath);
-          index++;
-          checkNextImage().then(resolve);
-        };
-
-        img.onerror = () => {
-          console.log(`PropertyPage: Изображение ${index} не найдено для ID ${property.id}: ${imagePath}`);
-          resolve();
-        };
-      });
-    };
-
-    checkNextImage().then(() => {
-      setLoadedImages(images);
-      console.log(`PropertyPage: Загруженные изображения для ID ${property.id}:`, images);
-    });
-  }, [developer, complex, property.id]);
-
-  console.log("PropertyPage: Rendering property:", property);
 
   return (
     <>
@@ -105,10 +126,9 @@ function PropertyPage({ properties, setSelectedProperty }) {
                         alt={`Фото ${index + 1}`}
                         className="w-full h-full object-contain rounded cursor-pointer bg-[var(--gray-200)]"
                         onClick={() => setSelectedImage(img)}
-                        onError={(e) => {
-                          console.log(`PropertyPage: Не удалось загрузить изображение: ${img}`);
+                        onError={e => {
                           e.target.src = 'https://via.placeholder.com/256x160?text=Image+Not+Found';
-                          e.target.alt = "Изображение не найдено";
+                          e.target.alt = 'Изображение не найдено';
                         }}
                       />
                     ))
@@ -127,10 +147,9 @@ function PropertyPage({ properties, setSelectedProperty }) {
                         alt={`Мини-превью ${index + 1}`}
                         className="w-16 h-16 object-cover rounded cursor-pointer bg-[var(--gray-200)]"
                         onClick={() => setSelectedImage(img)}
-                        onError={(e) => {
-                          console.log(`PropertyPage: Не удалось загрузить мини-превью: ${img}`);
+                        onError={e => {
                           e.target.src = 'https://via.placeholder.com/64x64?text=Image+Not+Found';
-                          e.target.alt = "Мини-превью не найдено";
+                          e.target.alt = 'Мини-превью не найдено';
                         }}
                       />
                     ))
@@ -141,26 +160,39 @@ function PropertyPage({ properties, setSelectedProperty }) {
               </div>
               <div className="mt-8">
                 <p className="text-[var(--gray-600)] leading-relaxed">
-                  {property.description || "Описание отсутствует"}
+                  {property.description || 'Описание отсутствует'}
                 </p>
               </div>
             </div>
             <div className="md:col-span-1">
               <div className="bg-[var(--white)] rounded-lg px-6 pb-6 pt-0">
                 <h2 className="text-2xl font-bold text-[var(--gray-800)] mb-4">
-                  {property.title || "Название отсутствует"}
+                  {property.title || 'Название отсутствует'}
                 </h2>
                 <div className="grid grid-cols-2 gap-3 text-[var(--gray-600)] mb-6">
-                  {Object.entries(property.tags || {}).map(([key, value]) => (
-                    <div key={key} className="flex flex-col">
-                      <span className="text-sm font-medium text-[var(--gray-800)]">
-                        {paramNames[key] || key.charAt(0).toUpperCase() + key.slice(1)}
-                      </span>
-                      <span className="text-sm">
-                        {key === 'price' ? `${value.toLocaleString()} ₽` : key === 'area' ? `${value} м²` : value}
-                      </span>
-                    </div>
-                  ))}
+                  {Object.entries(parsedTags)
+                    .filter(([_, value]) => value !== undefined && value !== null && value !== '')
+                    .map(([key, value]) => {
+                      let displayValue = value;
+                      if (key === 'price' || key === 'area') {
+                        const num = Number(value);
+                        if (!isNaN(num)) {
+                          displayValue = key === 'price' ? `${num.toLocaleString()} ₽` : `${num} м²`;
+                        } else {
+                          displayValue = value;
+                        }
+                      }
+                      return (
+                        <div key={key} className="flex flex-col">
+                          <span className="text-sm font-medium text-[var(--gray-800)]">
+                            {paramNames[key] || key.charAt(0).toUpperCase() + key.slice(1)}
+                          </span>
+                          <span className="text-sm">
+                            {displayValue}
+                          </span>
+                        </div>
+                      );
+                    })}
                 </div>
                 <a
                   href="https://t.me/yourmanager"

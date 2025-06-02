@@ -1,8 +1,16 @@
 import { useState, useEffect } from 'react';
 
 const RangeFilter = ({ label, filterKey, range, value, onChange }) => {
-  const [rawMinValue, setRawMinValue] = useState(value.min.toString());
-  const [rawMaxValue, setRawMaxValue] = useState(value.max.toString());
+  // Гарантируем, что range всегда объект с min/max числами
+  const normalizedRange = (range && typeof range === 'object') ? range : { min: 0, max: 0 };
+  const safeMin = typeof normalizedRange.min === 'number' && !isNaN(normalizedRange.min) ? normalizedRange.min : 0;
+  const safeMax = typeof normalizedRange.max === 'number' && !isNaN(normalizedRange.max) ? normalizedRange.max : 0;
+  // Гарантируем, что value всегда объект с min/max
+  const normalizedValue = (value && typeof value === 'object') ? value : { min: safeMin, max: safeMax };
+  const safeValueMin = typeof normalizedValue.min === 'number' ? normalizedValue.min : safeMin;
+  const safeValueMax = typeof normalizedValue.max === 'number' ? normalizedValue.max : safeMax;
+  const [rawMinValue, setRawMinValue] = useState(safeValueMin.toString());
+  const [rawMaxValue, setRawMaxValue] = useState(safeValueMax.toString());
   const isPriceField = filterKey === "price";
 
   const formatNumber = (num) => num?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') || '';
@@ -10,24 +18,24 @@ const RangeFilter = ({ label, filterKey, range, value, onChange }) => {
 
   const handleValueChange = (isMinField, newValue) => {
     let parsedValue = isPriceField ? parseNumber(newValue) : parseInt(newValue);
-    if (isNaN(parsedValue)) parsedValue = range.min;
-    parsedValue = Math.min(Math.max(parsedValue, range.min), range.max);
+    if (isNaN(parsedValue)) parsedValue = safeMin;
+    parsedValue = Math.min(Math.max(parsedValue, safeMin), safeMax);
 
     if (isMinField) {
-      const newMin = Math.min(parsedValue, value.max);
-      onChange(filterKey, { min: newMin, max: value.max });
+      const newMin = Math.min(parsedValue, safeValueMax);
+      onChange(filterKey, { min: newMin, max: safeValueMax });
       setRawMinValue(isPriceField ? formatNumber(newMin) : newMin.toString());
     } else {
-      const newMax = Math.max(parsedValue, value.min);
-      onChange(filterKey, { min: value.min, max: newMax });
+      const newMax = Math.max(parsedValue, safeValueMin);
+      onChange(filterKey, { min: safeValueMin, max: newMax });
       setRawMaxValue(isPriceField ? formatNumber(newMax) : newMax.toString());
     }
   };
 
   useEffect(() => {
-    setRawMinValue(isPriceField ? formatNumber(value.min) : value.min.toString());
-    setRawMaxValue(isPriceField ? formatNumber(value.max) : value.max.toString());
-  }, [value.min, value.max, isPriceField]);
+    setRawMinValue(isPriceField ? formatNumber(safeValueMin) : safeValueMin.toString());
+    setRawMaxValue(isPriceField ? formatNumber(safeValueMax) : safeValueMax.toString());
+  }, [safeValueMin, safeValueMax, isPriceField]);
 
   return (
     <div>
@@ -36,16 +44,16 @@ const RangeFilter = ({ label, filterKey, range, value, onChange }) => {
         <span className="text-sm text-[var(--gray-600)]">от</span>
         <input
           type="range"
-          min={range.min}
-          max={range.max}
-          value={value.min}
+          min={safeMin}
+          max={safeMax}
+          value={safeValueMin}
           onChange={e => handleValueChange(true, e.target.value)}
           className="w-full"
         />
         <div className="relative min-w-[100px]">
           <input
             type={isPriceField ? "text" : "number"}
-            value={isPriceField ? rawMinValue : value.min}
+            value={isPriceField ? rawMinValue : safeValueMin}
             onChange={e => setRawMinValue(e.target.value)}
             onFocus={e => e.target.select()}
             onBlur={e => handleValueChange(true, rawMinValue)}
@@ -56,16 +64,16 @@ const RangeFilter = ({ label, filterKey, range, value, onChange }) => {
         <span className="text-sm text-[var(--gray-600)]">до</span>
         <input
           type="range"
-          min={range.min}
-          max={range.max}
-          value={value.max}
+          min={safeMin}
+          max={safeMax}
+          value={safeValueMax}
           onChange={e => handleValueChange(false, e.target.value)}
           className="w-full"
         />
         <div className="relative min-w-[100px]">
           <input
             type={isPriceField ? "text" : "number"}
-            value={isPriceField ? rawMaxValue : value.max}
+            value={isPriceField ? rawMaxValue : safeValueMax}
             onChange={e => setRawMaxValue(e.target.value)}
             onFocus={e => e.target.select()}
             onBlur={e => handleValueChange(false, rawMaxValue)}

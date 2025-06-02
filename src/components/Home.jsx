@@ -1,17 +1,34 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import data from '../data.json';
 
-function Home({ properties: initialProperties }) {
+function Home() {
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loadedImages, setLoadedImages] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLeftHovered, setIsLeftHovered] = useState(false);
   const [isRightHovered, setIsRightHovered] = useState(false);
-  const properties = initialProperties || data;
 
+  useEffect(() => {
+    setLoading(true);
+    fetch('/api/properties?limit=20')
+      .then(res => res.json())
+      .then(data => {
+        setProperties(data.properties || []);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err);
+        setLoading(false);
+      });
+  }, []);
+
+  // Новый список тегов
   const topProperties = properties
     ? [...properties]
+        .filter(p => p.tags && typeof p.tags.price === 'number')
         .sort((a, b) => b.tags.price - a.tags.price)
         .slice(0, 5)
     : [];
@@ -68,6 +85,9 @@ function Home({ properties: initialProperties }) {
     setCurrentSlide(index);
   };
 
+  if (loading) return <div className="p-8 text-center text-gray-600">Загрузка...</div>;
+  if (error) return <div className="p-8 text-center text-red-600">Ошибка загрузки: {error.message}</div>;
+
   return (
     <section className="bg-[var(--white)] pt-24 pb-12 w-full min-h-screen flex flex-col px-6 animate-fadeIn">
       <div className="flex flex-col md:flex-row items-start justify-between w-full flex-grow">
@@ -107,9 +127,18 @@ function Home({ properties: initialProperties }) {
                         className="absolute inset-0 z-10 flex justify-center items-center"
                       >
                         <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white p-4 rounded-lg z-20">
-                          <p className="text-2xl font-semibold">{property.tags.price.toLocaleString()} ₽</p>
+                          <p className="text-2xl font-semibold">{property.tags?.price?.toLocaleString()} ₽</p>
                           <h3 className="text-base">{property.title}</h3>
-                          <p className="text-base">{property.tags.area} кв.м.</p>
+                          <p className="text-base">{property.tags?.area} кв.м.</p>
+                          <p className="text-base">{property.tags?.rooms}</p>
+                          <p className="text-base">{property.tags?.city}</p>
+                          <p className="text-base">{property.tags?.delivery}</p>
+                          <p className="text-base">{property.tags?.['sea-distance']}</p>
+                          <p className="text-base">{property.tags?.type}</p>
+                          <p className="text-base">{property.tags?.view}</p>
+                          <p className="text-base">{property.tags?.finishing}</p>
+                          <p className="text-base">{property.tags?.floor}</p>
+                          <p className="text-base">{property.tags?.payment}</p>
                         </div>
                       </Link>
                       <div

@@ -2,13 +2,16 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
 function PropertyCard({ property, onTagClick, tagOptions }) {
-  if (!property || !property.tags) {
+  if (!property) {
     console.error("PropertyCard: Invalid property data:", property);
     return <div className="bg-[var(--white)] rounded-lg shadow-md p-4">Ошибка: данные объекта недоступны</div>;
   }
 
-  const developer = property.developer.replace(/\s+/g, '');
-  const complex = property.complex.replace(/\s+/g, '');
+  // Безопасно получаем tags
+  const tags = (property.tags && typeof property.tags === 'object') ? property.tags : {};
+
+  const developer = property.developer ? property.developer.replace(/\s+/g, '') : '';
+  const complex = property.complex ? property.complex.replace(/\s+/g, '') : '';
   const images = [
     `/developers/${developer}/${complex}/${property.id}/images/${property.id}-1.jpg`,
     `/developers/${developer}/${complex}/${property.id}/images/${property.id}-2.jpg`,
@@ -43,23 +46,28 @@ function PropertyCard({ property, onTagClick, tagOptions }) {
     }
   };
 
+  // Только существующие значения
   const tagsToDisplay = [
     { key: 'developer', value: property.developer },
     { key: 'complex', value: property.complex },
-    { key: 'type', value: tagOptions?.type?.has(property.tags.type) ? property.tags.type : undefined },
-    { key: 'rooms', value: tagOptions?.rooms?.has(property.tags.rooms) ? property.tags.rooms : undefined },
-    { key: 'material', value: tagOptions?.material?.has(property.tags.material) ? property.tags.material : undefined },
-    { key: 'parking', value: tagOptions?.parking?.has(formatTag('parking', property.tags.parking)) ? property.tags.parking : undefined },
-    { key: 'condition', value: tagOptions?.condition?.has(property.tags.condition) ? property.tags.condition : undefined },
-    { key: 'location', value: tagOptions?.location?.has(property.tags.location) ? property.tags.location : undefined },
-    { key: 'finishing', value: tagOptions?.finishing?.has(property.tags.finishing) ? property.tags.finishing : undefined },
-    { key: 'district', value: tagOptions?.district?.has(property.tags.district) ? property.tags.district : undefined },
-    { key: 'yearBuilt', value: property.tags.yearBuilt },
-    { key: 'bedrooms', value: tagOptions?.bedrooms?.has(String(property.tags.bedrooms)) ? property.tags.bedrooms : undefined },
-    { key: 'bathrooms', value: tagOptions?.bathrooms?.has(String(property.tags.bathrooms)) ? property.tags.bathrooms : undefined },
-    { key: 'area', value: property.tags.area },
-    { key: 'floor', value: property.tags.floor },
-  ].filter(tag => tag.value !== undefined && tag.value !== null);
+    { key: 'type', value: tags?.type },
+    { key: 'rooms', value: tags?.rooms },
+    { key: 'material', value: tags?.material },
+    { key: 'parking', value: tags?.parking },
+    { key: 'condition', value: tags?.condition },
+    { key: 'location', value: tags?.location },
+    { key: 'finishing', value: tags?.finishing },
+    { key: 'district', value: tags?.district },
+    { key: 'yearBuilt', value: tags?.yearBuilt },
+    { key: 'bedrooms', value: tags?.bedrooms },
+    { key: 'bathrooms', value: tags?.bathrooms },
+    { key: 'area', value: tags?.area },
+    { key: 'floor', value: tags?.floor },
+    { key: 'delivery', value: tags?.delivery },
+    { key: 'sea-distance', value: tags?.['sea-distance'] },
+    { key: 'payment', value: tags?.payment },
+    { key: 'view', value: tags?.view },
+  ].filter(tag => tag.value !== undefined && tag.value !== null && tag.value !== '');
 
   return (
     <Link to={`/property/${property.id}`} className="bg-[var(--white)] rounded-lg shadow-md pb-4 hover:shadow-lg transition block animate-fadeIn">
@@ -88,18 +96,24 @@ function PropertyCard({ property, onTagClick, tagOptions }) {
         </div>
       </div>
       <div className="px-4 pt-2">
-        <h3 className="text-base text-[var(--gray-600)] mb-1">{property.title}</h3>
-        <p className="text-2xl text-[var(--primary)] font-bold mb-3">{property.tags.price.toLocaleString()} ₽</p>
+        {property.title && (
+          <h3 className="text-base text-[var(--gray-600)] mb-1">{property.title}</h3>
+        )}
+        {tags?.price && (
+          <p className="text-2xl text-[var(--primary)] font-bold mb-3">{tags.price.toLocaleString()} ₽</p>
+        )}
         <div className="flex flex-wrap gap-2">
-          {tagsToDisplay.map(({ key, value }) => (
-            <button
-              key={key}
-              onClick={(e) => { e.preventDefault(); onTagClick(key, value); }}
-              className="bg-[var(--blue-100)] text-[var(--primary)] px-2 py-1 rounded text-sm hover:bg-[var(--blue-200)] transition"
-            >
-              {formatTag(key, value)}
-            </button>
-          ))}
+          {tagsToDisplay
+            .filter(tag => tag.key !== 'developer' && tag.key !== 'complex' && tag.key !== 'price' && tag.key !== 'title')
+            .map(({ key, value }) => (
+              <button
+                key={key}
+                onClick={(e) => { e.preventDefault(); onTagClick(key, value); }}
+                className="bg-[var(--blue-100)] text-[var(--primary)] px-2 py-1 rounded text-sm hover:bg-[var(--blue-200)] transition"
+              >
+                {formatTag(key, value)}
+              </button>
+            ))}
         </div>
       </div>
     </Link>
