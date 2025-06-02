@@ -41,14 +41,14 @@ const TextFilter = ({ label, filterKey, options, selectedValues, onChange, onRes
 
   return (
     <div className="relative w-full max-w-full">
-      <label className="block text-xs sm:text-sm font-medium text-[var(--gray-700)]" style={{ fontSize: 'var(--font-size-xs)' }}>{label}</label>
-      <div className="relative mt-1">
+      <label className="block text-base sm:text-sm font-medium text-[var(--gray-700)]" style={{ fontSize: 'clamp(1rem, 2vw + 0.8rem, 1.1rem)' }}>{label}</label>
+      <div className="relative mt-2">
         <div
           ref={containerRef}
-          className="p-2 border border-[var(--gray-200)] rounded-md w-full bg-[var(--white)] cursor-pointer focus:ring-[var(--primary)] focus:border-[var(--primary)] overflow-hidden relative text-xs sm:text-sm"
+          className="p-3 sm:p-2 border border-[var(--gray-200)] rounded-md w-full bg-[var(--white)] cursor-pointer focus:ring-[var(--primary)] focus:border-[var(--primary)] overflow-hidden relative text-base sm:text-sm"
           onClick={toggleDropdown}
           style={{
-            fontSize: 'var(--font-size-xs)',
+            fontSize: 'clamp(1rem, 2vw + 0.8rem, 1.1rem)',
             background: showArrow
               ? "url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke-width=%221.5%22 stroke=%22%23A1A1AA%22 class=%22w-4 h-4%22%3E%3Cpath stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M19.5 8.25l-7.5 7.5-7.5-7.5%22 /%3E%3C/svg%3E') no-repeat right 1rem center"
               : 'none',
@@ -57,8 +57,8 @@ const TextFilter = ({ label, filterKey, options, selectedValues, onChange, onRes
         >
           <span
             ref={textRef}
-            className={`${safeSelectedValues.length === 0 ? 'text-[var(--gray-400)]' : 'text-[var(--gray-700)]'} text-xs sm:text-sm whitespace-nowrap`}
-            style={{ fontSize: 'var(--font-size-xs)' }}
+            className={`${safeSelectedValues.length === 0 ? 'text-[var(--gray-400)]' : 'text-[var(--gray-700)]'} text-base sm:text-sm whitespace-nowrap`}
+            style={{ fontSize: 'clamp(1rem, 2vw + 0.8rem, 1.1rem)' }}
           >
             {safeSelectedValues.length === 0 ? 'Выберите' : safeSelectedValues.join(', ')}
           </span>
@@ -68,13 +68,13 @@ const TextFilter = ({ label, filterKey, options, selectedValues, onChange, onRes
         </div>
         {isOpen && (
           <div
-            className="absolute top-0 left-0 w-full bg-[var(--white)] border border-[var(--gray-200)] rounded-md shadow-lg max-h-60 overflow-y-auto z-[1000] text-xs sm:text-sm"
-            style={{ fontSize: 'var(--font-size-xs)', background: 'var(--white)' }}
+            className="absolute top-0 left-0 w-full bg-[var(--white)] border border-[var(--gray-200)] rounded-md shadow-lg max-h-60 overflow-y-auto z-[1000] text-base sm:text-sm"
+            style={{ fontSize: 'clamp(1rem, 2vw + 0.8rem, 1.1rem)', background: 'var(--white)' }}
             onMouseLeave={handleMouseLeave}
           >
             <div
-              className="p-2 text-xs sm:text-sm text-[var(--blue-600)] hover:bg-[var(--gray-200)] cursor-pointer sticky top-0 bg-[var(--white)] z-10 whitespace-nowrap"
-              style={{ fontSize: 'var(--font-size-xs)' }}
+              className="p-3 sm:p-2 text-base sm:text-sm text-[var(--blue-600)] hover:bg-[var(--gray-200)] cursor-pointer sticky top-0 bg-[var(--white)] z-10 whitespace-nowrap"
+              style={{ fontSize: 'clamp(1rem, 2vw + 0.8rem, 1.1rem)' }}
               onClick={() => { onReset(filterKey); setIsOpen(false); }}
             >
               Сбросить
@@ -86,16 +86,16 @@ const TextFilter = ({ label, filterKey, options, selectedValues, onChange, onRes
               {options.map(value => (
                 <div
                   key={value}
-                  className="p-2 text-xs sm:text-sm text-[var(--gray-700)] hover:bg-[var(--gray-200)] flex items-center cursor-pointer whitespace-nowrap"
-                  style={{ fontSize: 'var(--font-size-xs)' }}
+                  className="p-3 sm:p-2 text-base sm:text-sm text-[var(--gray-700)] hover:bg-[var(--gray-200)] flex items-center cursor-pointer whitespace-nowrap"
+                  style={{ fontSize: 'clamp(1rem, 2vw + 0.8rem, 1.1rem)' }}
                   onClick={() => handleCheckboxChange(value)}
                 >
                   <input
                     type="checkbox"
                     checked={safeSelectedValues.includes(value)}
                     onChange={() => handleCheckboxChange(value)}
-                    className="mr-2 h-4 w-4 text-[var(--primary)] focus:ring-[var(--primary)] border-[var(--gray-200)] rounded"
-                    style={{ fontSize: 'var(--font-size-xs)' }}
+                    className="mr-2 h-5 w-5 sm:h-4 sm:w-4 text-[var(--primary)] focus:ring-[var(--primary)] border-[var(--gray-200)] rounded"
+                    style={{ fontSize: 'clamp(1rem, 2vw + 0.8rem, 1.1rem)' }}
                   />
                   {formatLabel(value)}
                 </div>
