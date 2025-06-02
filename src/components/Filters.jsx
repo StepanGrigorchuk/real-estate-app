@@ -262,9 +262,40 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
     return <div className="text-center text-gray-600 p-6">Диапазоны фильтров недоступны. Попробуйте позже.</div>;
   }
   return (
-    <div ref={ref} className="bg-[var(--gray-50)] p-2 sm:p-4 rounded-lg shadow-sm relative z-[1000] mt-24 sm:mt-10 w-full max-w-full overflow-x-auto">
-      <div>{isFiltersCollapsed ? (
-          <animated.div style={animationPropsCollapsed} className="overflow-visible z-[1000]">            <div className="flex items-center justify-between gap-16 px-2 sm:px-6">
+    <div ref={ref} className="bg-[var(--gray-50)] p-2 sm:p-4 rounded-lg shadow-sm relative z-[1000] mt-24 sm:mt-10 w-full max-w-full overflow-x-auto">      <div>{isFiltersCollapsed ? (
+          <animated.div style={animationPropsCollapsed} className="overflow-visible z-[1000]">            {/* Mobile collapsed view - vertical stack with key filters */}
+            <div className="block sm:hidden">
+              <div className="px-2">
+                <RangeFilter
+                  label="Цена (₽)"
+                  filterKey="price"
+                  range={serverRanges.price}
+                  value={tempFilters.price}
+                  onChange={handleFilterChange}
+                />
+                <div className="grid grid-cols-2 gap-4 mt-6">
+                  <TextFilter
+                    label="Комнаты"
+                    filterKey="rooms"
+                    options={Array.from(serverTagOptions.rooms || [])}
+                    selectedValues={tempFilters.rooms}
+                    onChange={handleFilterChange}
+                    onReset={handleResetFilter}
+                  />
+                  <TextFilter
+                    label="Отделка"
+                    filterKey="finishing"
+                    options={Array.from(serverTagOptions.finishing || [])}
+                    selectedValues={tempFilters.finishing}
+                    onChange={handleFilterChange}
+                    onReset={handleResetFilter}
+                  />
+                </div>
+              </div>
+            </div>
+            
+            {/* Desktop collapsed view - horizontal layout */}
+            <div className="hidden sm:flex items-center justify-between gap-16 px-6">
               {/* Цена - занимает больше места */}
               <div className="flex-1 min-w-0">
                 <RangeFilter
