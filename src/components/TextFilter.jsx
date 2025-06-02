@@ -46,9 +46,9 @@ const TextFilter = ({ label, filterKey, options, selectedValues, onChange, onRes
         <div
           ref={containerRef}
           className="p-2 border border-[var(--gray-200)] rounded-md w-full bg-[var(--white)] cursor-pointer focus:ring-[var(--primary)] focus:border-[var(--primary)] overflow-hidden relative text-xs sm:text-sm"
-          style={{ fontSize: 'var(--font-size-xs)' }}
           onClick={toggleDropdown}
           style={{
+            fontSize: 'var(--font-size-xs)',
             background: showArrow
               ? "url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke-width=%221.5%22 stroke=%22%23A1A1AA%22 class=%22w-4 h-4%22%3E%3Cpath stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M19.5 8.25l-7.5 7.5-7.5-7.5%22 /%3E%3C/svg%3E') no-repeat right 1rem center"
               : 'none',
