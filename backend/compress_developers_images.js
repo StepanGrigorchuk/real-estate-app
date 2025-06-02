@@ -25,11 +25,29 @@ async function compressImages() {
     const ext = path.extname(imgPath).toLowerCase();
     const output = imgPath; // перезаписываем
     try {
-      if (ext === '.jpg' || ext === '.jpeg') {
-        await sharp(imgPath).jpeg({ quality: 75 }).toFile(output);
-      } else if (ext === '.png') {
-        await sharp(imgPath).png({ quality: 75, compressionLevel: 8 }).toFile(output);
+      const image = sharp(imgPath);
+      const metadata = await image.metadata();
+      let width = metadata.width;
+      let height = metadata.height;
+      // Вычисляем новые размеры, если хотя бы одна сторона больше 2000
+      if (width > 2000 || height > 2000) {
+        if (width >= height) {
+          width = 2000;
+          height = Math.round((metadata.height / metadata.width) * 2000);
+        } else {
+          height = 2000;
+          width = Math.round((metadata.width / metadata.height) * 2000);
+        }
+        image.resize(width, height);
       }
+      // Сохраняем во временный файл, затем заменяем оригинал
+      const tempOutput = imgPath + '.tmp';
+      if (ext === '.jpg' || ext === '.jpeg') {
+        await image.jpeg({ quality: 50 }).toFile(tempOutput);
+      } else if (ext === '.png') {
+        await image.png({ quality: 50, compressionLevel: 8 }).toFile(tempOutput);
+      }
+      fs.renameSync(tempOutput, output);
       console.log('Compressed:', imgPath);
     } catch (e) {
       console.error('Error compressing', imgPath, e);
