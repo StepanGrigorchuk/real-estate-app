@@ -1,6 +1,10 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Lightbox from './Lightbox.jsx';
+import { getParsedTags } from '../utils/property';
+import { getImagePath } from '../utils/imagePath';
+import { formatTag, isNotEmpty } from '../utils/format';
+import { PARAM_NAMES, TELEGRAM_LINK } from '../constants';
 
 function PropertyPage({ properties, setSelectedProperty }) {
   const { id } = useParams();
@@ -45,12 +49,12 @@ function PropertyPage({ properties, setSelectedProperty }) {
   // Загрузка изображений
   useEffect(() => {
     if (!property || !property.developer || !property.complex) return;
-    const developer = property.developer.replace(/\s+/g, '');
-    const complex = property.complex.replace(/\s+/g, '');
+    const developer = property.developer;
+    const complex = property.complex;
     const images = [];
     let index = 1;
     const checkNextImage = () => {
-      const imagePath = `/developers/${developer}/${complex}/${property.id}/images/${property.id}-${index}.jpg`;
+      const imagePath = getImagePath({ developer, complex, id: property.id, index });
       return new Promise((resolve) => {
         const img = new window.Image();
         img.src = imagePath;
@@ -66,18 +70,7 @@ function PropertyPage({ properties, setSelectedProperty }) {
   }, [property]);
 
   // Безопасно получить параметры объекта
-  let parsedTags = {};
-  if (property && property.tags) {
-    if (typeof property.tags === 'string') {
-      try {
-        parsedTags = JSON.parse(property.tags);
-      } catch (e) {
-        parsedTags = {};
-      }
-    } else if (typeof property.tags === 'object' && property.tags !== null) {
-      parsedTags = property.tags;
-    }
-  }
+  const parsedTags = getParsedTags(property);
 
   if (loading) {
     return <div className="text-[var(--gray-800)] p-6 animate-fadeIn">Загрузка...</div>;
@@ -92,32 +85,15 @@ function PropertyPage({ properties, setSelectedProperty }) {
     return <div className="text-[var(--gray-800)] p-6 animate-fadeIn">Ошибка: объект не содержит необходимые данные</div>;
   }
 
-  const paramNames = {
-    type: 'Тип',
-    rooms: 'Комнаты',
-    area: 'Площадь',
-    floor: 'Этаж',
-    price: 'Цена',
-    location: 'Местоположение',
-    yearBuilt: 'Год постройки',
-    bedrooms: 'Спальни',
-    bathrooms: 'Ванные комнаты',
-    parking: 'Парковка',
-    condition: 'Состояние',
-    delivery: 'Срок сдачи',
-    'sea-distance': 'Расстояние до моря',
-    payment: 'Способ оплаты',
-    view: 'Вид из окна',
-  };
-
   return (
     <>
       <section className="bg-[var(--white)] min-h-screen pt-20 pb-12 px-6 animate-fadeIn">
+        {/* Удалён локальный <style> для скроллбара, теперь используется глобальный из index.css */}
         <div className="w-full flex-grow">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div className="md:col-span-2 flex flex-col">
               <div className="rounded-lg">
-                <div className="flex gap-4 overflow-x-auto scrollbar-hide h-[calc(100vh-300px)]">
+                <div className="flex gap-4 overflow-x-auto custom-scrollbar h-[calc(100vh-300px)] bg-white">
                   {loadedImages.length > 0 ? (
                     loadedImages.map((img, index) => (
                       <img
@@ -138,7 +114,7 @@ function PropertyPage({ properties, setSelectedProperty }) {
                 </div>
               </div>
               <div className="mt-4">
-                <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+                <div className="flex gap-2 overflow-x-auto custom-scrollbar bg-[#f3f4f6] rounded-md p-2">
                   {loadedImages.length > 0 ? (
                     loadedImages.map((img, index) => (
                       <img
@@ -171,31 +147,20 @@ function PropertyPage({ properties, setSelectedProperty }) {
                 </h2>
                 <div className="grid grid-cols-2 gap-3 text-[var(--gray-600)] mb-6">
                   {Object.entries(parsedTags)
-                    .filter(([_, value]) => value !== undefined && value !== null && value !== '')
-                    .map(([key, value]) => {
-                      let displayValue = value;
-                      if (key === 'price' || key === 'area') {
-                        const num = Number(value);
-                        if (!isNaN(num)) {
-                          displayValue = key === 'price' ? `${num.toLocaleString()} ₽` : `${num} м²`;
-                        } else {
-                          displayValue = value;
-                        }
-                      }
-                      return (
-                        <div key={key} className="flex flex-col">
-                          <span className="text-sm font-medium text-[var(--gray-800)]">
-                            {paramNames[key] || key.charAt(0).toUpperCase() + key.slice(1)}
-                          </span>
-                          <span className="text-sm">
-                            {displayValue}
-                          </span>
-                        </div>
-                      );
-                    })}
+                    .filter(([_, value]) => isNotEmpty(value))
+                    .map(([key, value]) => (
+                      <div key={key} className="flex flex-col">
+                        <span className="text-sm font-medium text-[var(--gray-800)]">
+                          {PARAM_NAMES[key] || key.charAt(0).toUpperCase() + key.slice(1)}
+                        </span>
+                        <span className="text-sm">
+                          {formatTag(key, value)}
+                        </span>
+                      </div>
+                    ))}
                 </div>
                 <a
-                  href="https://t.me/yourmanager"
+                  href={TELEGRAM_LINK}
                   className="inline-block w-full text-center bg-gradient-to-r from-blue-500 to-blue-700 text-[var(--white)] px-6 py-3 rounded-lg hover:from-blue-600 hover:to-blue-800 hover:shadow-xl hover:scale-105 hover:brightness-110 transition-all duration-300 font-medium"
                 >
                   Забронировать

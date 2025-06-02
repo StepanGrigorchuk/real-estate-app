@@ -1,37 +1,48 @@
-import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { TELEGRAM_LINK } from '../constants';
 
 function Header() {
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollY = useRef(0);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-
-      if (currentScrollY > lastScrollY && currentScrollY > 50) {
-        // Скролл вниз и прокручено больше 50px
-        setIsHeaderVisible(false);
-      } else if (currentScrollY < lastScrollY) {
-        // Скролл вверх
-        setIsHeaderVisible(true);
+      if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
+        setIsHeaderVisible(false); // Скролл вниз — скрыть
+      } else if (currentScrollY < lastScrollY.current) {
+        setIsHeaderVisible(true); // Скролл вверх — показать
       }
-
-      setLastScrollY(currentScrollY);
+      lastScrollY.current = currentScrollY;
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, []);
+
+  const handleLogoClick = (e) => {
+    if (location.pathname === '/') {
+      e.preventDefault();
+      window.location.reload();
+    }
+  };
 
   return (
-    <header className={`bg-white shadow-md py-4 md:py-4 px-6 fixed w-full z-10 transition-transform duration-300 ease-in-out ${isHeaderVisible ? 'translate-y-0' : '-translate-y-full'}`}>
+    <header
+      className={`bg-white shadow-md py-4 md:py-4 px-6 fixed w-full z-10 transition-transform duration-500`} // увеличена длительность
+      style={{
+        transform: isHeaderVisible ? 'translateY(0)' : 'translateY(-100%)',
+        transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)', // плавная кривая
+      }}
+    >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <Link to="/" className="flex items-center">
+        <Link to="/" reloadDocument className="flex items-center">
           <img src="/logo.svg" alt="Логотип Компас" className="h-10" />
         </Link>
         <div className="flex gap-3">
-          <a href="https://t.me/yourmanager" className="hidden md:inline-block bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+          <a href={TELEGRAM_LINK} className="hidden md:inline-block bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
             Написать помощнику
           </a>
           <a href="tel:+1234567890" className="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition">

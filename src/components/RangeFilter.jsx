@@ -37,6 +37,16 @@ const RangeFilter = ({ label, filterKey, range, value, onChange }) => {
     setRawMaxValue(isPriceField ? formatNumber(safeValueMax) : safeValueMax.toString());
   }, [safeValueMin, safeValueMax, isPriceField]);
 
+  // Если нет данных для диапазона — не отображаем фильтр
+  if (range?.min == null || range?.max == null) {
+    return (
+      <div>
+        <label className="block text-sm font-medium text-[var(--gray-700)]">{label}</label>
+        <div className="text-[var(--gray-400)] italic">Нет данных для фильтрации</div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <label className="block text-sm font-medium text-[var(--gray-700)]">{label}</label>

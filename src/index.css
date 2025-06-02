@@ -57,3 +57,30 @@ body {
 * {
   box-sizing: border-box;
 }
+
+/* Глобальный красивый скроллбар для всего сайта */
+html, body, * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray-400) var(--white);
+  scrollbar-arrow-color: var(--white);
+}
+
+/* Для Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background: var(--white);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--gray-400);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--white);
+}
+::-webkit-scrollbar-button {
+  display: none;
+  height: 0;
+  width: 0;
+  appearance: none;
+}

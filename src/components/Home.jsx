@@ -1,5 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { getParsedTags } from '../utils/property';
+import { getImagePath } from '../utils/imagePath';
+import { formatTag, isNotEmpty } from '../utils/format';
+import { PARAM_NAMES, TELEGRAM_LINK } from '../constants';
 
 function Home() {
   const [properties, setProperties] = useState([]);
@@ -37,9 +41,9 @@ function Home() {
     const loadImages = async () => {
       const imagePromises = topProperties.map((property, index) => {
         return new Promise((resolve) => {
-          const developer = property.developer.replace(/\s+/g, '');
-          const complex = property.complex.replace(/\s+/g, '');
-          const imagePath = `/developers/${developer}/${complex}/${property.id}/images/${property.id}-1.jpg`;
+          const developer = property.developer;
+          const complex = property.complex;
+          const imagePath = getImagePath({ developer, complex, id: property.id, index: 1 });
           const img = new Image();
           img.src = imagePath;
           img.onload = () => {
@@ -109,55 +113,58 @@ function Home() {
           {topProperties.length > 0 && isLoaded ? (
             <div className="w-full max-w-xl">
               <div className="w-full max-w-xl h-[450px] rounded-lg shadow-lg relative overflow-hidden">
-                {topProperties.map((property, index) => (
-                  loadedImages[index] && (
-                    <div
-                      key={property.id}
-                      className={`absolute w-full h-full transition-opacity duration-500 ${
-                        index === currentSlide ? 'opacity-100' : 'opacity-0'
-                      }`}
-                    >
-                      <img
-                        src={loadedImages[index]}
-                        alt={property.title}
-                        className="w-full h-full object-cover rounded-lg"
-                      />
-                      <Link
-                        to={`/property/${property.id}`}
-                        className="absolute inset-0 z-10 flex justify-center items-center"
+                {topProperties.map((property, index) => {
+                  const tags = getParsedTags(property);
+                  return (
+                    loadedImages[index] && (
+                      <div
+                        key={property.id}
+                        className={`absolute w-full h-full transition-opacity duration-500 ${
+                          index === currentSlide ? 'opacity-100' : 'opacity-0'
+                        }`}
                       >
-                        <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white p-4 rounded-lg z-20">
-                          <p className="text-2xl font-semibold">{property.tags?.price?.toLocaleString()} ₽</p>
-                          <h3 className="text-base">{property.title}</h3>
-                          <p className="text-base">{property.tags?.area} кв.м.</p>
-                          <p className="text-base">{property.tags?.rooms}</p>
-                          <p className="text-base">{property.tags?.city}</p>
-                          <p className="text-base">{property.tags?.delivery}</p>
-                          <p className="text-base">{property.tags?.['sea-distance']}</p>
-                          <p className="text-base">{property.tags?.type}</p>
-                          <p className="text-base">{property.tags?.view}</p>
-                          <p className="text-base">{property.tags?.finishing}</p>
-                          <p className="text-base">{property.tags?.floor}</p>
-                          <p className="text-base">{property.tags?.payment}</p>
-                        </div>
-                      </Link>
-                      <div
-                        className={`absolute top-0 left-0 w-1/4 h-full cursor-pointer transition-opacity duration-300 z-10 bg-gradient-to-r from-black to-transparent`}
-                        style={{ opacity: isLeftHovered ? 0.4 : 0, transition: 'opacity 150ms ease-in-out' }}
-                        onMouseEnter={() => setIsLeftHovered(true)}
-                        onMouseLeave={() => setIsLeftHovered(false)}
-                        onClick={handlePrevSlide}
-                      />
-                      <div
-                        className={`absolute top-0 right-0 w-1/4 h-full cursor-pointer transition-opacity duration-300 z-10 bg-gradient-to-l from-black to-transparent`}
-                        style={{ opacity: isRightHovered ? 0.4 : 0, transition: 'opacity 150ms ease-in-out' }}
-                        onMouseEnter={() => setIsRightHovered(true)}
-                        onMouseLeave={() => setIsRightHovered(false)}
-                        onClick={handleNextSlide}
-                      />
-                    </div>
-                  )
-                ))}
+                        <img
+                          src={loadedImages[index]}
+                          alt={property.title}
+                          className="w-full h-full object-cover rounded-lg"
+                        />
+                        <Link
+                          to={`/property/${property.id}`}
+                          className="absolute inset-0 z-10 flex justify-center items-center"
+                        >
+                          <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white p-4 rounded-lg z-20">
+                            {isNotEmpty(tags?.price) && <p className="text-2xl font-semibold">{formatTag('price', tags.price)}</p>}
+                            <h3 className="text-base">{property.title}</h3>
+                            {isNotEmpty(tags?.area) && <p className="text-base">{formatTag('area', tags.area)}</p>}
+                            {isNotEmpty(tags?.rooms) && <p className="text-base">{formatTag('rooms', tags.rooms)}</p>}
+                            {isNotEmpty(tags?.city) && <p className="text-base">{formatTag('city', tags.city)}</p>}
+                            {isNotEmpty(tags?.delivery) && <p className="text-base">{formatTag('delivery', tags.delivery)}</p>}
+                            {isNotEmpty(tags?.['sea-distance']) && <p className="text-base">{formatTag('sea-distance', tags['sea-distance'])}</p>}
+                            {isNotEmpty(tags?.type) && <p className="text-base">{formatTag('type', tags.type)}</p>}
+                            {isNotEmpty(tags?.view) && <p className="text-base">{formatTag('view', tags.view)}</p>}
+                            {isNotEmpty(tags?.finishing) && <p className="text-base">{formatTag('finishing', tags.finishing)}</p>}
+                            {isNotEmpty(tags?.floor) && <p className="text-base">{formatTag('floor', tags.floor)}</p>}
+                            {isNotEmpty(tags?.payment) && <p className="text-base">{formatTag('payment', tags.payment)}</p>}
+                          </div>
+                        </Link>
+                        <div
+                          className={`absolute top-0 left-0 w-1/4 h-full cursor-pointer transition-opacity duration-300 z-10 bg-gradient-to-r from-black to-transparent`}
+                          style={{ opacity: isLeftHovered ? 0.4 : 0, transition: 'opacity 150ms ease-in-out' }}
+                          onMouseEnter={() => setIsLeftHovered(true)}
+                          onMouseLeave={() => setIsLeftHovered(false)}
+                          onClick={handlePrevSlide}
+                        />
+                        <div
+                          className={`absolute top-0 right-0 w-1/4 h-full cursor-pointer transition-opacity duration-300 z-10 bg-gradient-to-l from-black to-transparent`}
+                          style={{ opacity: isRightHovered ? 0.4 : 0, transition: 'opacity 150ms ease-in-out' }}
+                          onMouseEnter={() => setIsRightHovered(true)}
+                          onMouseLeave={() => setIsRightHovered(false)}
+                          onClick={handleNextSlide}
+                        />
+                      </div>
+                    )
+                  );
+                })}
               </div>
               <div className="relative mt-2 flex gap-2 justify-center z-10">
                 {topProperties.map((_, index) => (

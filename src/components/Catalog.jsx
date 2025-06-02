@@ -50,7 +50,7 @@ function Catalog({ onTagClick, filtersRef, tagFilter, resetTagFilter }) {
         shouldShowButton = scrollPosition > 200 && filtersBottom < 0;
       }
       setShowScrollButton(shouldShowButton);
-      console.log("Catalog: Scroll position:", scrollPosition, "Filters bottom:", filtersBottom, "Show button:", shouldShowButton);
+      // console.log("Catalog: Scroll position:", scrollPosition, "Filters bottom:", filtersBottom, "Show button:", shouldShowButton);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -58,19 +58,12 @@ function Catalog({ onTagClick, filtersRef, tagFilter, resetTagFilter }) {
   }, []);
 
   // Отладка позиции кнопки
-  useEffect(() => {
-    if (scrollButtonRef.current) {
-      const rect = scrollButtonRef.current.getBoundingClientRect();
-      console.log("Catalog: Scroll button position:", rect);
-    }
-  }, [showScrollButton]);
-
-  console.log("Catalog: Properties received:", properties);
-  console.log("Catalog: onTagClick:", onTagClick);
-  console.log("Catalog: filtersRef:", filtersRef);
-  console.log("Catalog: tagFilter:", tagFilter);
-  console.log("Catalog: tagOptions:", tagOptions);
-  console.log("Catalog: Sort option:", sortOption);
+  // useEffect(() => {
+  //   if (scrollButtonRef.current) {
+  //     const rect = scrollButtonRef.current.getBoundingClientRect();
+  //     console.log("Catalog: Scroll button position:", rect);
+  //   }
+  // }, [showScrollButton]);
 
   const buildQuery = useCallback(() => {
     const params = new URLSearchParams();
@@ -139,12 +132,10 @@ function Catalog({ onTagClick, filtersRef, tagFilter, resetTagFilter }) {
   }, [loading, hasMore]);
 
   const applyFilters = (newFilters) => {
-    console.log("Catalog: Applying filters:", newFilters);
     setAppliedFilters(newFilters);
   };
 
   const resetFilters = (newFilters) => {
-    console.log("Catalog: Resetting filters:", newFilters);
     setAppliedFilters(newFilters);
     resetTagFilter();
     localStorage.removeItem('appliedFilters');
@@ -190,6 +181,7 @@ function Catalog({ onTagClick, filtersRef, tagFilter, resetTagFilter }) {
           tagFilter={tagFilter}
           resetTagFilter={resetTagFilter}
           onTagOptionsChange={setTagOptions}
+          total={total}
         />
       </div>
       <div className="mb-6 px-6 relative">

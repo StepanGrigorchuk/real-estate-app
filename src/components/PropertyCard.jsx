@@ -1,5 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { getParsedTags } from '../utils/property';
+import { getImagePath } from '../utils/imagePath';
+import { formatTag, isNotEmpty } from '../utils/format';
+import { PARAM_NAMES, TELEGRAM_LINK } from '../constants';
 
 function PropertyCard({ property, onTagClick, tagOptions }) {
   if (!property) {
@@ -8,14 +12,14 @@ function PropertyCard({ property, onTagClick, tagOptions }) {
   }
 
   // Безопасно получаем tags
-  const tags = (property.tags && typeof property.tags === 'object') ? property.tags : {};
+  const tags = getParsedTags(property);
 
-  const developer = property.developer ? property.developer.replace(/\s+/g, '') : '';
-  const complex = property.complex ? property.complex.replace(/\s+/g, '') : '';
+  const developer = property.developer || '';
+  const complex = property.complex || '';
   const images = [
-    `/developers/${developer}/${complex}/${property.id}/images/${property.id}-1.jpg`,
-    `/developers/${developer}/${complex}/${property.id}/images/${property.id}-2.jpg`,
-    `/developers/${developer}/${complex}/${property.id}/images/${property.id}-3.jpg`,
+    getImagePath({ developer, complex, id: property.id, index: 1 }),
+    getImagePath({ developer, complex, id: property.id, index: 2 }),
+    getImagePath({ developer, complex, id: property.id, index: 3 }),
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -28,23 +32,6 @@ function PropertyCard({ property, onTagClick, tagOptions }) {
   };
 
   const handleMouseLeave = () => setCurrentImageIndex(0);
-
-  const formatTag = (key, value) => {
-    switch (key) {
-      case 'bedrooms':
-        return value === 1 ? '1 спальня' : `${value} спальни`;
-      case 'bathrooms':
-        return value === 1 ? '1 ванна' : `${value} ванные`;
-      case 'area':
-        return `${value} кв.м.`;
-      case 'floor':
-        return `${value} этаж`;
-      case 'parking':
-        return value === true || value === 'true' || value === 'Есть' ? 'Есть парковка' : 'Нет парковки';
-      default:
-        return value;
-    }
-  };
 
   // Только существующие значения
   const tagsToDisplay = [
@@ -67,7 +54,7 @@ function PropertyCard({ property, onTagClick, tagOptions }) {
     { key: 'sea-distance', value: tags?.['sea-distance'] },
     { key: 'payment', value: tags?.payment },
     { key: 'view', value: tags?.view },
-  ].filter(tag => tag.value !== undefined && tag.value !== null && tag.value !== '');
+  ].filter(tag => isNotEmpty(tag.value));
 
   return (
     <Link to={`/property/${property.id}`} className="bg-[var(--white)] rounded-lg shadow-md pb-4 hover:shadow-lg transition block animate-fadeIn">

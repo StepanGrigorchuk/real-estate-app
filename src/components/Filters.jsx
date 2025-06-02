@@ -3,7 +3,7 @@ import { useSpring, animated } from 'react-spring';
 import TextFilter from './TextFilter';
 import RangeFilter from './RangeFilter';
 
-const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initialFilters, cardsRef, tagFilter, resetTagFilter, onTagOptionsChange }, ref) => {
+const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initialFilters, cardsRef, tagFilter, resetTagFilter, onTagOptionsChange, total }, ref) => {
   const ranges = useMemo(() => {
     const ranges = {
       price: { min: Infinity, max: -Infinity },
@@ -13,27 +13,29 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
     };
     properties.forEach(property => {
       if (property.tags && typeof property.tags === 'object') {
-        if (property.tags.delivery) {
+        // Для отладки: посмотреть структуру tags
+        // console.log('property.tags:', property.tags);
+        if (typeof property.tags.delivery === 'number' && !isNaN(property.tags.delivery)) {
           ranges.delivery.min = Math.min(ranges.delivery.min, property.tags.delivery);
           ranges.delivery.max = Math.max(ranges.delivery.max, property.tags.delivery);
         }
-        if (property.tags.area) {
+        if (typeof property.tags.area === 'number' && !isNaN(property.tags.area)) {
           ranges.area.min = Math.min(ranges.area.min, property.tags.area);
           ranges.area.max = Math.max(ranges.area.max, property.tags.area);
         }
-        if (property.tags.price) {
+        if (typeof property.tags.price === 'number' && !isNaN(property.tags.price)) {
           ranges.price.min = Math.min(ranges.price.min, property.tags.price);
           ranges.price.max = Math.max(ranges.price.max, property.tags.price);
         }
-        if (property.tags.floor) {
+        if (typeof property.tags.floor === 'number' && !isNaN(property.tags.floor)) {
           ranges.floor.min = Math.min(ranges.floor.min, property.tags.floor);
           ranges.floor.max = Math.max(ranges.floor.max, property.tags.floor);
         }
       }
     });
     Object.keys(ranges).forEach(key => {
-      if (ranges[key].min === Infinity) ranges[key].min = 0;
-      if (ranges[key].max === -Infinity) ranges[key].max = 100;
+      if (ranges[key].min === Infinity) ranges[key].min = null;
+      if (ranges[key].max === -Infinity) ranges[key].max = null;
     });
     return ranges;
   }, [properties]);
@@ -77,6 +79,12 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
     const savedTempFilters = localStorage.getItem('tempFilters');
     return savedTempFilters ? JSON.parse(savedTempFilters) : dynamicInitialFilters;
   });
+
+  // Сброс фильтров при изменении ranges (то есть когда properties загружены)
+  useEffect(() => {
+    setTempFilters(dynamicInitialFilters);
+  }, [ranges.price.min, ranges.price.max, ranges.area.min, ranges.area.max, ranges.delivery.min, ranges.delivery.max, ranges.floor.min, ranges.floor.max]);
+
   const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(() => {
     const savedCollapsed = localStorage.getItem('isFiltersCollapsed');
     return savedCollapsed ? JSON.parse(savedCollapsed) : true;
@@ -131,38 +139,36 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
     { label: "Способ оплаты", key: "payment", options: Array.from(tagOptions.payment || []) },
   ];
 
-  const getFilteredCount = (filters) => {
-    try {
-      const count = properties.filter(property => {
-        if (!property.tags || typeof property.tags !== 'object') {
-          console.warn("Filters: Skipping property with invalid tags:", property);
-          return false;
-        }
+  // Счётчик подходящих объектов с сервера
+  const [serverCount, setServerCount] = useState(total || 0);
 
-        return filterConfig.every(filter => {
-          if (filter.type === "range") {
-            const { min, max } = filters[filter.key];
-            const value = property.tags[filter.key];
-            return !min || !max || (value >= min && value <= max);
-          } else {
-            const selectedValues = filters[filter.key] || [];
-            const value = filter.key === 'developer' || filter.key === 'complex'
-              ? property[filter.key]
-              : property.tags[filter.key];
-            const formattedValue = filter.key === 'parking'
-              ? (value === true || value === 'true' || value === 'Есть' ? 'Есть парковка' : 'Нет парковки')
-              : value;
-            return selectedValues.length === 0 || selectedValues.includes(String(formattedValue));
-          }
-        });
-      }).length;
-      console.log("Filters: Filtered count:", count);
-      return count;
-    } catch (err) {
-      console.error("Filters: Error in getFilteredCount:", err);
-      return 0;
-    }
+  // Формируем query string для фильтров
+  const buildQuery = (filters) => {
+    const params = new URLSearchParams();
+    if (filters.price?.min) params.append('priceMin', filters.price.min);
+    if (filters.price?.max) params.append('priceMax', filters.price.max);
+    if (filters.area?.min) params.append('areaMin', filters.area.min);
+    if (filters.area?.max) params.append('areaMax', filters.area.max);
+    if (filters.delivery?.min) params.append('deliveryMin', filters.delivery.min);
+    if (filters.delivery?.max) params.append('deliveryMax', filters.delivery.max);
+    if (filters.floor?.min) params.append('floorMin', filters.floor.min);
+    if (filters.floor?.max) params.append('floorMax', filters.floor.max);
+    ['rooms','city','type','view','finishing','payment','sea-distance'].forEach(key => {
+      if (Array.isArray(filters[key]) && filters[key].length > 0) {
+        filters[key].forEach(val => params.append(key, val));
+      }
+    });
+    return params.toString();
   };
+
+  // Получаем count с сервера при изменении фильтров
+  useEffect(() => {
+    const query = buildQuery(tempFilters);
+    fetch(`/api/properties?${query}&limit=0`)
+      .then(res => res.json())
+      .then(data => setServerCount(data.total || 0))
+      .catch(() => setServerCount(0));
+  }, [tempFilters]);
 
   const handleFilterChange = (key, value) => {
     setTempFilters(prev => {
@@ -228,7 +234,13 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
     });
   };
 
-  const filteredCount = getFilteredCount(tempFilters);
+  // filteredCount — только для локального массива, total — с сервера
+  const isFiltersApplied = Object.values(tempFilters).some(val => {
+    if (Array.isArray(val)) return val.length > 0;
+    if (val && typeof val === 'object') return val.min != null || val.max != null;
+    return val != null && val !== '';
+  });
+  const countToShow = serverCount;
 
   return (
     <div ref={ref} className="bg-[var(--gray-50)] p-4 rounded-lg shadow-sm relative z-[1000]">
@@ -328,7 +340,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
             onClick={applyFilters}
             className="px-4 py-2 bg-[var(--primary)] text-[var(--white)] rounded-lg hover:bg-[var(--blue-600)] transition"
           >
-            Показать {filteredCount} вариантов
+            Показать {countToShow} вариантов
           </button>
         </div>
       </div>
