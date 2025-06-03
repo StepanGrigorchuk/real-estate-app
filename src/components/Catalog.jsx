@@ -202,10 +202,9 @@ function Catalog({ onTagClick, filtersRef, tagFilter, resetTagFilter }) {
             onTagOptionsChange={setTagOptions}
             total={total}
           />
-        </div>
-        <div className="mb-6 px-6 relative">
+        </div>        <div className="mb-6 px-6 relative">
           <div
-            className={`p-2 border border-gray-200 rounded-md w-full sm:w-1/4 bg-white cursor-pointer focus:ring-primary focus:border-primary overflow-hidden relative box-border ${isSortOpen ? 'opacity-0' : 'opacity-100'}`}
+            className={`p-3 border border-gray-200 rounded-md w-full sm:w-1/3 bg-white cursor-pointer focus:ring-primary focus:border-primary overflow-hidden relative box-border ${isSortOpen ? 'opacity-0' : 'opacity-100'}`}
             onClick={toggleSortDropdown}
             style={{
               background: "url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke-width=%221.5%22 stroke=%22%23A1A1AA%22 class=%22w-4 h-4%22%3E%3Cpath stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M19.5 8.25l-7.5 7.5-7.5-7.5%22 /%3E%3C/svg%3E') no-repeat right 1rem center",
@@ -220,15 +219,13 @@ function Catalog({ onTagClick, filtersRef, tagFilter, resetTagFilter }) {
                'Сначала меньше площадь'}
             </span>
             <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-r from-transparent to-white pointer-events-none" />
-          </div>
-          {isSortOpen && (
+          </div>          {isSortOpen && (
             <div
-              className="absolute top-0 left-6 right-6 w-full sm:w-1/4 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto z-50 box-border"
+              className="absolute top-0 left-6 right-6 w-full sm:w-1/3 bg-white border border-gray-200 rounded-md shadow-lg z-50 box-border"
               onMouseLeave={handleSortMouseLeave}
               style={{ background: 'var(--white)' }}
-            >
-              <div
-                className="p-2 text-sm text-blue-600 hover:bg-gray-200 cursor-pointer sticky top-0 bg-white z-10"
+            ><div
+                className="p-4 text-sm text-blue-600 hover:bg-gray-200 cursor-pointer sticky top-0 bg-white z-10"
                 onClick={() => { setSortOption('none'); setIsSortOpen(false); }}
               >
                 Без сортировки
@@ -236,27 +233,26 @@ function Catalog({ onTagClick, filtersRef, tagFilter, resetTagFilter }) {
               <div
                 className="relative z-0"
                 style={{ background: 'linear-gradient(to bottom, transparent 90%, var(--white) 100%)' }}
-              >
-                <div
-                  className="p-2 text-sm text-gray-700 hover:bg-gray-200 cursor-pointer"
+              >                <div
+                  className="p-4 text-sm text-gray-700 hover:bg-gray-200 cursor-pointer"
                   onClick={() => { setSortOption('price-asc'); setIsSortOpen(false); }}
                 >
                   Сначала дешевле
                 </div>
                 <div
-                  className="p-2 text-sm text-gray-700 hover:bg-gray-200 cursor-pointer"
+                  className="p-4 text-sm text-gray-700 hover:bg-gray-200 cursor-pointer"
                   onClick={() => { setSortOption('price-desc'); setIsSortOpen(false); }}
                 >
                   Сначала дороже
                 </div>
                 <div
-                  className="p-2 text-sm text-gray-700 hover:bg-gray-200 cursor-pointer"
+                  className="p-4 text-sm text-gray-700 hover:bg-gray-200 cursor-pointer"
                   onClick={() => { setSortOption('area-desc'); setIsSortOpen(false); }}
                 >
                   Сначала больше площадь
                 </div>
                 <div
-                  className="p-2 text-sm text-gray-700 hover:bg-gray-200 cursor-pointer"
+                  className="p-4 text-sm text-gray-700 hover:bg-gray-200 cursor-pointer"
                   onClick={() => { setSortOption('area-asc'); setIsSortOpen(false); }}
                 >
                   Сначала меньше площадь
