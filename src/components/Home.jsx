@@ -131,13 +131,17 @@ function Home() {
   if (error) return <div className="p-8 text-center text-red-600">Ошибка загрузки: {error.message}</div>;
 
   return (
-    <section className="bg-[var(--white)] w-full min-h-screen flex flex-col px-2 sm:px-6 animate-fadeIn">      <div className="flex flex-col md:flex-row items-stretch justify-between w-full flex-grow min-h-screen">
+    <section className="bg-[var(--white)] w-full min-h-screen flex flex-col px-2 sm:px-6 animate-fadeIn">
+      <div className="flex flex-col md:flex-row items-stretch justify-between w-full flex-grow min-h-screen">
         {/* Центрируем текстовый блок вертикально и делаем отступы как у галереи */}        <div className="w-full md:w-1/2 flex items-start md:items-center justify-center pt-28 md:pt-0 min-h-[300px] md:min-h-0 md:pl-0 md:pr-8" style={{minHeight: 'auto'}}>
           <div className="max-w-lg w-full text-left md:text-left flex flex-col items-start md:items-start justify-center mx-auto">
-            <h1 className="text-hero text-[var(--gray-800)] mb-2 sm:mb-4 text-left">
-              Найдите дом своей мечты
-            </h1>            <p className="text-lead mb-10 sm:mb-8 max-w-lg text-left">
-              Найдите идеальный дом с нашим каталогом. Умный поиск по цене, площади и другим параметрам поможет выбрать жильё, соответствующее вашим желаниям.            </p>
+            <h1 className="text-hero text-[var(--gray-800)] mb-4 sm:mb-8 text-left">
+              Выбери себе недвижимость в Крыму
+            </h1>
+            <p className="text-lead mb-20 sm:mb-16 max-w-lg text-left">
+              Открытый сервис по подбору инвестиционной недвижимости
+              без навязчивых звонков и менеджеров, экологично и честно.
+            </p>
             <div className="w-full flex justify-center md:justify-start mt-0 md:mt-4">
               <HeroButton to="/catalog">
                 Смотреть недвижку
