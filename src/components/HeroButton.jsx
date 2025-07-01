@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 function HeroButton({ to, href, onClick, children, className = "", ...props }) {
-  const baseClasses = "bg-gradient-to-r from-blue-500 to-blue-700 !text-white px-6 sm:px-6 py-5 sm:py-3 rounded-lg hover:from-blue-600 hover:to-blue-800 hover:shadow-xl hover:scale-105 hover:brightness-110 transition-all duration-300 text-[var(--font-size-hero)] sm:text-[var(--font-size-button)] inline-block min-h-[56px] sm:min-h-[40px] leading-tight font-medium";
+  const baseClasses = "bg-gradient-to-r from-blue-500 to-blue-700 !text-white px-6 sm:px-6 py-6 sm:py-4 rounded-lg hover:from-blue-600 hover:to-blue-800 hover:shadow-xl hover:scale-105 hover:brightness-110 transition-all duration-300 text-[var(--font-size-hero)] sm:text-[var(--font-size-button)] inline-block min-h-[64px] sm:min-h-[48px] leading-tight font-medium";
   
   const combinedClasses = `${baseClasses} ${className}`;
 
