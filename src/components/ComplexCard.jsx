@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { generateImagePathsForProperty } from '../utils/imagePath';
+import { splitTitleIntoDeveloperAndComplex, titleCaseFromSlug } from '../utils/nameDisplay';
 
 function ComplexCard({ complex, onTagClick }) {
-  const { developer, complex: complexName, price, area, floor, rooms, types, views, finishings, payments, totalUnits } = complex;
+  const { developer, complex: complexName, price, area, floor, rooms, types, views, finishings, payments, totalUnits, cities } = complex;
 
   const [previewProperty, setPreviewProperty] = useState(null);
   const [images, setImages] = useState([]);
@@ -38,7 +39,16 @@ function ComplexCard({ complex, onTagClick }) {
     return 'Цена по запросу';
   }, [price]);
 
-  const title = useMemo(() => `${developer} ${complexName}`, [developer, complexName]);
+  const display = useMemo(() => {
+    // Попробуем взять русский title из первого лота, если он есть
+    const titleRu = previewProperty?.title;
+    const roomRu = previewProperty?.tags?.rooms;
+    const { developerRu, complexRu } = splitTitleIntoDeveloperAndComplex({ titleRu, complexSlug: complexName, roomRu });
+    return {
+      complexTitle: complexRu || titleCaseFromSlug(complexName),
+      developerTitle: developerRu || titleCaseFromSlug(developer),
+    };
+  }, [developer, complexName, previewProperty]);
 
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -57,12 +67,35 @@ function ComplexCard({ complex, onTagClick }) {
   if (Array.isArray(finishings) && finishings.length) chips.push({ key: 'finishing', values: finishings });
   if (Array.isArray(payments) && payments.length) chips.push({ key: 'payment', values: payments });
 
+  // Build chips as per requirement
+  const chipItems = [];
+  if (previewProperty?.tags?.delivery) {
+    chipItems.push({ key: 'delivery', text: previewProperty.tags.delivery });
+  }
+  const typeValues = Array.isArray(types) && types.length
+    ? types
+    : (previewProperty?.tags?.type ? [previewProperty.tags.type] : []);
+  typeValues.forEach((t) => chipItems.push({ key: 'type', text: t }));
+  if (display.developerTitle) {
+    chipItems.push({ key: 'developer', text: display.developerTitle });
+  }
+  if (floor && floor.max != null) {
+    chipItems.push({ key: 'floors', text: `${floor.max} этажей` });
+  }
+  if (previewProperty?.tags?.['sea-distance']) {
+    chipItems.push({ key: 'sea-distance', text: previewProperty.tags['sea-distance'] });
+  }
+  const cityValue = (Array.isArray(cities) && cities.length ? cities[0] : (previewProperty?.tags?.city || null));
+  if (cityValue) {
+    chipItems.push({ key: 'city', text: cityValue });
+  }
+
   return (
     <Link to={`/complex/${encodeURIComponent(developer)}/${encodeURIComponent(complexName)}`} className="bg-[var(--white)] rounded-lg shadow-md pb-4 hover:shadow-lg transition block animate-fadeIn w-full max-w-full min-w-[320px]">
       <div className="relative">
         <img
           src={images[currentImageIndex]}
-          alt={title}
+          alt={display.complexTitle}
           className="w-full h-48 sm:h-48 md:h-56 object-cover rounded-t-lg bg-[var(--gray-200)]"
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
@@ -79,19 +112,17 @@ function ComplexCard({ complex, onTagClick }) {
         </div>
       </div>
       <div className="px-3 sm:px-4 pt-4">
-        <h3 className="mb-1 line-clamp-2 min-h-[1.4em] text-lg text-[var(--gray-600)]">{title}</h3>
+        <h3 className="mb-0.5 line-clamp-2 min-h-[1.4em] text-lg text-[var(--gray-600)]">{display.complexTitle}</h3>
         <p className="text-price mb-6 sm:mb-3">{priceText}</p>
         <div className="flex flex-wrap gap-2 sm:gap-2">
-          {chips.flatMap(({ key, values }) => values.map((val, idx) => (
-            <button
-              key={`${key}-${idx}`}
-              onClick={(e) => { e.preventDefault(); onTagClick && onTagClick(key, val); }}
-              className="bg-[var(--blue-100)] text-[var(--primary)] px-3 py-1 rounded text-tag hover:bg-[var(--blue-200)] transition"
+          {chipItems.map((chip, idx) => (
+            <span
+              key={`${chip.key}-${idx}`}
+              className="bg-[var(--blue-100)] text-[var(--primary)] px-3 py-1 rounded text-tag"
             >
-              {key === 'area' || key === 'floor' ? val : `${val}`}
-            </button>
-          )))}
-          <span className="text-xs text-gray-500 ml-1">Лотов: {totalUnits ?? 0}</span>
+              {chip.text}
+            </span>
+          ))}
         </div>
       </div>
     </Link>
