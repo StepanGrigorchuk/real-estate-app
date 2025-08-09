@@ -81,7 +81,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
 
   const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(() => {
     const savedCollapsed = localStorage.getItem('isFiltersCollapsed');
-    return savedCollapsed ? JSON.parse(savedCollapsed) : true;
+    return savedCollapsed ? JSON.parse(savedCollapsed) : false; // По умолчанию раскрыты
   });
 
   useEffect(() => {
@@ -116,10 +116,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
     }
   }, [tagFilter]);
 
-  if (!properties || !Array.isArray(properties)) {
-    console.error("Filters: Properties is not an array or is undefined");
-    return <div className="text-[var(--red-600)] p-4">Ошибка: данные для фильтров недоступны</div>;
-  }
+  // properties могут быть не переданы в режиме complexes — не блокируем UI
 
   // Проверка готовности serverRanges для RangeFilter
   const isRangesReady = serverRanges && ['price','area','delivery','floor'].every(key => key in serverRanges);
