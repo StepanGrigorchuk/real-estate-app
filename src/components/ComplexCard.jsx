@@ -89,6 +89,10 @@ function ComplexCard({ complex, onTagClick }) {
   if (cityValue) {
     chipItems.push({ key: 'city', text: cityValue });
   }
+  // Количество доступных лотов
+  if (totalUnits != null) {
+    chipItems.push({ key: 'total-units', text: `Лотов: ${totalUnits}` });
+  }
 
   return (
     <Link to={`/complex/${encodeURIComponent(developer)}/${encodeURIComponent(complexName)}`} className="bg-[var(--white)] rounded-lg shadow-md pb-4 hover:shadow-lg transition block animate-fadeIn w-full max-w-full min-w-[320px]">
