@@ -260,8 +260,8 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
     return <div className="text-center text-gray-600 p-6">Диапазоны фильтров недоступны. Попробуйте позже.</div>;
   }
   return (
-    <div ref={ref} className="bg-[var(--gray-50)] p-2 sm:p-4 rounded-lg shadow-sm relative z-[1000] mt-24 sm:mt-10 w-full max-w-full overflow-x-auto">      <div>{isFiltersCollapsed ? (
-          <animated.div style={animationPropsCollapsed} className="overflow-visible z-[1000]">            {/* Mobile collapsed view - vertical stack with key filters */}
+    <div ref={ref} className="bg-[var(--gray-50)] p-2 sm:p-4 rounded-lg shadow-sm relative z-0 mt-24 sm:mt-10 w-full max-w-full overflow-x-auto">      <div>{isFiltersCollapsed ? (
+          <animated.div style={animationPropsCollapsed} className="overflow-visible">            {/* Mobile collapsed view - vertical stack with key filters */}
             <div className="block sm:hidden">
               <div className="px-2">
                 <RangeFilter
@@ -330,7 +330,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
               </div>
             </div>
           </animated.div>) : (
-          <animated.div style={animationPropsExpanded} className="overflow-hidden z-[1000]">
+          <animated.div style={animationPropsExpanded} className="overflow-hidden">
             {/* Text Filters Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-[clamp(1.5rem,4vw,4.5rem)] gap-y-4 md:gap-y-8 px-2 sm:px-6 mb-8 sm:mb-12">
               {filterConfig.filter(f => f.type !== "range").map(filter => (
@@ -364,7 +364,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
           </animated.div>
         )}
       </div>      {/* Mobile layout - vertical stack */}
-      <div className="block sm:hidden mt-4 px-2 space-y-3 z-10">
+      <div className="block sm:hidden mt-4 px-2 space-y-3">
         <SimpleButton
           onClick={applyFilters}
           className="w-full"
@@ -387,7 +387,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
       </div>
       
       {/* Desktop layout - horizontal */}
-      <div className="hidden sm:flex justify-between items-center gap-4 mt-4 px-6 z-10">
+      <div className="hidden sm:flex justify-between items-center gap-4 mt-4 px-6">
         <button
           onClick={toggleFilters}
           className="text-[var(--gray-600)] underline text-small hover:text-[var(--gray-800)] transition"
