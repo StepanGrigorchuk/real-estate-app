@@ -23,6 +23,8 @@ router.get('/', async (req, res) => {
       view,
       finishing,
       payment,
+      developer,
+      complex,
       sort,
       limit = 20,
       skip = 0,
@@ -65,6 +67,16 @@ router.get('/', async (req, res) => {
     addInFilter('finishing', finishing);
     addInFilter('payment', payment);
 
+    // Фильтры по верхнеуровневым полям
+    function addTopLevelIn(field, value) {
+      if (value === undefined) return;
+      let arr = Array.isArray(value) ? value : [value];
+      arr = arr.filter(v => v !== undefined && v !== null && v !== '');
+      if (arr.length > 0) filter[field] = { $in: arr };
+    }
+    addTopLevelIn('developer', developer);
+    addTopLevelIn('complex', complex);
+
     // --- СОРТИРОВКА ---
     let sortObj = {};
     if (sort === 'price-asc') sortObj['tags.price'] = 1;
@@ -74,6 +86,9 @@ router.get('/', async (req, res) => {
 
     // DEBUG: log filter and query
     console.log('FILTER:', JSON.stringify(filter), 'QUERY:', JSON.stringify(req.query));
+
+    // Исключаем удалённые
+    filter.status = { $ne: 'removed' };
 
     const total = await Property.countDocuments(filter);
     const properties = await Property.find(filter)
@@ -153,7 +168,13 @@ router.get('/:id', async (req, res) => {
 // Добавить новый объект
 router.post('/', async (req, res) => {
   try {
-    const property = new Property(req.body);
+    const payload = {
+      ...req.body,
+      status: req.body.status || 'active',
+      updatedBy: req.headers['x-updated-by'] || 'api',
+      lastSeenAt: new Date(),
+    };
+    const property = new Property(payload);
     await property.save();
     res.status(201).json(property);
   } catch (err) {
@@ -165,7 +186,12 @@ router.post('/', async (req, res) => {
 // Обновить объект
 router.put('/:id', async (req, res) => {
   try {
-    const property = await Property.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const update = {
+      ...req.body,
+      updatedBy: req.headers['x-updated-by'] || 'api',
+      lastSeenAt: new Date(),
+    };
+    const property = await Property.findByIdAndUpdate(req.params.id, update, { new: true });
     if (!property) return res.status(404).json({ error: 'Not found' });
     res.json(property);
   } catch (err) {

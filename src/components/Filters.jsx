@@ -4,7 +4,7 @@ import TextFilter from './TextFilter';
 import RangeFilter from './RangeFilter';
 import SimpleButton from './SimpleButton';
 
-const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initialFilters, cardsRef, tagFilter, resetTagFilter, onTagOptionsChange, total }, ref) => {
+const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initialFilters, cardsRef, tagFilter, resetTagFilter, onTagOptionsChange, total, mode = 'properties' }, ref) => {
   // Диапазоны min/max теперь только с backend
   const [serverRanges, setServerRanges] = useState({ price: { min: null, max: null }, area: { min: null, max: null }, delivery: { min: null, max: null }, floor: { min: null, max: null } });
   const [rangesLoading, setRangesLoading] = useState(true);
@@ -136,7 +136,7 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
     { label: "Способ оплаты", key: "payment", options: serverTagOptions.payment || [] },
   ];
 
-  // Счётчик подходящих объектов с сервера
+  // Счётчик подходящих с сервера (объектов или комплексов)
   const [serverCount, setServerCount] = useState(total || 0);
 
   // Формируем query string для фильтров
@@ -160,11 +160,12 @@ const Filters = forwardRef(({ properties, onApplyFilters, onResetFilters, initia
   // Получаем count с сервера при изменении фильтров
   useEffect(() => {
     const query = buildQuery(tempFilters);
-    fetch(`/api/properties?${query}`)
+    const endpoint = mode === 'complexes' ? '/api/complexes' : '/api/properties';
+    fetch(`${endpoint}?${query}`)
       .then(res => res.json())
-      .then(data => setServerCount(data.total || 0))
+      .then(data => setServerCount((mode === 'complexes' ? data.total : data.total) || 0))
       .catch(() => setServerCount(0));
-  }, [tempFilters]);
+  }, [tempFilters, mode]);
 
   const handleFilterChange = (key, value) => {
     setTempFilters(prev => {

@@ -161,7 +161,8 @@ backend/
 ├── models/
 │   └── Property.js     # Схема объекта недвижимости
 ├── routes/
-│   └── properties.js   # API для работы с объектами
+│   ├── properties.js   # API для работы с объектами
+│   └── complexes.js    # API агрегированных комплексов
 ├── app.js             # Сервер Express
 └── package.json       # Зависимости backend
 ```
@@ -200,7 +201,7 @@ backend/
 
 - `public/` — статика (логотипы, изображения, галереи)
 
-- `generate_real_estate_russian.py`, `import_data_mongo.js` — скрипты для генерации и импорта данных
+- `generate_real_estate_russian.py`, `import_data_mongo.js` — скрипты для генерации и импорта данных (импорт с upsert и аудит-полями: `source`, `externalId`, `lastSeenAt`, `updatedBy`, `status`)
 
 #### Данные
 

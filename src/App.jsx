@@ -3,6 +3,8 @@ import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Header from "./components/Header.jsx";
 import Home from "./components/Home.jsx";
 import Catalog from "./components/Catalog.jsx";
+import ComplexCatalog from "./components/ComplexCatalog.jsx";
+import ComplexPage from "./components/ComplexPage.jsx";
 import PropertyPage from "./components/PropertyPage.jsx";
 import Footer from "./components/Footer.jsx";
 
@@ -104,16 +106,15 @@ function App() {
           <Route
             path="/catalog"
             element={
-              <Catalog
+              <ComplexCatalog
                 onTagClick={handleTagClick}
                 filtersRef={filtersRef}
                 tagFilter={tagFilter}
                 resetTagFilter={resetTagFilter}
-                properties={properties}
-                setProperties={setProperties}
               />
             }
           />
+          <Route path="/complex/:developer/:complex" element={<ComplexPage />} />
           <Route
             path="/property/:id"
             element={

@@ -11,11 +11,24 @@ mongoose.connect('mongodb://localhost:27017/realestate', {
 });
 
 async function importData() {
-  for (const property of data) {
+  for (const raw of data) {
+    const property = { ...raw };
     if (!property.price && property.tags && property.tags.price) {
       property.price = property.tags.price;
     }
-    await Property.create(property);
+    // Проставляем аудит-поля по умолчанию
+    property.source = property.source || 'seed-file';
+    property.externalId = property.externalId || property.id || null;
+    property.lastSeenAt = new Date();
+    property.updatedBy = 'seed-import';
+    property.status = property.status || 'active';
+
+    // Идемпотентный upsert по (source, externalId)
+    await Property.findOneAndUpdate(
+      { source: property.source, externalId: property.externalId },
+      { $set: property },
+      { upsert: true, new: true }
+    );
   }
   console.log('Импорт завершён');
   mongoose.disconnect();
