@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import PropertyCard from './PropertyCard';
+import ComplexPropertyCard from './ComplexPropertyCard';
 import { generateImagePathsForProperty } from '../utils/imagePath';
 import { splitTitleIntoDeveloperAndComplex, titleCaseFromSlug } from '../utils/nameDisplay';
 import HeroButton from './HeroButton';
@@ -172,13 +172,14 @@ function ComplexPage() {
 
               <div className="mt-8">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">Доступные квартиры</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {properties.map((p) => {
-                    const images = generateImagePathsForProperty(p, properties, 3);
-                    return (
-                      <PropertyCard key={p._id || p.id} property={p} onTagClick={() => {}} images={images} />
-                    );
-                  })}
+                <div className="space-y-3">
+                  {properties.map((p) => (
+                    <ComplexPropertyCard 
+                      key={p._id || p.id} 
+                      property={p} 
+                      allProperties={properties}
+                    />
+                  ))}
                 </div>
                 {properties.length === 0 && (
                   <div className="text-gray-600">В этом комплексе нет доступных предложений.</div>
